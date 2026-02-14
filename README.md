@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="assets/logo.png" alt="ProductLogik Logo" width="120" height="120">
+  <img src="assets/logo.svg" alt="ProductLogik Logo" width="120" height="120">
 </p>
 
 <h1 align="center">ProductLogik</h1>
