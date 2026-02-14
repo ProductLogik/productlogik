@@ -1,10 +1,13 @@
-# ProductLogik
 
-**AI-Powered Product Feedback Analysis & Agile Anti-Pattern Detection**
+<p align="center">
+  <img src="assets/logo.svg" alt="ProductLogik Logo" width="80" height="80">
+</p>
 
-ProductLogik helps product teams transform user feedback into actionable insights while detecting agile anti-patterns that slow down delivery.
+<h1 align="center">ProductLogik</h1>
+<p align="center"><strong>AI-Powered Product Feedback Analysis & Agile Anti-Pattern Detection</strong></p>
 
-![ProductLogik Logo](assets/logo.svg)
+<p align="center">ProductLogik helps product teams transform user feedback into actionable insights while detecting agile anti-patterns that slow down delivery.</p>
+
 
 ---
 
