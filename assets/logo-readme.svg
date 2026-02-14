@@ -1,0 +1,19 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Rect with rounded corners -->
+  <rect width="120" height="120" rx="24" fill="url(#logoGradient)"/>
+  
+  <!-- Lightning bolt icon centered -->
+  <path d="M65 37.5V11.25L30 52.5h26.25v26.25L90 37.5H65z" 
+        stroke="white" 
+        stroke-width="6" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        fill="none"/>
+  
+  <defs>
+    <linearGradient id="logoGradient" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#059669"/>
+      <stop offset="1" stop-color="#34D399"/>
+    </linearGradient>
+  </defs>
+</svg>
