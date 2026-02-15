@@ -3,7 +3,9 @@ uvicorn
 sqlalchemy
 pydantic
 pandas
+google-generativeai
 openai
+resend
 python-multipart
 python-dotenv
 psycopg2-binary

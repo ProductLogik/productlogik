@@ -18,7 +18,7 @@ export async function login(email: string, password: string): Promise<{ access_t
     return response.json();
 }
 
-export async function register(email: string, password: string, full_name: string, company_name: string): Promise<{ access_token: string, token_type: string }> {
+export async function register(email: string, password: string, full_name: string, company_name: string): Promise<any> {
     console.log("Attempting to register:", email, "at", `${API_URL}/auth/register`);
     try {
         const response = await fetch(`${API_URL}/auth/register`, {
@@ -63,4 +63,82 @@ export async function register(email: string, password: string, full_name: strin
         console.error("Fetch error:", e);
         throw e;
     }
+}
+
+export async function getUserProfile(token: string): Promise<{
+    id: string;
+    email: string;
+    full_name: string | null;
+    company_name: string | null;
+    role: string;
+    created_at: string | null;
+}> {
+    const response = await fetch(`${API_URL}/auth/me`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+        },
+    });
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || "Failed to fetch profile");
+    }
+
+    return response.json();
+}
+
+export async function updateUserProfile(
+    token: string,
+    full_name?: string,
+    company_name?: string
+): Promise<{
+    id: string;
+    email: string;
+    full_name: string | null;
+    company_name: string | null;
+    role: string;
+    created_at: string | null;
+}> {
+    const response = await fetch(`${API_URL}/auth/me`, {
+        method: "PATCH",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ full_name, company_name }),
+    });
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || "Failed to update profile");
+    }
+
+    return response.json();
+}
+
+export async function uploadCSV(file: File, token: string): Promise<{
+    upload_id: string;
+    filename: string;
+    row_count: number;
+    status: string;
+    message: string;
+}> {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await fetch(`${API_URL}/upload`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+        },
+        body: formData,
+    });
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || "Upload failed");
+    }
+
+    return response.json();
 }

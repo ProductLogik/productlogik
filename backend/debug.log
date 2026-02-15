@@ -1,0 +1,154 @@
+2026-02-15 02:47:45,928 DEBUG: Attempting to send verification email to hamzi207@gmail.com
+2026-02-15 02:47:46,062 DEBUG: Initializing EmailService. Key present: True
+2026-02-15 02:47:46,062 DEBUG: Key value (first 4): your
+2026-02-15 02:47:46,062 \u26a0\ufe0f  Email service disabled. Key: your_resend_api_key_here
+2026-02-15 02:47:46,063 DEBUG: Email sent result: False
+2026-02-15 02:49:25,544 DEBUG: Attempting to send verification email to hamzi207@gmail.com
+2026-02-15 02:49:25,545 DEBUG: Email sent result: False
+2026-02-15 02:50:04,366 DEBUG: Attempting to send verification email to hamzi207@gmail.com
+2026-02-15 02:50:04,507 DEBUG: Initializing EmailService. Key present: True
+2026-02-15 02:50:04,507 DEBUG: Key value (first 4): your
+2026-02-15 02:50:04,507 \u26a0\ufe0f  Email service disabled. Key: your_resend_api_key_here
+2026-02-15 02:50:04,508 DEBUG: Email sent result: False
+2026-02-15 02:51:16,900 DEBUG: Attempting to send verification email to hamzi207@gmail.com
+2026-02-15 02:51:17,017 DEBUG: Initializing EmailService. Key present: True
+2026-02-15 02:51:17,017 DEBUG: Key value (first 4): re_c
+2026-02-15 02:51:17,017 \u2705 Email service initialized (Resend)
+2026-02-15 02:51:17,019 Starting new HTTPS connection (1): api.resend.com:443
+2026-02-15 02:51:17,907 https://api.resend.com:443 "POST /emails HTTP/1.1" 200 None
+2026-02-15 02:51:17,910 \u2705 Verification email sent to hamzi207@gmail.com (ID: f6778ae9-28b2-4bb0-9dde-b8c79391f7df)
+2026-02-15 02:51:17,910 DEBUG: Email sent result: True
+2026-02-15 02:56:53,765 --- BACKEND STARTING ---
+2026-02-15 02:56:54,136 DEBUG: Loading auth.py module
+2026-02-15 02:57:28,405 --- BACKEND STARTING ---
+2026-02-15 02:57:29,047 DEBUG: Loading auth.py module
+2026-02-15 02:58:41,624 --- BACKEND STARTING ---
+2026-02-15 02:58:42,063 DEBUG: Loading auth.py module
+2026-02-15 02:59:08,406 DEBUG: Attempting to send verification email to hamzi207@gmail.com
+2026-02-15 02:59:08,554 DEBUG: Initializing EmailService. Key present: True
+2026-02-15 02:59:08,555 DEBUG: Key value (first 4): re_c
+2026-02-15 02:59:08,555 \u2705 Email service initialized (Resend)
+2026-02-15 02:59:08,556 Starting new HTTPS connection (1): api.resend.com:443
+2026-02-15 02:59:09,171 https://api.resend.com:443 "POST /emails HTTP/1.1" 200 None
+2026-02-15 02:59:09,173 \u2705 Verification email sent to hamzi207@gmail.com (ID: 897dedc2-dc2b-44e1-ab4e-4da8c92ed20c)
+2026-02-15 02:59:09,173 DEBUG: Email sent result: True
+2026-02-15 03:01:21,300 --- BACKEND STARTING ---
+2026-02-15 03:01:21,793 DEBUG: Loading auth.py module
+2026-02-15 03:01:23,543 --- BACKEND STARTING ---
+2026-02-15 03:01:23,957 DEBUG: Loading auth.py module
+2026-02-15 03:01:46,068 --- BACKEND STARTING ---
+2026-02-15 03:01:46,461 DEBUG: Loading auth.py module
+2026-02-15 03:01:58,476 --- BACKEND STARTING ---
+2026-02-15 03:01:58,823 DEBUG: Loading auth.py module
+2026-02-15 03:02:33,631 Calling on_part_begin with no data
+2026-02-15 03:02:33,631 Calling on_header_field with data[42:61]
+2026-02-15 03:02:33,632 Calling on_header_value with data[63:89]
+2026-02-15 03:02:33,632 Calling on_header_end with no data
+2026-02-15 03:02:33,632 Calling on_headers_finished with no data
+2026-02-15 03:02:33,632 Calling on_part_data with data[93:111]
+2026-02-15 03:02:33,632 Calling on_part_end with no data
+2026-02-15 03:02:33,632 Calling on_part_begin with no data
+2026-02-15 03:02:33,632 Calling on_header_field with data[155:174]
+2026-02-15 03:02:33,632 Calling on_header_value with data[176:202]
+2026-02-15 03:02:33,632 Calling on_header_end with no data
+2026-02-15 03:02:33,632 Calling on_headers_finished with no data
+2026-02-15 03:02:33,632 Calling on_part_data with data[206:216]
+2026-02-15 03:02:33,633 Calling on_part_end with no data
+2026-02-15 03:02:33,633 Calling on_end with no data
+2026-02-15 03:03:03,898 DEBUG: Attempting to send verification email to hamzi207@gmail.com
+2026-02-15 03:03:04,103 DEBUG: Initializing EmailService. Key present: True
+2026-02-15 03:03:04,103 DEBUG: Key value (first 4): re_c
+2026-02-15 03:03:04,103 \u2705 Email service initialized (Resend)
+2026-02-15 03:03:04,107 Starting new HTTPS connection (1): api.resend.com:443
+2026-02-15 03:03:05,085 https://api.resend.com:443 "POST /emails HTTP/1.1" 200 None
+2026-02-15 03:03:05,087 \u2705 Verification email sent to hamzi207@gmail.com (ID: 08077330-49b7-44ff-a154-ec54c9025127)
+2026-02-15 03:03:05,087 DEBUG: Email sent result: True
+2026-02-15 03:06:05,399 --- BACKEND STARTING ---
+2026-02-15 03:06:06,081 DEBUG: Loading auth.py module
+2026-02-15 03:06:34,735 --- BACKEND STARTING ---
+2026-02-15 03:06:35,196 DEBUG: Loading auth.py module
+2026-02-15 03:07:06,460 DEBUG: Attempting to send verification email to hamzi207@gmail.com
+2026-02-15 03:07:06,600 DEBUG: Initializing EmailService. Key present: True
+2026-02-15 03:07:06,601 DEBUG: Key value (first 4): re_c
+2026-02-15 03:07:06,601 \u2705 Email service initialized (Resend)
+2026-02-15 03:07:06,603 Starting new HTTPS connection (1): api.resend.com:443
+2026-02-15 03:07:07,287 https://api.resend.com:443 "POST /emails HTTP/1.1" 200 None
+2026-02-15 03:07:07,289 \u2705 Verification email sent to hamzi207@gmail.com (ID: 959fafe2-89f4-4c15-b47c-6cf16fc688f0)
+2026-02-15 03:07:07,289 DEBUG: Email sent result: True
+2026-02-15 03:10:35,586 --- BACKEND STARTING ---
+2026-02-15 03:10:36,118 DEBUG: Loading auth.py module
+2026-02-15 03:10:45,545 --- BACKEND STARTING ---
+2026-02-15 03:10:45,955 DEBUG: Loading auth.py module
+2026-02-15 03:10:47,640 --- BACKEND STARTING ---
+2026-02-15 03:10:48,052 DEBUG: Loading auth.py module
+2026-02-15 03:11:05,741 --- BACKEND STARTING ---
+2026-02-15 03:11:06,135 DEBUG: Loading auth.py module
+2026-02-15 03:11:12,437 --- BACKEND STARTING ---
+2026-02-15 03:11:12,787 DEBUG: Loading auth.py module
+2026-02-15 03:11:57,125 Calling on_part_begin with no data
+2026-02-15 03:11:57,125 Calling on_header_field with data[42:61]
+2026-02-15 03:11:57,125 Calling on_header_value with data[63:89]
+2026-02-15 03:11:57,125 Calling on_header_end with no data
+2026-02-15 03:11:57,125 Calling on_headers_finished with no data
+2026-02-15 03:11:57,126 Calling on_part_data with data[93:111]
+2026-02-15 03:11:57,126 Calling on_part_end with no data
+2026-02-15 03:11:57,126 Calling on_part_begin with no data
+2026-02-15 03:11:57,126 Calling on_header_field with data[155:174]
+2026-02-15 03:11:57,126 Calling on_header_value with data[176:202]
+2026-02-15 03:11:57,126 Calling on_header_end with no data
+2026-02-15 03:11:57,126 Calling on_headers_finished with no data
+2026-02-15 03:11:57,126 Calling on_part_data with data[206:216]
+2026-02-15 03:11:57,126 Calling on_part_end with no data
+2026-02-15 03:11:57,126 Calling on_end with no data
+2026-02-15 03:12:01,995 DEBUG: Attempting to send verification email to hamzi207@gmail.com
+2026-02-15 03:12:02,176 DEBUG: Initializing EmailService. Key present: True
+2026-02-15 03:12:02,177 DEBUG: Key value (first 4): re_c
+2026-02-15 03:12:02,177 \u2705 Email service initialized (Resend)
+2026-02-15 03:12:02,180 Starting new HTTPS connection (1): api.resend.com:443
+2026-02-15 03:12:03,076 https://api.resend.com:443 "POST /emails HTTP/1.1" 200 None
+2026-02-15 03:12:03,079 \u2705 Verification email sent to hamzi207@gmail.com (ID: 9d952cbc-7aba-4fc7-85db-95583639957a)
+2026-02-15 03:12:03,079 DEBUG: Email sent result: True
+2026-02-15 03:16:08,098 --- BACKEND STARTING ---
+2026-02-15 03:16:08,639 DEBUG: Loading auth.py module
+2026-02-15 03:16:15,093 --- BACKEND STARTING ---
+2026-02-15 03:16:15,815 DEBUG: Loading auth.py module
+2026-02-15 03:17:04,871 DEBUG: Attempting to send verification email to hamzi207@gmail.com
+2026-02-15 03:17:05,183 DEBUG: Initializing EmailService. Key present: True
+2026-02-15 03:17:05,184 DEBUG: Key value (first 4): re_c
+2026-02-15 03:17:05,184 \u2705 Email service initialized (Resend)
+2026-02-15 03:17:05,188 Starting new HTTPS connection (1): api.resend.com:443
+2026-02-15 03:17:06,615 https://api.resend.com:443 "POST /emails HTTP/1.1" 200 None
+2026-02-15 03:17:06,617 \u2705 Verification email sent to hamzi207@gmail.com (ID: 328e6c79-623e-4a56-a654-f3f6b61e675b)
+2026-02-15 03:17:06,617 DEBUG: Email sent result: True
+2026-02-15 03:18:36,127 --- BACKEND STARTING ---
+2026-02-15 03:18:36,679 DEBUG: Loading auth.py module
+2026-02-15 03:18:41,427 --- BACKEND STARTING ---
+2026-02-15 03:18:41,864 DEBUG: Loading auth.py module
+2026-02-15 03:19:14,332 DEBUG: Attempting to send verification email to hamzi207@gmail.com
+2026-02-15 03:19:14,453 DEBUG: Initializing EmailService. Key present: True
+2026-02-15 03:19:14,453 DEBUG: Key value (first 4): re_c
+2026-02-15 03:19:14,453 \u2705 Email service initialized (Resend)
+2026-02-15 03:19:14,455 Starting new HTTPS connection (1): api.resend.com:443
+2026-02-15 03:19:15,330 https://api.resend.com:443 "POST /emails HTTP/1.1" 200 None
+2026-02-15 03:19:15,332 \u2705 Verification email sent to hamzi207@gmail.com (ID: 9287bdf5-77b5-4b37-a9e4-105a55b622b6)
+2026-02-15 03:19:15,332 DEBUG: Email sent result: True
+2026-02-15 03:22:08,938 --- BACKEND STARTING ---
+2026-02-15 03:22:09,421 DEBUG: Loading auth.py module
+2026-02-15 03:22:17,368 --- BACKEND STARTING ---
+2026-02-15 03:22:19,039 DEBUG: Loading auth.py module
+2026-02-15 03:22:35,841 DEBUG: Attempting to send verification email to hamzi207@gmail.com
+2026-02-15 03:22:36,040 DEBUG: Initializing EmailService. Key present: True
+2026-02-15 03:22:36,040 DEBUG: Key value (first 4): re_c
+2026-02-15 03:22:36,040 \u2705 Email service initialized (Resend)
+2026-02-15 03:22:36,044 Starting new HTTPS connection (1): api.resend.com:443
+2026-02-15 03:22:37,372 https://api.resend.com:443 "POST /emails HTTP/1.1" 200 None
+2026-02-15 03:22:37,374 \u2705 Verification email sent to hamzi207@gmail.com (ID: 691595de-9ad3-4284-a4df-bc3090d36efb)
+2026-02-15 03:22:37,374 DEBUG: Email sent result: True
+2026-02-15 03:24:45,008 --- BACKEND STARTING ---
+2026-02-15 03:24:45,576 DEBUG: Loading auth.py module
+2026-02-15 03:24:49,491 --- BACKEND STARTING ---
+2026-02-15 03:24:49,942 DEBUG: Loading auth.py module
+2026-02-15 03:26:13,118 --- BACKEND STARTING ---
+2026-02-15 03:26:13,545 DEBUG: Loading auth.py module
+2026-02-15 03:26:17,921 --- BACKEND STARTING ---
+2026-02-15 03:26:18,345 DEBUG: Loading auth.py module

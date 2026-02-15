@@ -10,6 +10,8 @@ import { ResultsPage } from "./pages/ResultsPage";
 import { UsagePage } from "./pages/UsagePage";
 import { AccountPage } from "./pages/AccountPage";
 
+import { VerifyEmailPage } from "./pages/VerifyEmailPage";
+
 function App() {
   const location = useLocation();
 
@@ -18,6 +20,7 @@ function App() {
       "/": "Home - Productlogik",
       "/login": "Login - Productlogik",
       "/signup": "Signup - Productlogik",
+      "/verify-email": "Verify Email - Productlogik",
       "/dashboard": "Dashboard - Productlogik",
       "/upload": "Upload Data - Productlogik",
       "/usage": "Usage & Billing - Productlogik",
@@ -39,6 +42,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/verify-email" element={<VerifyEmailPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/upload" element={<UploadPage />} />
         <Route path="/results/:id" element={<ResultsPage />} />

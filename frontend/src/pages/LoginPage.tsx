@@ -19,6 +19,8 @@ export function LoginPage() {
         try {
             const data = await login(email, password);
             localStorage.setItem("token", data.access_token);
+            // Notify navbar of login state change
+            window.dispatchEvent(new Event("loginStateChanged"));
             navigate("/dashboard");
         } catch (err: any) {
             setError(err.message);
