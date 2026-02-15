@@ -61,9 +61,13 @@ export function Navbar() {
                 </Link>
 
                 <nav className="hidden md:flex items-center gap-8">
-                    <Link to="/upload" className="text-sm font-medium text-text-secondary hover:text-brand-600 transition-colors">Analyzer</Link>
-                    <Link to="/dashboard" className="text-sm font-medium text-text-secondary hover:text-brand-600 transition-colors">Dashboard</Link>
-                    <Link to="/usage" className="text-sm font-medium text-text-secondary hover:text-brand-600 transition-colors">Pricing</Link>
+                    {isLoggedIn && (
+                        <>
+                            <Link to="/upload" className="text-sm font-medium text-text-secondary hover:text-brand-600 transition-colors">Analyzer</Link>
+                            <Link to="/dashboard" className="text-sm font-medium text-text-secondary hover:text-brand-600 transition-colors">Dashboard</Link>
+                            <Link to="/usage" className="text-sm font-medium text-text-secondary hover:text-brand-600 transition-colors">Usage</Link>
+                        </>
+                    )}
                 </nav>
 
                 <div className="flex items-center gap-4">

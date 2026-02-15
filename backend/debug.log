@@ -152,3 +152,445 @@
 2026-02-15 03:26:13,545 DEBUG: Loading auth.py module
 2026-02-15 03:26:17,921 --- BACKEND STARTING ---
 2026-02-15 03:26:18,345 DEBUG: Loading auth.py module
+2026-02-15 03:32:01,476 --- BACKEND STARTING ---
+2026-02-15 03:32:01,913 DEBUG: Loading auth.py module
+2026-02-15 03:35:42,611 Calling on_part_begin with no data
+2026-02-15 03:35:42,615 Calling on_header_field with data[42:61]
+2026-02-15 03:35:42,615 Calling on_header_value with data[63:89]
+2026-02-15 03:35:42,615 Calling on_header_end with no data
+2026-02-15 03:35:42,616 Calling on_headers_finished with no data
+2026-02-15 03:35:42,616 Calling on_part_data with data[93:111]
+2026-02-15 03:35:42,616 Calling on_part_end with no data
+2026-02-15 03:35:42,616 Calling on_part_begin with no data
+2026-02-15 03:35:42,616 Calling on_header_field with data[155:174]
+2026-02-15 03:35:42,616 Calling on_header_value with data[176:202]
+2026-02-15 03:35:42,616 Calling on_header_end with no data
+2026-02-15 03:35:42,616 Calling on_headers_finished with no data
+2026-02-15 03:35:42,616 Calling on_part_data with data[206:216]
+2026-02-15 03:35:42,616 Calling on_part_end with no data
+2026-02-15 03:35:42,616 Calling on_end with no data
+2026-02-15 03:39:55,062 Calling on_part_begin with no data
+2026-02-15 03:39:55,062 Calling on_header_field with data[42:61]
+2026-02-15 03:39:55,062 Calling on_header_value with data[63:118]
+2026-02-15 03:39:55,062 Calling on_header_end with no data
+2026-02-15 03:39:55,062 Calling on_header_field with data[120:132]
+2026-02-15 03:39:55,062 Calling on_header_value with data[134:142]
+2026-02-15 03:39:55,062 Calling on_header_end with no data
+2026-02-15 03:39:55,062 Calling on_headers_finished with no data
+2026-02-15 03:39:55,063 Calling on_part_data with data[146:2388]
+2026-02-15 03:39:55,064 Calling on_part_end with no data
+2026-02-15 03:39:55,064 Calling on_end with no data
+2026-02-15 03:40:33,298 Calling on_part_begin with no data
+2026-02-15 03:40:33,299 Calling on_header_field with data[42:61]
+2026-02-15 03:40:33,299 Calling on_header_value with data[63:89]
+2026-02-15 03:40:33,299 Calling on_header_end with no data
+2026-02-15 03:40:33,299 Calling on_headers_finished with no data
+2026-02-15 03:40:33,299 Calling on_part_data with data[93:111]
+2026-02-15 03:40:33,299 Calling on_part_end with no data
+2026-02-15 03:40:33,299 Calling on_part_begin with no data
+2026-02-15 03:40:33,299 Calling on_header_field with data[155:174]
+2026-02-15 03:40:33,299 Calling on_header_value with data[176:202]
+2026-02-15 03:40:33,299 Calling on_header_end with no data
+2026-02-15 03:40:33,299 Calling on_headers_finished with no data
+2026-02-15 03:40:33,299 Calling on_part_data with data[206:216]
+2026-02-15 03:40:33,299 Calling on_part_end with no data
+2026-02-15 03:40:33,299 Calling on_end with no data
+2026-02-15 03:42:17,303 Calling on_field_start with no data
+2026-02-15 03:42:17,304 Calling on_field_name with data[0:8]
+2026-02-15 03:42:17,304 Calling on_field_data with data[9:32]
+2026-02-15 03:42:17,304 Calling on_field_end with no data
+2026-02-15 03:42:17,304 Calling on_field_start with no data
+2026-02-15 03:42:17,304 Calling on_field_name with data[33:41]
+2026-02-15 03:42:17,304 Calling on_field_data with data[42:53]
+2026-02-15 03:42:17,304 Calling on_field_end with no data
+2026-02-15 03:42:17,304 Calling on_end with no data
+2026-02-15 03:42:37,838 DEBUG: Attempting to send verification email to debug_1771123355@test.com
+2026-02-15 03:42:38,022 DEBUG: Initializing EmailService. Key present: True
+2026-02-15 03:42:38,022 DEBUG: Key value (first 4): re_c
+2026-02-15 03:42:38,023 \u2705 Email service initialized (Resend)
+2026-02-15 03:42:38,025 Starting new HTTPS connection (1): api.resend.com:443
+2026-02-15 03:42:39,293 https://api.resend.com:443 "POST /emails HTTP/1.1" 403 None
+2026-02-15 03:42:39,297 \u274c Failed to send verification email to debug_1771123355@test.com: You can only send testing emails to your own email address (hamzi207@gmail.com). To send emails to other recipients, please verify a domain at resend.com/domains, and change the `from` address to an email using this domain.
+2026-02-15 03:42:39,302 Traceback (most recent call last):
+  File "D:\SpicedProjects\Projects\productlogik\backend\services\email_service.py", line 562, in send_verification_email
+    response = resend.Emails.send(params)
+  File "C:\Users\Hamza Latif\AppData\Local\Programs\Python\Python313\Lib\site-packages\resend\emails\_emails.py", line 277, in send
+    ).perform_with_content()
+      ~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Hamza Latif\AppData\Local\Programs\Python\Python313\Lib\site-packages\resend\request.py", line 44, in perform_with_content
+    resp = self.perform()
+  File "C:\Users\Hamza Latif\AppData\Local\Programs\Python\Python313\Lib\site-packages\resend\request.py", line 35, in perform
+    raise_for_code_and_type(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        code=data.get("statusCode") or 500,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        message=data.get("message", "Unknown error"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        error_type=data.get("name", "InternalServerError"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Hamza Latif\AppData\Local\Programs\Python\Python313\Lib\site-packages\resend\exceptions.py", line 247, in raise_for_code_and_type
+    raise ResendError(
+        code=code, message=message, error_type=error_type, suggested_action=""
+    )
+resend.exceptions.ResendError: You can only send testing emails to your own email address (hamzi207@gmail.com). To send emails to other recipients, please verify a domain at resend.com/domains, and change the `from` address to an email using this domain.
+
+2026-02-15 03:42:39,303 DEBUG: Email sent result: False
+2026-02-15 03:44:04,128 --- BACKEND STARTING ---
+2026-02-15 03:44:04,519 DEBUG: Loading auth.py module
+2026-02-15 03:44:15,538 DEBUG: Attempting to send verification email to debug_1771123453@test.com
+2026-02-15 03:44:15,650 DEBUG: Initializing EmailService. Key present: True
+2026-02-15 03:44:15,650 DEBUG: Key value (first 4): re_c
+2026-02-15 03:44:15,650 \u2705 Email service initialized (Resend)
+2026-02-15 03:44:15,652 Starting new HTTPS connection (1): api.resend.com:443
+2026-02-15 03:44:16,876 https://api.resend.com:443 "POST /emails HTTP/1.1" 403 None
+2026-02-15 03:44:16,879 \u274c Failed to send verification email to debug_1771123453@test.com: You can only send testing emails to your own email address (hamzi207@gmail.com). To send emails to other recipients, please verify a domain at resend.com/domains, and change the `from` address to an email using this domain.
+2026-02-15 03:44:16,883 Traceback (most recent call last):
+  File "D:\SpicedProjects\Projects\productlogik\backend\services\email_service.py", line 562, in send_verification_email
+    response = resend.Emails.send(params)
+  File "C:\Users\Hamza Latif\AppData\Local\Programs\Python\Python313\Lib\site-packages\resend\emails\_emails.py", line 277, in send
+    ).perform_with_content()
+      ~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Hamza Latif\AppData\Local\Programs\Python\Python313\Lib\site-packages\resend\request.py", line 44, in perform_with_content
+    resp = self.perform()
+  File "C:\Users\Hamza Latif\AppData\Local\Programs\Python\Python313\Lib\site-packages\resend\request.py", line 35, in perform
+    raise_for_code_and_type(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        code=data.get("statusCode") or 500,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        message=data.get("message", "Unknown error"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        error_type=data.get("name", "InternalServerError"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Hamza Latif\AppData\Local\Programs\Python\Python313\Lib\site-packages\resend\exceptions.py", line 247, in raise_for_code_and_type
+    raise ResendError(
+        code=code, message=message, error_type=error_type, suggested_action=""
+    )
+resend.exceptions.ResendError: You can only send testing emails to your own email address (hamzi207@gmail.com). To send emails to other recipients, please verify a domain at resend.com/domains, and change the `from` address to an email using this domain.
+
+2026-02-15 03:44:16,883 DEBUG: Email sent result: False
+2026-02-15 03:44:40,619 --- BACKEND STARTING ---
+2026-02-15 03:44:41,053 DEBUG: Loading auth.py module
+2026-02-15 03:44:50,572 DEBUG: Attempting to send verification email to debug_1771123488@test.com
+2026-02-15 03:44:50,687 DEBUG: Initializing EmailService. Key present: True
+2026-02-15 03:44:50,688 DEBUG: Key value (first 4): re_c
+2026-02-15 03:44:50,688 \u2705 Email service initialized (Resend)
+2026-02-15 03:44:50,690 Starting new HTTPS connection (1): api.resend.com:443
+2026-02-15 03:44:51,729 https://api.resend.com:443 "POST /emails HTTP/1.1" 403 None
+2026-02-15 03:44:51,732 \u274c Failed to send verification email to debug_1771123488@test.com: You can only send testing emails to your own email address (hamzi207@gmail.com). To send emails to other recipients, please verify a domain at resend.com/domains, and change the `from` address to an email using this domain.
+2026-02-15 03:44:51,736 Traceback (most recent call last):
+  File "D:\SpicedProjects\Projects\productlogik\backend\services\email_service.py", line 562, in send_verification_email
+    response = resend.Emails.send(params)
+  File "C:\Users\Hamza Latif\AppData\Local\Programs\Python\Python313\Lib\site-packages\resend\emails\_emails.py", line 277, in send
+    ).perform_with_content()
+      ~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Hamza Latif\AppData\Local\Programs\Python\Python313\Lib\site-packages\resend\request.py", line 44, in perform_with_content
+    resp = self.perform()
+  File "C:\Users\Hamza Latif\AppData\Local\Programs\Python\Python313\Lib\site-packages\resend\request.py", line 35, in perform
+    raise_for_code_and_type(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        code=data.get("statusCode") or 500,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        message=data.get("message", "Unknown error"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        error_type=data.get("name", "InternalServerError"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Hamza Latif\AppData\Local\Programs\Python\Python313\Lib\site-packages\resend\exceptions.py", line 247, in raise_for_code_and_type
+    raise ResendError(
+        code=code, message=message, error_type=error_type, suggested_action=""
+    )
+resend.exceptions.ResendError: You can only send testing emails to your own email address (hamzi207@gmail.com). To send emails to other recipients, please verify a domain at resend.com/domains, and change the `from` address to an email using this domain.
+
+2026-02-15 03:44:51,736 DEBUG: Email sent result: False
+2026-02-15 03:44:51,736 \u26a0\ufe0f Email failed to send, but creating user anyway for debugging
+2026-02-15 03:44:53,932 Calling on_field_start with no data
+2026-02-15 03:44:53,932 Calling on_field_name with data[0:8]
+2026-02-15 03:44:53,932 Calling on_field_data with data[9:36]
+2026-02-15 03:44:53,932 Calling on_field_end with no data
+2026-02-15 03:44:53,932 Calling on_field_start with no data
+2026-02-15 03:44:53,932 Calling on_field_name with data[37:45]
+2026-02-15 03:44:53,932 Calling on_field_data with data[46:57]
+2026-02-15 03:44:53,932 Calling on_field_end with no data
+2026-02-15 03:44:53,932 Calling on_end with no data
+2026-02-15 03:45:11,506 --- BACKEND STARTING ---
+2026-02-15 03:45:12,004 DEBUG: Loading auth.py module
+2026-02-15 03:46:00,186 --- BACKEND STARTING ---
+2026-02-15 03:46:00,524 DEBUG: Loading auth.py module
+2026-02-15 03:47:28,819 --- BACKEND STARTING ---
+2026-02-15 03:47:29,179 DEBUG: Loading auth.py module
+2026-02-15 03:48:44,341 DEBUG: Attempting to send verification email to cors_debug_1771123719@test.com
+2026-02-15 03:48:44,440 DEBUG: Initializing EmailService. Key present: True
+2026-02-15 03:48:44,440 DEBUG: Key value (first 4): re_c
+2026-02-15 03:48:44,440 \u2705 Email service initialized (Resend)
+2026-02-15 03:48:44,442 Starting new HTTPS connection (1): api.resend.com:443
+2026-02-15 03:48:45,616 https://api.resend.com:443 "POST /emails HTTP/1.1" 403 None
+2026-02-15 03:48:45,617 \u274c Failed to send verification email to cors_debug_1771123719@test.com: You can only send testing emails to your own email address (hamzi207@gmail.com). To send emails to other recipients, please verify a domain at resend.com/domains, and change the `from` address to an email using this domain.
+2026-02-15 03:48:45,619 Traceback (most recent call last):
+  File "D:\SpicedProjects\Projects\productlogik\backend\services\email_service.py", line 562, in send_verification_email
+    response = resend.Emails.send(params)
+  File "C:\Users\Hamza Latif\AppData\Local\Programs\Python\Python313\Lib\site-packages\resend\emails\_emails.py", line 277, in send
+    ).perform_with_content()
+      ~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Hamza Latif\AppData\Local\Programs\Python\Python313\Lib\site-packages\resend\request.py", line 44, in perform_with_content
+    resp = self.perform()
+  File "C:\Users\Hamza Latif\AppData\Local\Programs\Python\Python313\Lib\site-packages\resend\request.py", line 35, in perform
+    raise_for_code_and_type(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        code=data.get("statusCode") or 500,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        message=data.get("message", "Unknown error"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        error_type=data.get("name", "InternalServerError"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Hamza Latif\AppData\Local\Programs\Python\Python313\Lib\site-packages\resend\exceptions.py", line 247, in raise_for_code_and_type
+    raise ResendError(
+        code=code, message=message, error_type=error_type, suggested_action=""
+    )
+resend.exceptions.ResendError: You can only send testing emails to your own email address (hamzi207@gmail.com). To send emails to other recipients, please verify a domain at resend.com/domains, and change the `from` address to an email using this domain.
+
+2026-02-15 03:48:45,619 DEBUG: Email sent result: False
+2026-02-15 03:48:49,762 Calling on_field_start with no data
+2026-02-15 03:48:49,762 Calling on_field_name with data[0:8]
+2026-02-15 03:48:49,762 Calling on_field_data with data[9:41]
+2026-02-15 03:48:49,762 Calling on_field_end with no data
+2026-02-15 03:48:49,762 Calling on_field_start with no data
+2026-02-15 03:48:49,762 Calling on_field_name with data[42:50]
+2026-02-15 03:48:49,762 Calling on_field_data with data[51:62]
+2026-02-15 03:48:49,763 Calling on_field_end with no data
+2026-02-15 03:48:49,763 Calling on_end with no data
+2026-02-15 03:49:03,619 --- BACKEND STARTING ---
+2026-02-15 03:49:03,664 --- BACKEND STARTING ---
+2026-02-15 03:49:04,111 DEBUG: Loading auth.py module
+2026-02-15 03:49:04,135 DEBUG: Loading auth.py module
+2026-02-15 03:49:15,667 DEBUG: Attempting to send verification email to cors_debug_1771123751@test.com
+2026-02-15 03:49:15,767 DEBUG: Initializing EmailService. Key present: True
+2026-02-15 03:49:15,767 DEBUG: Key value (first 4): re_c
+2026-02-15 03:49:15,767 \u2705 Email service initialized (Resend)
+2026-02-15 03:49:15,769 Starting new HTTPS connection (1): api.resend.com:443
+2026-02-15 03:49:16,472 https://api.resend.com:443 "POST /emails HTTP/1.1" 403 None
+2026-02-15 03:49:16,473 \u274c Failed to send verification email to cors_debug_1771123751@test.com: You can only send testing emails to your own email address (hamzi207@gmail.com). To send emails to other recipients, please verify a domain at resend.com/domains, and change the `from` address to an email using this domain.
+2026-02-15 03:49:16,475 Traceback (most recent call last):
+  File "D:\SpicedProjects\Projects\productlogik\backend\services\email_service.py", line 562, in send_verification_email
+    response = resend.Emails.send(params)
+  File "C:\Users\Hamza Latif\AppData\Local\Programs\Python\Python313\Lib\site-packages\resend\emails\_emails.py", line 277, in send
+    ).perform_with_content()
+      ~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Hamza Latif\AppData\Local\Programs\Python\Python313\Lib\site-packages\resend\request.py", line 44, in perform_with_content
+    resp = self.perform()
+  File "C:\Users\Hamza Latif\AppData\Local\Programs\Python\Python313\Lib\site-packages\resend\request.py", line 35, in perform
+    raise_for_code_and_type(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        code=data.get("statusCode") or 500,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        message=data.get("message", "Unknown error"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        error_type=data.get("name", "InternalServerError"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Hamza Latif\AppData\Local\Programs\Python\Python313\Lib\site-packages\resend\exceptions.py", line 247, in raise_for_code_and_type
+    raise ResendError(
+        code=code, message=message, error_type=error_type, suggested_action=""
+    )
+resend.exceptions.ResendError: You can only send testing emails to your own email address (hamzi207@gmail.com). To send emails to other recipients, please verify a domain at resend.com/domains, and change the `from` address to an email using this domain.
+
+2026-02-15 03:49:16,476 DEBUG: Email sent result: False
+2026-02-15 03:49:16,476 \u26a0\ufe0f Email failed to send, but creating user anyway for debugging
+2026-02-15 03:49:20,729 Calling on_field_start with no data
+2026-02-15 03:49:20,729 Calling on_field_name with data[0:8]
+2026-02-15 03:49:20,729 Calling on_field_data with data[9:41]
+2026-02-15 03:49:20,729 Calling on_field_end with no data
+2026-02-15 03:49:20,729 Calling on_field_start with no data
+2026-02-15 03:49:20,729 Calling on_field_name with data[42:50]
+2026-02-15 03:49:20,729 Calling on_field_data with data[51:62]
+2026-02-15 03:49:20,730 Calling on_field_end with no data
+2026-02-15 03:49:20,730 Calling on_end with no data
+2026-02-15 03:49:43,143 --- BACKEND STARTING ---
+2026-02-15 03:49:43,495 DEBUG: Loading auth.py module
+2026-02-15 03:50:02,462 DEBUG: Attempting to send verification email to cors_debug_1771123797@test.com
+2026-02-15 03:50:02,567 DEBUG: Initializing EmailService. Key present: True
+2026-02-15 03:50:02,567 DEBUG: Key value (first 4): re_c
+2026-02-15 03:50:02,567 \u2705 Email service initialized (Resend)
+2026-02-15 03:50:02,570 Starting new HTTPS connection (1): api.resend.com:443
+2026-02-15 03:50:03,450 https://api.resend.com:443 "POST /emails HTTP/1.1" 403 None
+2026-02-15 03:50:03,451 \u274c Failed to send verification email to cors_debug_1771123797@test.com: You can only send testing emails to your own email address (hamzi207@gmail.com). To send emails to other recipients, please verify a domain at resend.com/domains, and change the `from` address to an email using this domain.
+2026-02-15 03:50:03,453 Traceback (most recent call last):
+  File "D:\SpicedProjects\Projects\productlogik\backend\services\email_service.py", line 562, in send_verification_email
+    response = resend.Emails.send(params)
+  File "C:\Users\Hamza Latif\AppData\Local\Programs\Python\Python313\Lib\site-packages\resend\emails\_emails.py", line 277, in send
+    ).perform_with_content()
+      ~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Hamza Latif\AppData\Local\Programs\Python\Python313\Lib\site-packages\resend\request.py", line 44, in perform_with_content
+    resp = self.perform()
+  File "C:\Users\Hamza Latif\AppData\Local\Programs\Python\Python313\Lib\site-packages\resend\request.py", line 35, in perform
+    raise_for_code_and_type(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        code=data.get("statusCode") or 500,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        message=data.get("message", "Unknown error"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        error_type=data.get("name", "InternalServerError"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Hamza Latif\AppData\Local\Programs\Python\Python313\Lib\site-packages\resend\exceptions.py", line 247, in raise_for_code_and_type
+    raise ResendError(
+        code=code, message=message, error_type=error_type, suggested_action=""
+    )
+resend.exceptions.ResendError: You can only send testing emails to your own email address (hamzi207@gmail.com). To send emails to other recipients, please verify a domain at resend.com/domains, and change the `from` address to an email using this domain.
+
+2026-02-15 03:50:03,453 DEBUG: Email sent result: False
+2026-02-15 03:50:03,453 \u26a0\ufe0f Email failed to send, but creating user anyway for debugging
+2026-02-15 03:50:07,784 Calling on_field_start with no data
+2026-02-15 03:50:07,784 Calling on_field_name with data[0:8]
+2026-02-15 03:50:07,784 Calling on_field_data with data[9:41]
+2026-02-15 03:50:07,784 Calling on_field_end with no data
+2026-02-15 03:50:07,784 Calling on_field_start with no data
+2026-02-15 03:50:07,784 Calling on_field_name with data[42:50]
+2026-02-15 03:50:07,784 Calling on_field_data with data[51:62]
+2026-02-15 03:50:07,785 Calling on_field_end with no data
+2026-02-15 03:50:07,785 Calling on_end with no data
+2026-02-15 03:50:10,169 Calling on_part_begin with no data
+2026-02-15 03:50:10,169 Calling on_header_field with data[36:55]
+2026-02-15 03:50:10,169 Calling on_header_value with data[57:100]
+2026-02-15 03:50:10,169 Calling on_header_end with no data
+2026-02-15 03:50:10,169 Calling on_headers_finished with no data
+2026-02-15 03:50:10,169 Calling on_part_data with data[104:119]
+2026-02-15 03:50:10,169 Calling on_part_end with no data
+2026-02-15 03:50:10,169 Calling on_end with no data
+2026-02-15 03:50:38,960 --- BACKEND STARTING ---
+2026-02-15 03:50:39,320 DEBUG: Loading auth.py module
+2026-02-15 03:50:45,443 --- BACKEND STARTING ---
+2026-02-15 03:50:45,806 DEBUG: Loading auth.py module
+2026-02-15 03:51:32,877 --- BACKEND STARTING ---
+2026-02-15 03:51:33,235 DEBUG: Loading auth.py module
+2026-02-15 03:53:07,933 --- BACKEND STARTING ---
+2026-02-15 03:53:08,384 DEBUG: Loading auth.py module
+2026-02-15 03:54:29,430 --- BACKEND STARTING ---
+2026-02-15 03:54:29,752 DEBUG: Loading auth.py module
+2026-02-15 04:03:25,496 --- BACKEND STARTING ---
+2026-02-15 04:03:25,959 DEBUG: Loading auth.py module
+2026-02-15 04:04:31,350 --- BACKEND STARTING ---
+2026-02-15 04:04:31,753 DEBUG: Loading auth.py module
+2026-02-15 04:10:04,254 --- BACKEND STARTING ---
+2026-02-15 04:10:04,611 DEBUG: Loading auth.py module
+2026-02-15 04:11:52,218 --- BACKEND STARTING ---
+2026-02-15 04:11:52,691 DEBUG: Loading auth.py module
+2026-02-15 04:12:45,782 --- BACKEND STARTING ---
+2026-02-15 04:12:46,182 DEBUG: Loading auth.py module
+2026-02-15 04:12:48,641 --- BACKEND STARTING ---
+2026-02-15 04:12:49,035 DEBUG: Loading auth.py module
+2026-02-15 04:12:51,666 --- BACKEND STARTING ---
+2026-02-15 04:12:52,122 DEBUG: Loading auth.py module
+2026-02-15 04:13:53,776 --- BACKEND STARTING ---
+2026-02-15 04:13:54,156 DEBUG: Loading auth.py module
+2026-02-15 04:14:43,295 --- BACKEND STARTING ---
+2026-02-15 04:14:43,624 DEBUG: Loading auth.py module
+2026-02-15 04:15:53,454 --- BACKEND STARTING ---
+2026-02-15 04:15:53,929 DEBUG: Loading auth.py module
+2026-02-15 04:17:25,262 --- BACKEND STARTING ---
+2026-02-15 04:17:25,970 DEBUG: Loading auth.py module
+2026-02-15 04:17:36,728 Calling on_part_begin with no data
+2026-02-15 04:17:36,728 Calling on_header_field with data[42:61]
+2026-02-15 04:17:36,728 Calling on_header_value with data[63:89]
+2026-02-15 04:17:36,728 Calling on_header_end with no data
+2026-02-15 04:17:36,728 Calling on_headers_finished with no data
+2026-02-15 04:17:36,728 Calling on_part_data with data[93:111]
+2026-02-15 04:17:36,728 Calling on_part_end with no data
+2026-02-15 04:17:36,728 Calling on_part_begin with no data
+2026-02-15 04:17:36,728 Calling on_header_field with data[155:174]
+2026-02-15 04:17:36,728 Calling on_header_value with data[176:202]
+2026-02-15 04:17:36,728 Calling on_header_end with no data
+2026-02-15 04:17:36,728 Calling on_headers_finished with no data
+2026-02-15 04:17:36,728 Calling on_part_data with data[206:216]
+2026-02-15 04:17:36,729 Calling on_part_end with no data
+2026-02-15 04:17:36,729 Calling on_end with no data
+2026-02-15 04:21:24,263 --- BACKEND STARTING ---
+2026-02-15 04:21:24,787 DEBUG: Loading auth.py module
+2026-02-15 04:26:35,075 --- BACKEND STARTING ---
+2026-02-15 04:26:35,540 DEBUG: Loading auth.py module
+2026-02-15 04:27:57,043 --- BACKEND STARTING ---
+2026-02-15 04:27:57,460 DEBUG: Loading auth.py module
+2026-02-15 04:31:48,746 --- BACKEND STARTING ---
+2026-02-15 04:31:49,219 DEBUG: Loading auth.py module
+2026-02-15 04:32:05,183 Calling on_part_begin with no data
+2026-02-15 04:32:05,183 Calling on_header_field with data[42:61]
+2026-02-15 04:32:05,183 Calling on_header_value with data[63:89]
+2026-02-15 04:32:05,183 Calling on_header_end with no data
+2026-02-15 04:32:05,183 Calling on_headers_finished with no data
+2026-02-15 04:32:05,184 Calling on_part_data with data[93:111]
+2026-02-15 04:32:05,184 Calling on_part_end with no data
+2026-02-15 04:32:05,184 Calling on_part_begin with no data
+2026-02-15 04:32:05,184 Calling on_header_field with data[155:174]
+2026-02-15 04:32:05,184 Calling on_header_value with data[176:202]
+2026-02-15 04:32:05,184 Calling on_header_end with no data
+2026-02-15 04:32:05,184 Calling on_headers_finished with no data
+2026-02-15 04:32:05,184 Calling on_part_data with data[206:216]
+2026-02-15 04:32:05,184 Calling on_part_end with no data
+2026-02-15 04:32:05,184 Calling on_end with no data
+2026-02-15 13:47:17,178 --- BACKEND STARTING ---
+2026-02-15 13:47:18,255 DEBUG: Loading auth.py module
+2026-02-15 13:47:52,119 Calling on_part_begin with no data
+2026-02-15 13:47:52,120 Calling on_header_field with data[42:61]
+2026-02-15 13:47:52,120 Calling on_header_value with data[63:89]
+2026-02-15 13:47:52,120 Calling on_header_end with no data
+2026-02-15 13:47:52,120 Calling on_headers_finished with no data
+2026-02-15 13:47:52,120 Calling on_part_data with data[93:111]
+2026-02-15 13:47:52,120 Calling on_part_end with no data
+2026-02-15 13:47:52,120 Calling on_part_begin with no data
+2026-02-15 13:47:52,120 Calling on_header_field with data[155:174]
+2026-02-15 13:47:52,121 Calling on_header_value with data[176:202]
+2026-02-15 13:47:52,121 Calling on_header_end with no data
+2026-02-15 13:47:52,121 Calling on_headers_finished with no data
+2026-02-15 13:47:52,121 Calling on_part_data with data[206:216]
+2026-02-15 13:47:52,121 Calling on_part_end with no data
+2026-02-15 13:47:52,121 Calling on_end with no data
+2026-02-15 13:48:09,612 DEBUG: Initializing EmailService. Key present: True
+2026-02-15 13:48:09,615 DEBUG: Key value (first 4): re_c
+2026-02-15 13:48:09,625 \u2705 Email service initialized (Resend)
+2026-02-15 13:48:09,818 Starting new HTTPS connection (1): api.resend.com:443
+2026-02-15 13:48:12,095 https://api.resend.com:443 "POST /emails HTTP/1.1" 403 None
+2026-02-15 13:52:17,134 --- BACKEND STARTING ---
+2026-02-15 13:52:18,067 DEBUG: Loading auth.py module
+2026-02-15 14:02:37,277 --- BACKEND STARTING ---
+2026-02-15 14:02:37,764 DEBUG: Loading auth.py module
+2026-02-15 14:04:30,904 DEBUG: Initializing EmailService. Key present: True
+2026-02-15 14:04:30,905 DEBUG: Key value (first 4): re_c
+2026-02-15 14:04:30,908 \u2705 Email service initialized (Resend)
+2026-02-15 14:04:31,053 Starting new HTTPS connection (1): api.resend.com:443
+2026-02-15 14:04:34,584 https://api.resend.com:443 "POST /emails HTTP/1.1" 403 None
+2026-02-15 14:10:20,130 Starting new HTTPS connection (1): api.resend.com:443
+2026-02-15 14:10:22,140 https://api.resend.com:443 "POST /emails HTTP/1.1" 403 None
+2026-02-15 14:12:37,785 --- BACKEND STARTING ---
+2026-02-15 14:12:38,356 DEBUG: Loading auth.py module
+2026-02-15 14:34:19,166 --- BACKEND STARTING ---
+2026-02-15 14:34:20,052 DEBUG: Loading auth.py module
+2026-02-15 14:34:35,907 Calling on_part_begin with no data
+2026-02-15 14:34:35,908 Calling on_header_field with data[42:61]
+2026-02-15 14:34:35,909 Calling on_header_value with data[63:89]
+2026-02-15 14:34:35,909 Calling on_header_end with no data
+2026-02-15 14:34:35,913 Calling on_headers_finished with no data
+2026-02-15 14:34:35,914 Calling on_part_data with data[93:111]
+2026-02-15 14:34:35,914 Calling on_part_end with no data
+2026-02-15 14:34:35,914 Calling on_part_begin with no data
+2026-02-15 14:34:35,915 Calling on_header_field with data[155:174]
+2026-02-15 14:34:35,915 Calling on_header_value with data[176:202]
+2026-02-15 14:34:35,915 Calling on_header_end with no data
+2026-02-15 14:34:35,915 Calling on_headers_finished with no data
+2026-02-15 14:34:35,915 Calling on_part_data with data[206:216]
+2026-02-15 14:34:35,915 Calling on_part_end with no data
+2026-02-15 14:34:35,915 Calling on_end with no data
+2026-02-15 14:35:06,510 DEBUG: Initializing EmailService. Key present: True
+2026-02-15 14:35:06,515 DEBUG: Key value (first 4): re_c
+2026-02-15 14:35:06,515 \u2705 Email service initialized (Resend)
+2026-02-15 14:35:06,683 Starting new HTTPS connection (1): api.resend.com:443
+2026-02-15 14:35:09,004 https://api.resend.com:443 "POST /emails HTTP/1.1" 403 None
+2026-02-15 14:39:19,239 --- BACKEND STARTING ---
+2026-02-15 14:39:19,648 DEBUG: Loading auth.py module

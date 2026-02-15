@@ -2,6 +2,11 @@ import os
 import json
 from typing import List, Dict, Optional
 import time
+import logging
+
+# Configure logger
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 class AIService:
     def __init__(self):
@@ -12,16 +17,17 @@ class AIService:
         
         # Try to initialize Gemini
         try:
-            import google.generativeai as genai
+            from google import genai
             gemini_key = os.getenv("GEMINI_API_KEY")
             if gemini_key and gemini_key != "your_gemini_api_key_here":
-                genai.configure(api_key=gemini_key)
-                self.gemini_model = genai.GenerativeModel('gemini-flash-latest')
+                self.gemini_client = genai.Client(api_key=gemini_key)
                 self.gemini_available = True
                 self.primary_provider = "gemini"
-                print("✅ Gemini AI initialized (Primary)")
+                logger.info("✅ Gemini AI initialized (Primary)")
+            else:
+                 logger.warning("⚠️ Gemini API key not found or default")
         except Exception as e:
-            print(f"⚠️  Gemini initialization failed: {e}")
+            logger.error(f"⚠️  Gemini initialization failed: {e}")
         
         # Try to initialize OpenAI
         try:
@@ -32,12 +38,14 @@ class AIService:
                 self.openai_available = True
                 if not self.primary_provider:
                     self.primary_provider = "openai"
-                print(f"✅ OpenAI initialized ({'Primary' if not self.gemini_available else 'Fallback'})")
+                logger.info(f"✅ OpenAI initialized ({'Primary' if not self.gemini_available else 'Fallback'})")
         except Exception as e:
-            print(f"⚠️  OpenAI initialization failed: {e}")
+            logger.error(f"⚠️  OpenAI initialization failed: {e}")
         
         if not self.gemini_available and not self.openai_available:
-            raise ValueError("No AI provider available. Please configure GEMINI_API_KEY or OPENAI_API_KEY")
+            logger.error("❌ No AI provider available. Please configure GEMINI_API_KEY or OPENAI_API_KEY")
+            # Do not raise error to allow server startup
+            pass
     
     async def analyze_feedback(self, feedback_entries: List[Dict], upload_id: str) -> Dict:
         """
@@ -69,11 +77,11 @@ class AIService:
             if self.gemini_available:
                 try:
                     result = await self._analyze_with_gemini(feedback_sample)
-                    provider_used = "gemini-flash-latest"
+                    provider_used = "gemini-2.0-flash"
                 except Exception as e:
-                    print(f"⚠️  Gemini analysis failed: {e}")
+                    logger.error(f"⚠️  Gemini analysis failed: {e}")
                     if self.openai_available:
-                        print("🔄 Falling back to OpenAI...")
+                        logger.info("🔄 Falling back to OpenAI...")
             
             if not result and self.openai_available:
                 try:
@@ -143,10 +151,13 @@ Feedback:
 
 Return ONLY the JSON object."""
 
-        import google.generativeai as genai
-        response = self.gemini_model.generate_content(
-            prompt,
-            generation_config=genai.GenerationConfig(
+        from google import genai
+        from google.genai import types
+        
+        response = self.gemini_client.models.generate_content(
+            model='gemini-2.0-flash',
+            contents=prompt,
+            config=types.GenerateContentConfig(
                 temperature=0.3,
                 max_output_tokens=2000,
                 response_mime_type="application/json"

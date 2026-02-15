@@ -43,7 +43,7 @@ class EmailService:
             True if sent successfully, False otherwise
         """
         if not self.enabled:
-            print(f"📧 Email not sent (service disabled): Invitation to {to_email}")
+            print(f"[!] Email not sent (service disabled): Invitation to {to_email}")
             return False
         
         try:
@@ -203,7 +203,7 @@ class EmailService:
             return True
             
         except Exception as e:
-            print(f"❌ Failed to send invitation email to {to_email}: {e}")
+            print(f"[X] Failed to send invitation email to {to_email}: {e}")
             return False
     
     def send_share_notification_email(

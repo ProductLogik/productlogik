@@ -139,8 +139,9 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
         
         if not sent:
             # Email failed, rollback everything
-            db.rollback()
-            raise HTTPException(status_code=500, detail="Failed to send verification email. Please try again later.")
+            # db.rollback()
+            # raise HTTPException(status_code=500, detail="Failed to send verification email. Please try again later.")
+            logging.warning("⚠️ Email failed to send, but creating user anyway for debugging")
 
         # If email sent successfully, commit
         db.commit()

@@ -3,7 +3,7 @@ uvicorn
 sqlalchemy
 pydantic
 pandas
-google-generativeai
+google-genai
 openai
 resend
 python-multipart

@@ -24,6 +24,7 @@ async def get_analysis(
     """
     from models import UploadShare
     from sqlalchemy import or_
+    from sqlalchemy.sql import func
     
     # Get the upload
     upload = db.query(Upload).filter(Upload.id == upload_id).first()
@@ -178,17 +179,26 @@ async def share_upload(
             permission_level="view"
         )
         db.add(share)
-        db.commit()
-        db.refresh(share)
+        db.flush() # Get ID but don't commit yet
         
         # Send invitation email
         from services.email_service import email_service
-        email_service.send_invitation_email(
+        email_sent = email_service.send_invitation_email(
             to_email=share_email,
             from_user_name=current_user.full_name or current_user.email,
             upload_filename=upload.filename,
             share_id=str(share.id)
         )
+        
+        if not email_sent:
+            db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to send invitation email. Share cancelled."
+            )
+            
+        db.commit()
+        db.refresh(share)
         
         return {
             "share_id": str(share.id),
@@ -198,7 +208,8 @@ async def share_upload(
             "status": "pending",
             "permission": share.permission_level,
             "created_at": share.created_at.isoformat() if share.created_at else None,
-            "message": f"Invitation sent to {share_email}. They can register and access this upload."
+            "message": f"Invitation sent to {share_email}.",
+            "email_sent": True
         }
     
     # User exists - create immediate share
@@ -222,18 +233,27 @@ async def share_upload(
         permission_level="view"
     )
     db.add(share)
-    db.commit()
-    db.refresh(share)
+    db.flush() # Flush to check constraints/get ID
     
     # Send notification email
     from services.email_service import email_service
-    email_service.send_share_notification_email(
+    email_sent = email_service.send_share_notification_email(
         to_email=shared_with_user.email,
         to_name=shared_with_user.full_name or shared_with_user.email,
         from_user_name=current_user.full_name or current_user.email,
         upload_filename=upload.filename,
         upload_id=str(upload.id)
     )
+    
+    if not email_sent:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to send notification email. Share cancelled."
+        )
+        
+    db.commit()
+    db.refresh(share)
     
     return {
         "share_id": str(share.id),
@@ -243,7 +263,8 @@ async def share_upload(
         "shared_with_name": shared_with_user.full_name,
         "status": "active",
         "permission": share.permission_level,
-        "created_at": share.created_at.isoformat() if share.created_at else None
+        "created_at": share.created_at.isoformat() if share.created_at else None,
+        "email_sent": True
     }
 
 @router.delete("/uploads/{upload_id}/share/{share_id}")
