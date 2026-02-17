@@ -54,7 +54,9 @@ origins = [
     "http://localhost:8001",
     "http://127.0.0.1:5173",
     "http://127.0.0.1:5180",
-    "http://127.0.0.1:5181"
+    "http://127.0.0.1:5181",
+    "https://productlogik.com",
+    "https://www.productlogik.com"
 ]
 
 for url in frontend_urls:
@@ -67,7 +69,7 @@ logging.info(f"CORS Allowed Origins: {origins}")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_origin_regex=r"https://.*productlogik\.(com|vercel\.app)", # Support custom domain and Vercel
+    allow_origin_regex=r"https://.*\.vercel\.app", # Permissive for any Vercel preview/deployment
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
