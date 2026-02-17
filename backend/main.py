@@ -82,12 +82,18 @@ async def log_origin(request, call_next):
     response = await call_next(request)
     return response
 
+@app.get("/")
+@app.head("/")
+async def read_root():
+    return {"status": "ProductLogik API is running"}
+
+@app.get("/health")
+@app.head("/health")
+async def health_check():
+    return {"status": "healthy"}
+
 # Include routers
 app.include_router(auth_router, prefix="/api/auth", tags=["auth"])
 app.include_router(payment_router, prefix="/api/subscription", tags=["subscription"])
 app.include_router(upload_router, prefix="/api", tags=["upload"])
 app.include_router(analysis_router, prefix="/api", tags=["analysis"])
-
-@app.get("/")
-def read_root():
-    return {"status": "ProductLogik API is running"}
