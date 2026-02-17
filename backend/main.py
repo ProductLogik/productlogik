@@ -33,7 +33,8 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(title="ProductLogik API")
 
 # Enable CORS
-frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
+# Enable CORS
+frontend_urls = os.getenv("FRONTEND_URL", "http://localhost:5173").split(",")
 origins = [
     "http://localhost:5173",
     "http://localhost:5180", 
@@ -41,9 +42,8 @@ origins = [
     "http://localhost:8001",
     "http://127.0.0.1:5173",
     "http://127.0.0.1:5180",
-    "http://127.0.0.1:5181",
-    frontend_url
-]
+    "http://127.0.0.1:5181"
+] + [url.strip() for url in frontend_urls if url.strip()]
 
 app.add_middleware(
     CORSMiddleware,
