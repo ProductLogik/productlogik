@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: productlogik-backend
+    env: python
+    region: frankfurt # Optional: Choose your region
+    plan: free # Optional: free, starter, etc.
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn -k uvicorn.workers.UvicornWorker main:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0

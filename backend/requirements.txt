@@ -9,3 +9,8 @@ python-dotenv
 psycopg2-binary
 passlib[bcrypt]
 python-jose[cryptography]
+requests
+google-genai
+resend
+stripe
+gunicorn

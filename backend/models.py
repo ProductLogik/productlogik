@@ -14,6 +14,11 @@ class User(Base):
     full_name = Column(String)
     company_name = Column(String)
     role = Column(String, default="user")
+    
+    # Stripe Integration
+    stripe_customer_id = Column(String, nullable=True)
+    stripe_subscription_id = Column(String, nullable=True)
+    
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
@@ -25,8 +30,8 @@ class UsageQuota(Base):
     __tablename__ = "usage_quotas"
 
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
-    plan_tier = Column(String, default="free")
-    analyses_limit = Column(Integer, default=5)
+    plan_tier = Column(String, default="demo") # demo, pro, team, enterprise
+    analyses_limit = Column(Integer, default=3) # Default limit for demo
     analyses_used = Column(Integer, default=0)
     reset_date = Column(DateTime(timezone=True), default=func.now())
 

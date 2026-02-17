@@ -9,6 +9,7 @@ import { UploadPage } from "./pages/UploadPage";
 import { ResultsPage } from "./pages/ResultsPage";
 import { UsagePage } from "./pages/UsagePage";
 import { AccountPage } from "./pages/AccountPage";
+import PricingPage from "./components/pages/PricingPage";
 
 function App() {
   const location = useLocation();
@@ -20,8 +21,10 @@ function App() {
       "/signup": "Signup - Productlogik",
       "/dashboard": "Dashboard - Productlogik",
       "/upload": "Upload Data - Productlogik",
+      "/results": "Analysis Results - Productlogik",
       "/usage": "Usage & Billing - Productlogik",
       "/account": "Account Settings - Productlogik",
+      "/pricing": "Pricing - Productlogik",
     };
 
     const title = titles[location.pathname] || "Productlogik";
@@ -44,6 +47,7 @@ function App() {
         <Route path="/results/:id" element={<ResultsPage />} />
         <Route path="/usage" element={<UsagePage />} />
         <Route path="/account" element={<AccountPage />} />
+        <Route path="/pricing" element={<PricingPage />} />
       </Route>
     </Routes>
   );
