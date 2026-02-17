@@ -1,0 +1,21 @@
+Response ID,Submitted At,Question 1: How satisfied are you with our product?,Question 2: What do you like most about our product?,Question 3: What could we improve?,Question 4: Would you recommend us to a friend?
+R001,2024-01-15 10:30:00,Very Satisfied,The interface is clean and intuitive. I can find everything I need quickly.,Would love to see more integrations with other tools we use.,Yes
+R002,2024-01-16 14:22:00,Satisfied,Great analytics and insights. Helps us make better product decisions.,The mobile app could use some work. It's a bit clunky.,Yes
+R003,2024-01-17 09:15:00,Neutral,It does what it's supposed to do.,Pricing is a bit high for small teams. Also the learning curve is steep.,Maybe
+R004,2024-01-18 16:45:00,Very Satisfied,Customer support is excellent! They always respond quickly and are very helpful.,Nothing major. Maybe add dark mode?,Yes
+R005,2024-01-19 11:20:00,Dissatisfied,The concept is good but execution needs work.,Too many bugs. The app crashes frequently and data doesn't always sync properly.,No
+R006,2024-01-20 13:30:00,Satisfied,Love the AI-powered insights. They're surprisingly accurate and useful.,Export options are limited. Need Excel and API access.,Yes
+R007,2024-01-22 15:10:00,Very Satisfied,Best tool we've used for feedback analysis. Saves us hours of manual work.,More customization options for reports would be great.,Yes
+R008,2024-01-23 08:45:00,Neutral,It's okay. Does the job but nothing special.,UI feels outdated. Competitors have more modern interfaces.,Maybe
+R009,2024-01-25 12:00:00,Satisfied,The dashboard is comprehensive and the insights are actionable.,Onboarding was confusing. Took a while to figure out how to use all features.,Yes
+R010,2024-01-26 14:30:00,Very Satisfied,Incredible value for money. Much cheaper than alternatives with similar features.,Would love Slack integration for notifications.,Yes
+R011,2024-01-28 10:15:00,Dissatisfied,Had high hopes but disappointed with the performance.,App is too slow. Takes forever to load large datasets.,No
+R012,2024-01-30 16:20:00,Satisfied,Good product overall. Team uses it daily.,Need better collaboration features. Want to share insights with team members.,Yes
+R013,2024-02-01 09:30:00,Very Satisfied,The theme extraction is amazing. Saves us so much time analyzing feedback.,Nothing comes to mind. Very happy with it!,Yes
+R014,2024-02-03 11:45:00,Neutral,It works but has some rough edges.,Mobile experience needs improvement. Also want more export formats.,Maybe
+R015,2024-02-05 13:15:00,Satisfied,Helpful for understanding customer sentiment and identifying trends.,Documentation could be better. Some features are not well explained.,Yes
+R016,2024-02-07 15:40:00,Very Satisfied,Fantastic tool! Highly recommend to any product team.,Add more chart types and visualization options.,Yes
+R017,2024-02-09 10:00:00,Satisfied,Does exactly what we need for feedback analysis.,Pricing tiers are confusing. Not clear what's included in each plan.,Yes
+R018,2024-02-11 12:30:00,Dissatisfied,Not worth the money in my opinion.,Limited features compared to competitors. Also buggy.,No
+R019,2024-02-13 14:50:00,Very Satisfied,Love it! Makes our product decisions data-driven instead of gut-feeling based.,Keep up the great work. Maybe add more AI features?,Yes
+R020,2024-02-14 16:10:00,Satisfied,Good tool for the price. Gets the job done.,Need better filtering options in the dashboard.,Yes

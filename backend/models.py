@@ -14,6 +14,8 @@ class User(Base):
     full_name = Column(String)
     company_name = Column(String)
     role = Column(String, default="user")
+    email_verified = Column(String, default=False)  # Email verification status
+    verification_token = Column(String, nullable=True)  # Token for email verification
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
@@ -76,3 +78,20 @@ class AnalysisResult(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     upload = relationship("Upload", back_populates="analysis_result")
+
+class UploadShare(Base):
+    __tablename__ = "upload_shares"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    upload_id = Column(UUID(as_uuid=True), ForeignKey("uploads.id", ondelete="CASCADE"), nullable=False)
+    owner_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    shared_with_user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=True)  # Nullable for pending invites
+    invited_email = Column(String, nullable=True)  # Email for pending invites (before user registers)
+    permission_level = Column(String, default="view")  # 'view' or 'edit' (future)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    expires_at = Column(DateTime(timezone=True), nullable=True)
+    
+    # Relationships
+    upload = relationship("Upload", foreign_keys=[upload_id])
+    owner = relationship("User", foreign_keys=[owner_id])
+    shared_with_user = relationship("User", foreign_keys=[shared_with_user_id])
