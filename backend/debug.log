@@ -594,3 +594,7 @@ resend.exceptions.ResendError: You can only send testing emails to your own emai
 2026-02-15 14:35:09,004 https://api.resend.com:443 "POST /emails HTTP/1.1" 403 None
 2026-02-15 14:39:19,239 --- BACKEND STARTING ---
 2026-02-15 14:39:19,648 DEBUG: Loading auth.py module
+2026-02-17 16:24:00,501 --- BACKEND STARTING ---
+2026-02-17 16:24:00,597 --- BACKEND STARTING ---
+2026-02-17 16:24:01,437 DEBUG: Loading auth.py module
+2026-02-17 16:24:01,474 DEBUG: Loading auth.py module
