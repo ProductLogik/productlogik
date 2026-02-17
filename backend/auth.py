@@ -1,4 +1,5 @@
 import logging
+import os
 logging.info("DEBUG: Loading auth.py module")
 # logging.basicConfig is already called in main but safe to call again or rely on existing handlers if shared
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -13,7 +14,10 @@ from models import User, UsageQuota
 from pydantic import BaseModel, EmailStr
 
 # --- Config ---
-SECRET_KEY = "your-secret-key-keep-this-safe-in-production"  # TODO: Move to env
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    logging.warning("⚠️ SECRET_KEY not found in environment variables. Using unsafe default!")
+    SECRET_KEY = "unsafe-default-key-change-me"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
