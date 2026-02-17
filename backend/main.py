@@ -1,8 +1,9 @@
 
 import os
 import logging
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 
 # Load .env from the same directory as this file
@@ -27,10 +28,22 @@ logging.basicConfig(
 )
 logging.info("--- BACKEND STARTING ---")
 
-# Create tables (if using simple SQL models without alembic for MVP)
-Base.metadata.create_all(bind=engine)
+# --- Lifespan ---
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup
+    logging.info("Initializing database tables...")
+    try:
+        Base.metadata.create_all(bind=engine)
+        logging.info("Database tables initialized successfully.")
+    except Exception as e:
+        logging.error(f"Error during database initialization: {e}")
+        # Note: We continue startup even if DB fails so Render sees the app as "up"
+    yield
+    # Shutdown
+    logging.info("Shutting down backend...")
 
-app = FastAPI(title="ProductLogik API")
+app = FastAPI(title="ProductLogik API", lifespan=lifespan)
 
 # Enable CORS
 frontend_urls = os.getenv("FRONTEND_URL", "http://localhost:5173").split(",")
