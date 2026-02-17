@@ -1,7 +1,7 @@
 fastapi
 uvicorn
 sqlalchemy
-pydantic
+pydantic[email]
 pandas
 google-genai
 openai
@@ -12,7 +12,6 @@ psycopg2-binary
 passlib[bcrypt]
 python-jose[cryptography]
 requests
-google-genai
-resend
 stripe
 gunicorn
+email-validator
