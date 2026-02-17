@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Check, X, CreditCard } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
+import { Check } from "lucide-react";
 import ComparisonTable from './ComparisonTable';
 import FAQ from './FAQ';
 import { useAuth } from '@/hooks/useAuth';
 
 const PricingPage: React.FC = () => {
-    const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
     const navigate = useNavigate();
     const { user } = useAuth();
 
