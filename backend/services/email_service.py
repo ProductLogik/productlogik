@@ -21,7 +21,13 @@ class EmailService:
             logging.info(f"⚠️  Email service disabled. Key: {api_key}")
         
         self.from_email = os.getenv("FROM_EMAIL", "ProductLogik <onboarding@resend.dev>")
-        self.frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
+        
+        # Handle FRONTEND_URL (support multiple for CORS, but pick first for links)
+        raw_urls = os.getenv("FRONTEND_URL", "http://localhost:5173")
+        url_list = [u.strip() for u in raw_urls.split(",") if u.strip()]
+        self.frontend_url = url_list[0] if url_list else "http://localhost:5173"
+        
+        logging.info(f"✅ EmailService initialized (Frontend URL: {self.frontend_url})")
     
     def send_invitation_email(
         self,

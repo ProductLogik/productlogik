@@ -16,8 +16,10 @@ from pydantic import BaseModel, EmailStr
 # --- Config ---
 SECRET_KEY = os.getenv("SECRET_KEY")
 if not SECRET_KEY:
-    logging.warning("⚠️ SECRET_KEY not found in environment variables. Using unsafe default!")
-    SECRET_KEY = "unsafe-default-key-change-me"
+    logging.error("❌ CRITICAL: SECRET_KEY not found in environment variables! JWT security is compromised.")
+    SECRET_KEY = "unsafe-default-development-only-key"
+else:
+    logging.info("✅ SECRET_KEY loaded from environment variables")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 

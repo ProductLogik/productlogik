@@ -8,7 +8,9 @@ from datetime import datetime
 # Initialize Stripe
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
+# Handle FRONTEND_URL (pick first one if multiple are provided for CORS)
+_frontend_urls = [u.strip() for u in os.getenv("FRONTEND_URL", "http://localhost:5173").split(",") if u.strip()]
+FRONTEND_URL = _frontend_urls[0] if _frontend_urls else "http://localhost:5173"
 
 # Plan Configuration (Map Price IDs to Tiers)
 # Replace these with real Stripe Price IDs in Production
