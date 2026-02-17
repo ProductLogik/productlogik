@@ -54,7 +54,7 @@ logging.info(f"CORS Allowed Origins: {origins}")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_origin_regex=r"https://.*\.vercel\.app", # Extremely permissive for Vercel
+    allow_origin_regex=r"https://.*productlogik\.(com|vercel\.app)", # Support custom domain and Vercel
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
