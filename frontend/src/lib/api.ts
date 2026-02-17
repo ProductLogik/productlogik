@@ -1,4 +1,5 @@
-export const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8001/api";
+const rawApiUrl = import.meta.env.VITE_API_URL || "http://127.0.0.1:8001/api";
+export const API_URL = rawApiUrl.endsWith("/api") ? rawApiUrl : `${rawApiUrl}/api`;
 
 // Types
 export interface Theme {
