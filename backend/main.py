@@ -44,20 +44,30 @@ origins = [
     "http://127.0.0.1:5181"
 ]
 
-# Safely add origins from env, avoiding '*' if credentials are enabled
 for url in frontend_urls:
     u = url.strip()
     if u and u != "*":
         origins.append(u)
 
+logging.info(f"CORS Allowed Origins: {origins}")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_origin_regex=r"https://productlogik.*\.vercel\.app",
+    allow_origin_regex=r"https://.*\.vercel\.app", # Extremely permissive for Vercel
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Debug middleware to log origins
+@app.middleware("http")
+async def log_origin(request, call_next):
+    origin = request.headers.get("origin")
+    if origin:
+        logging.info(f"Incoming Request Origin: {origin}")
+    response = await call_next(request)
+    return response
 
 # Include routers
 app.include_router(auth_router, prefix="/api/auth", tags=["auth"])
