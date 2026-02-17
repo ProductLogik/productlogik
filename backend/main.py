@@ -10,19 +10,47 @@ from payment import router as payment_router
 from database import engine, Base, get_db
 from models import User
 from dependencies import check_upload_quota, increment_usage
+import logging
+logging.basicConfig(filename='debug.log', level=logging.DEBUG, format='%(asctime)s %(message)s')
+logging.info("--- BACKEND STARTING ---")
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
+import os
+
+# Load .env from the same directory as this file
+env_path = os.path.join(os.path.dirname(__file__), '.env')
+load_dotenv(env_path)
+
+from auth import router as auth_router
+from upload import router as upload_router
+from analysis import router as analysis_router
+from database import engine, Base
 
 # Create tables (if using simple SQL models without alembic for MVP)
-# Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="ProductLogik API")
 
+# Include routers
 app.include_router(auth_router, prefix="/api/auth", tags=["auth"])
 app.include_router(payment_router, prefix="/api/subscription", tags=["subscription"])
+app.include_router(upload_router, prefix="/api", tags=["upload"])
+app.include_router(analysis_router, prefix="/api", tags=["analysis"])
 
-# Enable CORS for Frontend (Vite runs on 5176 commonly, 5173 is default, 5180 is new dev port)
+# Enable CORS for Frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Allow ALL origins for dev to fix "Failed to fetch"
+    allow_origins=[
+        "http://localhost:5173", 
+        "http://localhost:5180",
+        "http://localhost:5181",
+        "http://localhost:8001",
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:5180",
+        "http://127.0.0.1:5181"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

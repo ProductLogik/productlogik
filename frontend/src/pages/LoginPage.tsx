@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { Button } from "../components/ui/Button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../components/ui/Card";
-import { login } from "../lib/api";
+import { login, getUserUploads } from "../lib/api";
 
 export function LoginPage() {
     const [email, setEmail] = useState("");
@@ -19,7 +19,21 @@ export function LoginPage() {
         try {
             const data = await login(email, password);
             localStorage.setItem("token", data.access_token);
-            navigate("/dashboard");
+            // Notify navbar of login state change
+            window.dispatchEvent(new Event("loginStateChanged"));
+
+            // Check if user has existing uploads
+            try {
+                const uploadsData = await getUserUploads(data.access_token);
+                if (uploadsData.uploads && uploadsData.uploads.length > 0) {
+                    navigate("/dashboard");
+                } else {
+                    navigate("/upload");
+                }
+            } catch (uploadError) {
+                console.warn("Failed to check uploads, defaulting to dashboard", uploadError);
+                navigate("/dashboard");
+            }
         } catch (err: any) {
             setError(err.message);
         } finally {

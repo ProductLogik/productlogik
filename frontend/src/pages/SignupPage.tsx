@@ -12,6 +12,7 @@ export function SignupPage() {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const [success, setSuccess] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -20,14 +21,51 @@ export function SignupPage() {
 
         try {
             const data = await register(email, password, fullName, companyName);
-            localStorage.setItem("token", data.access_token);
-            navigate("/dashboard");
+
+            if (data.verification_required) {
+                setSuccess(true);
+            } else if (data.access_token) {
+                // Fallback for old behavior (should not happen with new backend)
+                localStorage.setItem("token", data.access_token);
+                window.dispatchEvent(new Event("loginStateChanged"));
+                navigate("/dashboard");
+            }
         } catch (err: any) {
             setError(err.message);
         } finally {
             setLoading(false);
         }
     };
+
+    if (success) {
+        return (
+            <div className="flex min-h-[80vh] items-center justify-center px-4">
+                <Card className="w-full max-w-sm text-center">
+                    <CardHeader>
+                        <div className="mx-auto bg-green-100 text-green-600 rounded-full p-3 mb-4 w-16 h-16 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-8 h-8">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                            </svg>
+                        </div>
+                        <CardTitle className="text-2xl">Check your email</CardTitle>
+                        <CardDescription>
+                            We've sent a verification link to <strong>{email}</strong>
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-sm text-brand-600">
+                            Please check your email and click the link to verify your account before logging in.
+                        </p>
+                    </CardContent>
+                    <CardFooter className="justify-center">
+                        <Link to="/login" className="text-sm font-medium text-brand-600 hover:underline">
+                            Return to Login
+                        </Link>
+                    </CardFooter>
+                </Card>
+            </div>
+        );
+    }
 
     return (
         <div className="flex min-h-[80vh] items-center justify-center px-4">
