@@ -1,0 +1,14 @@
+Issue Key,Summary,Description,Issue Type,Status,Priority,Created,Reporter
+PROD-101,Login page is slow on mobile,Users are complaining that the login page takes 5-10 seconds to load on mobile devices. This is causing frustration and some users are abandoning the login process.,Bug,Open,High,2024-01-15,john.doe@company.com
+PROD-102,Add dark mode support,Multiple customers have requested a dark mode option for the dashboard. This would improve usability during evening hours.,Feature Request,In Progress,Medium,2024-01-18,sarah.smith@company.com
+PROD-103,Export to PDF not working,When users try to export reports to PDF the download fails with a 500 error. This is blocking several enterprise customers.,Bug,Open,Critical,2024-01-20,mike.johnson@company.com
+PROD-104,Dashboard charts are confusing,Users find the current dashboard charts hard to understand. They want clearer labels and better color coding.,Improvement,Open,Medium,2024-01-22,emma.wilson@company.com
+PROD-105,Need bulk upload feature,Product managers want to upload multiple feedback files at once instead of one at a time. Current process is too slow.,Feature Request,Backlog,Low,2024-01-25,alex.brown@company.com
+PROD-106,Search results are not relevant,The search function returns irrelevant results. Users expect to find feedback by keywords but results don't match.,Bug,Open,High,2024-01-28,lisa.davis@company.com
+PROD-107,Add email notifications,Users want to receive email notifications when new insights are generated from their uploaded feedback.,Feature Request,Backlog,Medium,2024-02-01,james.miller@company.com
+PROD-108,Mobile app crashes on iOS,The mobile app crashes when users try to view detailed analysis on iOS devices running version 17+.,Bug,In Progress,Critical,2024-02-03,olivia.garcia@company.com
+PROD-109,Improve onboarding flow,New users are confused about how to get started. Need a better onboarding tutorial or wizard.,Improvement,Open,Medium,2024-02-05,william.martinez@company.com
+PROD-110,Integration with Slack needed,Teams want to receive analysis summaries directly in their Slack channels instead of checking the dashboard.,Feature Request,Backlog,High,2024-02-08,sophia.rodriguez@company.com
+PROD-111,Data export takes too long,Exporting large datasets (10000+ rows) takes over 5 minutes. Users expect this to be faster.,Performance,Open,Medium,2024-02-10,daniel.hernandez@company.com
+PROD-112,Add team collaboration features,Multiple team members want to collaborate on the same analysis with comments and annotations.,Feature Request,Backlog,Low,2024-02-12,ava.lopez@company.com
+PROD-113,Charts not displaying on Firefox,Dashboard charts fail to render on Firefox browser. Works fine on Chrome and Safari.,Bug,Open,Medium,2024-02-14,ethan.gonzalez@company.com

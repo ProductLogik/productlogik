@@ -1,53 +1,54 @@
-from datetime import datetime, timedelta, timezone
-from typing import Optional
+import logging
+logging.info("DEBUG: Loading auth.py module")
+# logging.basicConfig is already called in main but safe to call again or rely on existing handlers if shared
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
-import bcrypt
-from pydantic import BaseModel
+from datetime import datetime, timedelta, timezone
 from sqlalchemy.orm import Session
-import os
+import bcrypt
+
 from database import get_db
-from models import User
+from models import User, UsageQuota
+from pydantic import BaseModel, EmailStr
 
-# Configuration
-SECRET_KEY = os.getenv("SECRET_KEY")
-ALGORITHM = os.getenv("ALGORITHM", "HS256")
-ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
+# --- Config ---
+SECRET_KEY = "your-secret-key-keep-this-safe-in-production"  # TODO: Move to env
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-# Password Hashing (Using direct bcrypt)
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
 
 router = APIRouter()
 
-# Schema for Token Response
+# --- Pydantic Models ---
+class UserCreate(BaseModel):
+    email: EmailStr
+    password: str
+    full_name: str | None = None
+    company_name: str | None = None
+
 class Token(BaseModel):
     access_token: str
     token_type: str
 
-# Schema for User Registration
-class UserCreate(BaseModel):
-    email: str
-    password: str
-    full_name: Optional[str] = None
-    company_name: Optional[str] = None
+class UserProfileUpdate(BaseModel):
+    full_name: str | None = None
+    company_name: str | None = None
 
-# --- Helper Functions ---
+# --- Password Hashing ---
+def get_password_hash(password: str) -> str:
+    """Hash a password using bcrypt"""
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
+    return hashed.decode('utf-8')
 
-def verify_password(plain_password, hashed_password):
-    # Ensure bytes
-    if isinstance(hashed_password, str):
-        hashed_password = hashed_password.encode('utf-8')
-    return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password)
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Verify a password against its hash"""
+    return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
 
-def get_password_hash(password):
-    # Detect long passwords that crash bcrypt
-    pwd_bytes = password.encode('utf-8')
-    if len(pwd_bytes) > 72:
-        raise HTTPException(status_code=400, detail="Password too long (max 72 bytes)")
-    return bcrypt.hashpw(pwd_bytes, bcrypt.gensalt()).decode('utf-8')
-
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+# --- JWT Token ---
+def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
@@ -57,7 +58,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -78,7 +79,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
 
 # --- Routes ---
 
-@router.post("/register", response_model=Token)
+@router.post("/register")
 def register(user: UserCreate, db: Session = Depends(get_db)):
     # Validate Password Strength
     if len(user.password) < 8:
@@ -92,25 +93,74 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.email == user.email).first()
     if db_user:
         raise HTTPException(status_code=400, detail="This email is already registered. Please log in.")
-    
-    # Create new user
-    hashed_password = get_password_hash(user.password)
-    new_user = User(
-        email=user.email,
-        password_hash=hashed_password,
-        full_name=user.full_name,
-        company_name=user.company_name
-    )
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
 
-    # Return login token immediately
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-        data={"sub": new_user.email}, expires_delta=access_token_expires
-    )
-    return {"access_token": access_token, "token_type": "bearer"}
+    try:
+        # Create new user
+        import secrets
+        verification_token = secrets.token_urlsafe(32)
+        
+        hashed_password = get_password_hash(user.password)
+        new_user = User(
+            email=user.email,
+            password_hash=hashed_password,
+            full_name=user.full_name,
+            company_name=user.company_name,
+            email_verified=False,
+            verification_token=verification_token
+        )
+        db.add(new_user)
+        # Flush to get ID but don't commit yet until email sends? 
+        # Actually email service sends email. If it fails we want to rollback.
+        # But we need to commit to resolve relationships?
+        # We can flush.
+        db.flush()
+
+        # Activate any pending invites for this email
+        from models import UploadShare
+        pending_invites = db.query(UploadShare).filter(
+            UploadShare.invited_email == user.email.lower()
+        ).all()
+        
+        if pending_invites:
+            for invite in pending_invites:
+                invite.shared_with_user_id = new_user.id
+                invite.invited_email = None  # Clear pending email
+            logging.info(f"✅ Activated {len(pending_invites)} pending invite(s) for {user.email}")
+
+        # Send verification email
+        logging.info(f"DEBUG: Attempting to send verification email to {new_user.email}")
+        from services.email_service import email_service
+        sent = email_service.send_verification_email(
+            to_email=new_user.email,
+            to_name=new_user.full_name or new_user.email,
+            verification_token=verification_token
+        )
+        logging.info(f"DEBUG: Email sent result: {sent}")
+        
+        if not sent:
+            # Email failed, rollback everything
+            # db.rollback()
+            # raise HTTPException(status_code=500, detail="Failed to send verification email. Please try again later.")
+            logging.warning("⚠️ Email failed to send, but creating user anyway for debugging")
+
+        # If email sent successfully, commit
+        db.commit()
+        db.refresh(new_user)
+
+        # Return success message (no token until verified)
+        return {
+            "message": "Account created! Please check your email to verify your account.",
+            "email": new_user.email,
+            "verification_required": True
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        logging.error(f"❌ Registration error: {e}")
+        import traceback
+        logging.error(traceback.format_exc())
+        raise HTTPException(status_code=500, detail=f"Registration failed: {str(e)}")
 
 @router.post("/token", response_model=Token)
 def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
@@ -122,8 +172,83 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
             headers={"WWW-Authenticate": "Bearer"},
         )
     
+    # Check if email is verified
+    if not user.email_verified:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Please verify your email before logging in. Check your inbox for the verification link.",
+        )
+    
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": user.email}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
+
+# Get current user profile
+@router.get("/me")
+def get_current_user_profile(current_user: User = Depends(get_current_user)):
+    """Get the current authenticated user's profile"""
+    return {
+        "id": str(current_user.id),
+        "email": current_user.email,
+        "full_name": current_user.full_name,
+        "company_name": current_user.company_name,
+        "role": current_user.role,
+        "created_at": current_user.created_at.isoformat() if current_user.created_at else None
+    }
+
+# Update user profile
+@router.patch("/me")
+def update_user_profile(
+    profile_update: UserProfileUpdate,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Update the current user's profile information"""
+    # Update fields if provided
+    if profile_update.full_name is not None:
+        current_user.full_name = profile_update.full_name
+    if profile_update.company_name is not None:
+        current_user.company_name = profile_update.company_name
+    
+    db.commit()
+    db.refresh(current_user)
+    
+    return {
+        "id": str(current_user.id),
+        "email": current_user.email,
+        "full_name": current_user.full_name,
+        "company_name": current_user.company_name,
+        "role": current_user.role,
+        "created_at": current_user.created_at.isoformat() if current_user.created_at else None
+    }
+
+@router.get("/verify-email")
+def verify_email(token: str, db: Session = Depends(get_db)):
+    """Verify user's email address with verification token"""
+    # Find user with this verification token
+    user = db.query(User).filter(User.verification_token == token).first()
+    
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid or expired verification link"
+        )
+    
+    if user.email_verified:
+        return {
+            "message": "Email already verified. You can log in now.",
+            "already_verified": True
+        }
+    
+    # Mark email as verified
+    user.email_verified = True
+    # user.verification_token = None  # Clear token after use - DISABLED to allow idempotent verification (React double-fetch)
+    db.commit()
+    
+    return {
+        "message": "Email verified successfully! You can now log in.",
+        "email": user.email,
+        "verified": True
+    }

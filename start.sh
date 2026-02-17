@@ -32,9 +32,11 @@ start_backend() {
     cd backend
     if [ "$OS" = "Windows" ]; then
         # On Windows Git Bash, 'uvicorn' might need python -m
-        python -m uvicorn main:app --reload --host 127.0.0.1 --port 8001 &
+        # Bind to 0.0.0.0 to avoid localhost IPv4/IPv6 issues
+        # Log output to backend.log for debugging
+        python -m uvicorn main:app --reload --host 0.0.0.0 --port 8001 > ../backend.log 2>&1 &
     else
-        uvicorn main:app --reload --host 127.0.0.1 --port 8001 &
+        uvicorn main:app --reload --host 0.0.0.0 --port 8001 > ../backend.log 2>&1 &
     fi
     cd ..
 }
