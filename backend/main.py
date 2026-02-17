@@ -46,7 +46,8 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="ProductLogik API", lifespan=lifespan)
 
 # Enable CORS
-frontend_urls = os.getenv("FRONTEND_URL", "http://localhost:5173").split(",")
+# Enable CORS
+frontend_urls = [u.strip() for u in os.getenv("FRONTEND_URL", "http://localhost:5173").split(",") if u.strip()]
 origins = [
     "http://localhost:5173",
     "http://localhost:5180", 
@@ -59,9 +60,8 @@ origins = [
     "https://www.productlogik.com"
 ]
 
-for url in frontend_urls:
-    u = url.strip()
-    if u and u != "*":
+for u in frontend_urls:
+    if u and u not in origins and u != "*":
         origins.append(u)
 
 logging.info(f"CORS Allowed Origins: {origins}")
