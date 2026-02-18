@@ -15,8 +15,8 @@ FRONTEND_URL = _frontend_urls[0] if _frontend_urls else "http://localhost:5173"
 # Plan Configuration (Map Price IDs to Tiers)
 # Replace these with real Stripe Price IDs in Production
 PLAN_PRICES = {
-    os.getenv("STRIPE_PRICE_PRO_MONTHLY", "price_pro_test"): {"tier": "pro", "limit": 50},
-    os.getenv("STRIPE_PRICE_TEAM_MONTHLY", "price_team_test"): {"tier": "team", "limit": 999999},
+    os.getenv("STRIPE_PRICE_PRO_MONTHLY", "price_1T1wUDAoUwXHg17S3OYd4yc5"): {"tier": "pro", "limit": 50},
+    os.getenv("STRIPE_PRICE_TEAM_MONTHLY", "price_1T1wmmAoUwXHg17SsdSLrt6Q"): {"tier": "team", "limit": 999999},
 }
 
 class PaymentService:
@@ -147,6 +147,13 @@ def filter_plan_by_price(price_id):
     for pid, info in PLAN_PRICES.items():
         if pid == price_id:
             return info
-    return {"tier": "pro", "limit": 50} # Fallback/Default
+            
+    # Fallback/Default based on price IDs in env (if known)
+    if price_id == os.getenv("STRIPE_PRICE_PRO_MONTHLY"):
+        return {"tier": "pro", "limit": 50}
+    elif price_id == os.getenv("STRIPE_PRICE_TEAM_MONTHLY"):
+        return {"tier": "team", "limit": 999999}
+        
+    return {"tier": "demo", "limit": 3} # Safe fallback
 
 payment_service = PaymentService()
