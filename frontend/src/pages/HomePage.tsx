@@ -7,7 +7,7 @@ export function HomePage() {
     return (
         <div className="flex flex-col">
             {/* Hero Section with Mesh Gradient */}
-            <section className="relative overflow-hidden pt-32 pb-20 lg:pt-40 lg:pb-32">
+            <section className="relative overflow-hidden pt-20 pb-20 lg:pt-28 lg:pb-32 bg-white">
                 <div className="container mx-auto px-4 text-center sm:px-6 lg:px-8 relative z-10">
                     <div className="inline-flex items-center rounded-full border border-brand-200 bg-brand-50/50 backdrop-blur-sm px-3 py-1 text-sm font-medium text-brand-800 mb-8 animate-fade-in-up">
                         <span className="flex h-2 w-2 rounded-full bg-brand-600 mr-2"></span>
@@ -36,11 +36,10 @@ export function HomePage() {
                         </Button>
                     </div>
 
-                    {/* Social Proof Strip */}
+                    {/* Social Proof Strip (Commented out for now)
                     <div className="mt-16 pt-8 border-t border-slate-200/60">
                         <p className="text-sm font-semibold text-text-secondary uppercase tracking-widest mb-6">Trusted by Product Teams at</p>
                         <div className="flex flex-wrap justify-center gap-8 md:gap-16 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-                            {/* Placeholders for logos (using text for now in high-end font) */}
                             <span className="font-display font-bold text-xl">Acme Corp</span>
                             <span className="font-display font-bold text-xl">GlobalBank</span>
                             <span className="font-display font-bold text-xl">TechFlow</span>
@@ -48,6 +47,7 @@ export function HomePage() {
                             <span className="font-display font-bold text-xl">FutureScale</span>
                         </div>
                     </div>
+                    */}
                 </div>
 
                 {/* Background Decorations */}
@@ -55,7 +55,10 @@ export function HomePage() {
             </section>
 
             {/* Features Grid with Glassmorphism */}
-            <section className="py-24 bg-white/50 backdrop-blur-sm">
+            <section className="py-24 bg-slate-50 border-y border-slate-200/60 relative">
+                {/* Subtle decoration for the features section */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-brand-100/30 blur-3xl rounded-full -z-10" />
+                <div className="absolute bottom-0 left-0 w-64 h-64 bg-slate-200/30 blur-3xl rounded-full -z-10" />
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-16">
                         <h2 className="text-3xl font-display font-bold tracking-tight text-text-primary sm:text-4xl mb-4">
@@ -68,32 +71,32 @@ export function HomePage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         <FeatureCard
-                            icon={<Zap className="h-6 w-6 text-brand-600" />}
+                            icon={<Zap className="h-6 w-6" />}
                             title="Instant Clarity"
                             description="Aggregate feedback from Jira, Zendesk, and surveys into a single source of truth in seconds."
                         />
                         <FeatureCard
-                            icon={<ShieldCheck className="h-6 w-6 text-brand-600" />}
+                            icon={<ShieldCheck className="h-6 w-6" />}
                             title="Explainable & Trusted"
                             description="Every AI insight links back to original customer quotes. No hallucinations, just evidence."
                         />
                         <FeatureCard
-                            icon={<Layers className="h-6 w-6 text-brand-600" />}
+                            icon={<Layers className="h-6 w-6" />}
                             title="Agile Health Checks"
                             description="Automatically detect anti-patterns like 'Build Loops' or 'Zombie Features' before they kill momentum."
                         />
                         <FeatureCard
-                            icon={<BarChart3 className="h-6 w-6 text-brand-600" />}
+                            icon={<BarChart3 className="h-6 w-6" />}
                             title="Strategic Alignment"
                             description="Map every feature request to your OKRs and strategic pillars automatically."
                         />
                         <FeatureCard
-                            icon={<CheckCircle2 className="h-6 w-6 text-brand-600" />}
+                            icon={<CheckCircle2 className="h-6 w-6" />}
                             title="Confidence Scoring"
                             description="Know exactly how much data backs each decision with our proprietary Confidence Score."
                         />
                         <FeatureCard
-                            icon={<Globe className="h-6 w-6 text-brand-600" />}
+                            icon={<Globe className="h-6 w-6" />}
                             title="Global Scale"
                             description="Enterprise-grade security and compliance (GDPR, SOC2) built for global teams."
                         />
@@ -101,7 +104,7 @@ export function HomePage() {
                 </div>
             </section>
 
-            {/* Testimonials */}
+            {/* Testimonials (Commented out for now)
             <section className="py-24 relative overflow-hidden">
                 <div className="container mx-auto px-4 relative z-10">
                     <div className="bg-brand-900 rounded-3xl p-12 lg:p-16 text-center text-white relative overflow-hidden shadow-2xl">
@@ -112,7 +115,6 @@ export function HomePage() {
                             <h2 className="text-3xl font-display font-bold mb-8">"Finally, a tool that helps me explain <br /><i>why</i> we are building this."</h2>
                             <div className="flex flex-col items-center gap-4">
                                 <div className="h-16 w-16 rounded-full bg-white/10 border border-white/20 overflow-hidden">
-                                    {/* Avatar placeholder */}
                                     <div className="w-full h-full bg-brand-200"></div>
                                 </div>
                                 <div>
@@ -124,12 +126,14 @@ export function HomePage() {
                     </div>
                 </div>
             </section>
+            */}
 
             {/* Premium CTA */}
-            <section className="py-24 bg-white">
-                <div className="container mx-auto px-4 text-center sm:px-6 lg:px-8">
-                    <h2 className="text-4xl font-display font-bold tracking-tight text-text-primary mb-6">Ready to lead with data?</h2>
-                    <p className="text-xl text-text-secondary mb-10 max-w-2xl mx-auto">
+            <section className="py-24 bg-brand-900 relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10"></div>
+                <div className="container mx-auto px-4 text-center sm:px-6 lg:px-8 relative z-10">
+                    <h2 className="text-4xl font-display font-bold tracking-tight text-white mb-6">Ready to lead with data?</h2>
+                    <p className="text-xl text-brand-100 mb-10 max-w-2xl mx-auto opacity-90">
                         Join 500+ product leaders making faster, confident decisions today.
                     </p>
                     <div className="flex justify-center gap-4">
@@ -137,8 +141,8 @@ export function HomePage() {
                             <Link to="/upload">Start Free Analysis</Link>
                         </Button>
                     </div>
-                    <p className="mt-6 text-sm text-text-secondary">
-                        No credit card required · GDPR Compliant · 14-day Pro trial
+                    <p className="mt-6 text-sm text-brand-300">
+                        Free Demo Plan · No credit card required · GDPR Compliant
                     </p>
                 </div>
             </section>
