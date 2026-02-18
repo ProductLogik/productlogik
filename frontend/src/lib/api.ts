@@ -1,5 +1,22 @@
-const rawApiUrl = import.meta.env.VITE_API_URL || "http://127.0.0.1:8001/api";
-export const API_URL = rawApiUrl.endsWith("/api") ? rawApiUrl : `${rawApiUrl}/api`;
+const getBaseApiUrl = () => {
+    const envUrl = import.meta.env.VITE_API_URL;
+    if (!envUrl) return "http://127.0.0.1:8001/api";
+
+    // Remove trailing slashes
+    const trimmedUrl = envUrl.replace(/\/+$/, "");
+
+    // If it already ends with /api, use it
+    if (trimmedUrl.endsWith("/api")) return trimmedUrl;
+
+    // Otherwise append /api
+    return `${trimmedUrl}/api`;
+};
+
+export const API_URL = getBaseApiUrl();
+
+if (import.meta.env.DEV) {
+    console.log("🚀 ProductLogik API URL:", API_URL);
+}
 
 // Types
 export interface Theme {

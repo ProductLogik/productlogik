@@ -49,3 +49,20 @@ If you need a database on Render:
 Since your frontend is hosted elsewhere (VPS, Web Hosting):
 1.  Get your **Backend URL** from Render (e.g., `https://productlogik-backend.onrender.com`).
 2.  Update your **Frontend's** environment configuration (e.g., `.env.production` or code constants) to point `VITE_API_URL` (or equivalent) to this new HTTPS URL.
+## Troubleshooting
+
+### 1. "No open HTTP ports detected"
+This is usually caused by the app crashing during startup.
+*   **Logging Fix**: We have updated `main.py` to only log to the console on Render, avoiding potential file permission issues.
+*   **Port Binding**: Ensure your Start Command in Render is exactly: 
+    `gunicorn -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT main:app`
+
+### 2. Login fails silently
+This is often a mismatch between the Frontend's `VITE_API_URL` and the Backend's actual URL.
+*   **Trailing Slashes**: We've updated the frontend logic to automatically handle trailing slashes in your URL. 
+*   **Verification**: Check your Vercel/Frontend environment variables. `VITE_API_URL` should be `https://your-backend-name.onrender.com` (no `/api` required, it's added automatically).
+
+### 3. Database Connection
+If Render says "Failure to connect to database", ensure you've either:
+*   Linked a Render PostgreSQL database.
+*   Added your external `DATABASE_URL` to the Environment tab.

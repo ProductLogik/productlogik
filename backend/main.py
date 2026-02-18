@@ -18,13 +18,18 @@ from upload import router as upload_router
 from analysis import router as analysis_router
 
 # Configure logging
+handlers = [logging.StreamHandler()]
+# Only use FileHandler if not running on Render (where filesystem might be restricted or ephemeral)
+if not os.getenv("RENDER"):
+    try:
+        handlers.append(logging.FileHandler("backend.log"))
+    except Exception:
+        pass
+
 logging.basicConfig(
     level=logging.INFO, 
     format='%(asctime)s [%(levelname)s] %(message)s',
-    handlers=[
-        logging.FileHandler("backend.log"),
-        logging.StreamHandler()
-    ]
+    handlers=handlers
 )
 logging.info("--- BACKEND STARTING ---")
 
