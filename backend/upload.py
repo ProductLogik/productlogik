@@ -28,6 +28,22 @@ async def upload_csv(
     - Stores upload metadata and feedback entries in database
     - Returns upload ID for tracking
     """
+    # 0. Check Usage Quota
+    from models import UsageQuota
+    quota = db.query(UsageQuota).filter(UsageQuota.user_id == current_user.id).first()
+    
+    # Safety: Create quota if it doesn't exist for some reason
+    if not quota:
+        quota = UsageQuota(user_id=current_user.id, plan_tier="demo", analyses_limit=3, analyses_used=0)
+        db.add(quota)
+        db.commit()
+        db.refresh(quota)
+        
+    if quota.analyses_used >= quota.analyses_limit:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Usage limit reached ({quota.analyses_used}/{quota.analyses_limit}). Please upgrade your plan to continue."
+        )
     
     # Validate file extension
     if not file.filename.endswith('.csv'):
@@ -193,8 +209,12 @@ async def upload_csv(
                     agile_risks_json=analysis_result.get('agile_risks', None)
                 )
                 db.add(analysis_record)
+                
+                # 5. Increment usage quota
+                quota.analyses_used += 1
+                
                 db.commit()
-                print(f"✅ AI analysis completed using {analysis_result.get('model_used')}")
+                print(f"✅ AI analysis completed using {analysis_result.get('model_used')}. Quota: {quota.analyses_used}/{quota.analyses_limit}")
             
         except Exception as e:
             # Log error and mark analysis as failed

@@ -121,17 +121,20 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
         # We can flush.
         db.flush()
 
-        # Activate any pending invites for this email
-        from models import UploadShare
-        pending_invites = db.query(UploadShare).filter(
-            UploadShare.invited_email == user.email.lower()
-        ).all()
-        
         if pending_invites:
             for invite in pending_invites:
                 invite.shared_with_user_id = new_user.id
                 invite.invited_email = None  # Clear pending email
             logging.info(f"✅ Activated {len(pending_invites)} pending invite(s) for {user.email}")
+
+        # Create UsageQuota record
+        usage_quota = UsageQuota(
+            user_id=new_user.id,
+            plan_tier="demo",
+            analyses_limit=3,
+            analyses_used=0
+        )
+        db.add(usage_quota)
 
         # Send verification email
         logging.info(f"DEBUG: Attempting to send verification email to {new_user.email}")
@@ -201,7 +204,12 @@ def get_current_user_profile(current_user: User = Depends(get_current_user)):
         "full_name": current_user.full_name,
         "company_name": current_user.company_name,
         "role": current_user.role,
-        "created_at": current_user.created_at.isoformat() if current_user.created_at else None
+        "created_at": current_user.created_at.isoformat() if current_user.created_at else None,
+        "usage_quota": {
+            "plan_tier": current_user.usage_quota.plan_tier if current_user.usage_quota else "demo",
+            "analyses_limit": current_user.usage_quota.analyses_limit if current_user.usage_quota else 3,
+            "analyses_used": current_user.usage_quota.analyses_used if current_user.usage_quota else 0
+        }
     }
 
 # Update user profile

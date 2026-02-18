@@ -20,7 +20,7 @@ class EmailService:
             self.enabled = False
             logging.info(f"⚠️  Email service disabled. Key: {api_key}")
         
-        self.from_email = os.getenv("FROM_EMAIL", "ProductLogik <onboarding@resend.dev>")
+        self.from_email = os.getenv("FROM_EMAIL", "ProductLogik <no-reply@productlogik.com>")
         
         # Handle FRONTEND_URL (support multiple for CORS, but pick first for links)
         raw_urls = os.getenv("FRONTEND_URL", "http://localhost:5173")

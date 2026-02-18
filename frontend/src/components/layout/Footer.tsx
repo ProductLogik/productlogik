@@ -66,7 +66,11 @@ export function Footer() {
                 </div>
 
                 <div className="border-t border-slate-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-text-secondary">
-                    <p>&copy; {new Date().getFullYear()} Productlogik AI. All rights reserved.</p>
+                    <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4">
+                        <p>&copy; {new Date().getFullYear()} Productlogik AI. All rights reserved.</p>
+                        <span className="hidden md:inline text-slate-300">|</span>
+                        <p>Created by <a href="https://www.hamzalatif.com" target="_blank" rel="noopener noreferrer" className="text-brand-600 hover:text-brand-700 font-medium transition-colors">Hamza Latif</a></p>
+                    </div>
                     <div className="flex gap-8">
                         <Link to="#" className="hover:text-text-primary">Privacy Policy</Link>
                         <Link to="#" className="hover:text-text-primary">Terms of Service</Link>

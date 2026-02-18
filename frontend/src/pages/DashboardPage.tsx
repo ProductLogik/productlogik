@@ -2,23 +2,30 @@ import { useEffect, useState } from "react";
 import { Button } from "../components/ui/Button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/Card";
 import { Link } from "react-router";
-import { ArrowRight, FileText, Loader2, Plus } from "lucide-react";
-import { getUserUploads } from "../lib/api";
+import { ArrowRight, FileText, Loader2, Plus, Zap } from "lucide-react";
+import { getUserUploads, getUserProfile } from "../lib/api";
+import { Progress } from "../components/ui/Progress";
 import type { Upload } from "../lib/api";
 
 export function DashboardPage() {
     const [uploads, setUploads] = useState<Upload[]>([]);
+    const [userProfile, setUserProfile] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        async function fetchUploads() {
+        async function fetchDashboardData() {
             try {
                 const token = localStorage.getItem("token");
                 if (!token) return;
 
-                const data = await getUserUploads(token);
-                setUploads(data.uploads);
+                const [uploadsData, profileData] = await Promise.all([
+                    getUserUploads(token),
+                    getUserProfile(token)
+                ]);
+
+                setUploads(uploadsData.uploads);
+                setUserProfile(profileData);
             } catch (err: any) {
                 console.error("Failed to fetch uploads:", err);
                 if (err.message && (err.message.includes("401") || err.message.includes("Unauthorized") || err.message.includes("permissions"))) {
@@ -33,7 +40,7 @@ export function DashboardPage() {
             }
         }
 
-        fetchUploads();
+        fetchDashboardData();
     }, []);
 
     return (
@@ -49,6 +56,45 @@ export function DashboardPage() {
                     </Link>
                 </Button>
             </div>
+
+            {userProfile?.usage_quota && (
+                <Card className="mb-8 border-brand-100 bg-brand-50/30 overflow-hidden">
+                    <CardContent className="p-4 sm:p-6">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div className="flex items-center gap-4">
+                                <div className="h-12 w-12 rounded-full bg-brand-100 flex items-center justify-center text-brand-600">
+                                    <Zap className="h-6 w-6" />
+                                </div>
+                                <div>
+                                    <h3 className="font-semibold text-text-primary">
+                                        <span className="capitalize">{userProfile.usage_quota.plan_tier}</span> Plan Usage
+                                    </h3>
+                                    <p className="text-sm text-text-secondary">
+                                        {userProfile.usage_quota.analyses_used} of {userProfile.usage_quota.analyses_limit === 999999 ? "∞" : userProfile.usage_quota.analyses_limit} analyses used
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="flex-1 max-w-xs">
+                                <Progress
+                                    value={Math.min(100, (userProfile.usage_quota.analyses_used / userProfile.usage_quota.analyses_limit) * 100)}
+                                    className="h-2 mb-2"
+                                    indicatorClassName="bg-brand-600"
+                                />
+                                <div className="flex justify-between items-center text-xs">
+                                    <span className="text-text-secondary">
+                                        {userProfile.usage_quota.analyses_limit === 999999
+                                            ? "Unlimited credits"
+                                            : `${userProfile.usage_quota.analyses_limit - userProfile.usage_quota.analyses_used} credits left`}
+                                    </span>
+                                    <Link to="/usage" className="text-brand-600 font-medium hover:underline">
+                                        View Details
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
 
             {loading ? (
                 <div className="flex justify-center py-12">
