@@ -66,3 +66,13 @@ This is often a mismatch between the Frontend's `VITE_API_URL` and the Backend's
 If Render says "Failure to connect to database", ensure you've either:
 *   Linked a Render PostgreSQL database.
 *   Added your external `DATABASE_URL` to the Environment tab.
+
+### 4. Preventing "Spin Down" (Free Tier)
+Render's free tier spins down after 15 minutes of inactivity, causing a 50+ second delay on the next request.
+To keep it alive:
+1.  **Use a Free Pinger**: Sign up for [cron-job.org](https://cron-job.org/en/) (free) or [UptimeRobot](https://uptimerobot.com/).
+2.  **Create a Job**:
+    *   **URL**: `https://your-backend-name.onrender.com/health`
+    *   **Interval**: Every 14 minutes.
+    *   **Method**: `GET`
+3.  This keeps your service "warm" and prevents the delay.
