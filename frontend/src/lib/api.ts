@@ -259,3 +259,18 @@ export async function shareUpload(uploadId: string, email: string, token: string
 
     return response.json();
 }
+export async function exportAnalysis(uploadId: string, token: string): Promise<Blob> {
+    const response = await fetch(`${API_URL}/analysis/${uploadId}/export`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+        },
+    });
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || "Failed to export PDF");
+    }
+
+    return response.blob();
+}

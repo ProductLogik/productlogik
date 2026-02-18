@@ -1,43 +1,57 @@
-
 <p align="center">
   <img src="assets/logo.svg" alt="ProductLogik Logo" width="120" height="120">
 </p>
 
 <h1 align="center">ProductLogik</h1>
-<p align="center"><strong>AI-Powered Product Feedback Analysis & Agile Anti-Pattern Detection</strong></p>
+<p align="center"><strong>The AI-Powered Product Decision Intelligence Platform</strong></p>
 
-<p align="center">ProductLogik helps product teams transform user feedback into actionable insights while detecting agile anti-patterns that slow down delivery.</p>
-
+<p align="center">ProductLogik (The "A.I. Product Compass") transforms raw customer feedback into strategic intelligence. It diagnoses product strategy, extracts actionable problem themes, and detects systemic agile anti-patterns.</p>
 
 ---
 
-## 🚀 Features
+## 🚀 Key Features
 
-- **📊 Feedback Analysis**: Upload CSV files with user feedback and get AI-powered theme extraction
-- **🎯 Sentiment Detection**: Automatically categorize feedback by sentiment (Critical, Feature Request, Performance)
-- **⚠️ Agile Anti-Pattern Detection**: Identify "Feature Factory" and other anti-patterns in your workflow
-- **🔐 Secure Authentication**: JWT-based authentication with bcrypt password hashing
-- **📈 Usage Tracking**: Monitor API usage and quotas per user
-- **💎 Premium UI**: Modern glassmorphism design with smooth animations
+- **🧠 Dual-Provider AI**: Powered by **Google Gemini 2.0 Flash** (Primary) with automated fallback to **GPT-4o-mini**, ensuring high performance and reliable feedback analysis.
+- **📊 Intelligence Ingestion**: Transform raw CSV feedback into coherent themes with sentiment analysis, confidence scores, and evidence quotes.
+- **🧭 Compass Dashboard**: A streamlined results view for product owners to prioritize what users actually need.
+- **⚡ Real-Time Usage Tracking**: Integrated usage dashboard with dynamic progress bars and credits management.
+- **💳 Tiered Quota Enforcement**: Production-ready **Stripe** integration enforcing 3 tiers (Demo, Pro, Team) with hard API limits.
+- ** प्रोफेशनल Branding**: Authenticated domain emails via **Resend** and hosted PNG branding assets for professional delivery.
+- **🔐 Enterprise Security**: JWT-based session management, feedback data isolation, and secure CORS/CSP configuration.
+
+---
+
+## 🤖 AI Intelligence Layer (The Compass)
+
+ProductLogik is built with a sophisticated, self-healing AI architecture designed for reliability and strategic depth:
+
+### 🔄 Multi-Model Fallback System (Self-Healing)
+The platform prioritizes speed and cost with **Gemini 2.0 Flash**, but the `AIService` automatically detects provider failures or rate limits and fails over to **GPT-4o-mini** in real-time.
+
+### 🎯 Strategic Theme Discovery
+Our proprietary prompt architecture uses a **Senior Agile Coach persona**. It doesn't just summarize feedback; it filters noise and identifies underlying strategic risks such as "Login Friction" or "Innovation Debt".
+
+### 🛡️ Privacy-First AI
+*   **Zero-Training**: We use enterprise-grade APIs where your data is NOT used to train the base models.
+*   **Minimal Footprint**: Analysis insights are stored in structured JSON; raw text is processed and evicted to respect data privacy.
 
 ---
 
 ## 🏗️ Tech Stack
 
 ### Backend
-- **FastAPI** - Modern Python web framework
-- **PostgreSQL** (Supabase) - Database
-- **SQLAlchemy** - ORM
-- **bcrypt** - Password hashing
-- **python-jose** - JWT tokens
-- **OpenAI SDK** - AI analysis (Phase 3)
+- **FastAPI** - High-performance Python web framework
+- **Google Gemini Pro** - State-of-the-art LLM for feedback analysis
+- **PostgreSQL (Supabase)** - Scalable relational database
+- **SQLAlchemy** - Robust ORM for data management
+- **Resend** - Professional transactional email infrastructure
+- **Stripe** - Secure payment processing and subscription management
 
 ### Frontend
-- **React 18** - UI library
-- **Vite** - Build tool
-- **TypeScript** - Type safety
-- **Tailwind CSS** - Styling
-- **React Router** - Navigation
+- **React 18** - UI library with **Vite** build tool
+- **TypeScript** - Strict type safety for large-scale development
+- **Tailwind CSS** - Modern, responsive glassmorphism design
+- **Lucide Icons** - Clean and consistent iconography
 
 ---
 
@@ -46,24 +60,19 @@
 ```
 productlogik/
 ├── backend/              # FastAPI backend
-│   ├── auth.py          # Authentication routes & JWT logic
-│   ├── main.py          # Main FastAPI app
-│   ├── models.py        # SQLAlchemy models
-│   ├── database.py      # Database connection
-│   ├── services/        # AI service & business logic
-│   └── requirements.txt # Python dependencies
+│   ├── services/        # AI (Gemini), Email (Resend), & Quota services
+│   ├── models.py        # SQLAlchemy database models
+│   ├── auth.py          # Secure JWT authentication & user management
+│   └── upload.py        # Quota-enforced feedback ingestion
 ├── frontend/            # React frontend
 │   ├── src/
-│   │   ├── pages/      # Page components
-│   │   ├── components/ # Reusable UI components
-│   │   └── lib/        # API client & utilities
-│   └── package.json    # Node dependencies
-├── docs/               # Documentation
-│   ├── planning/       # Product specs & user stories
-│   └── design/         # UI/UX design prompts
-├── assets/             # Logo and brand assets
-├── start.sh            # Start both backend & frontend
-├── stop.sh             # Stop all services
+│   │   ├── pages/      # Dashboards, Pricing, & Usage tracking
+│   │   ├── components/ # Reusable UI components (Navbar, UserProfile)
+│   │   └── lib/        # API client & internal utilities
+├── docs/               # System & Strategy Documentation
+│   ├── planning/       # Product specs, Agile specs, & Feature plans
+│   └── design/         # UI/UX design tokens
+├── start.sh            # One-click developer environment boot
 └── README.md           # This file
 ```
 
@@ -72,150 +81,50 @@ productlogik/
 ## 🛠️ Setup & Installation
 
 ### Prerequisites
-- **Python 3.11+**
+- **Python 3.10+**
 - **Node.js 18+**
-- **PostgreSQL** (or Supabase account)
+- **Supabase/PostgreSQL** instance
 
-### 1. Clone the Repository
-```bash
-git clone https://github.com/ProductLogik/productlogik.git
-cd productlogik
-```
-
-### 2. Backend Setup
+### 1. Backend Setup
 ```bash
 cd backend
-
-# Create virtual environment
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
 pip install -r requirements.txt
-
-# Create .env file
 cp .env.example .env
-# Edit .env with your database credentials and JWT secret
+# Configure DATABASE_URL, GEMINI_API_KEY, and RESEND_API_KEY
 ```
 
-**Required `.env` variables:**
-```env
-DATABASE_URL=postgresql://user:password@host:port/database
-SECRET_KEY=your-secret-key-here
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-```
-
-### 3. Frontend Setup
+### 2. Frontend Setup
 ```bash
 cd frontend
-
-# Install dependencies
 npm install
 ```
 
-### 4. Database Setup
-Run the SQL schema to create tables:
+### 3. Execution
 ```bash
-psql -U your_user -d your_database -f backend/supabase_schema.sql
-```
-
-Or use the provided check script:
-```bash
-cd backend
-python check_db.py
-```
-
----
-
-## 🚀 Running the Application
-
-### Option 1: Use Start Script (Recommended)
-```bash
-# From project root
+# From root directory
 ./start.sh
 ```
-This starts:
-- **Backend** on `http://127.0.0.1:8001`
-- **Frontend** on `http://localhost:5180`
-
-### Option 2: Manual Start
-**Terminal 1 (Backend):**
-```bash
-cd backend
-uvicorn main:app --reload --host 127.0.0.1 --port 8001
-```
-
-**Terminal 2 (Frontend):**
-```bash
-cd frontend
-npm run dev -- --port 5180
-```
-
-### Stop Services
-```bash
-./stop.sh
-```
 
 ---
 
-## 📖 Usage
+## 🗺️ Roadmap: The Path to Enterprise
 
-1. **Sign Up**: Create an account at `http://localhost:5180/signup`
-2. **Log In**: Access your dashboard at `http://localhost:5180/login`
-3. **Upload CSV**: Upload user feedback CSV files
-4. **View Insights**: See AI-generated themes and agile anti-pattern warnings
-
----
-
-## 🧪 Testing
-
-### Backend Tests
-```bash
-cd backend
-pytest test_auth.py
-```
-
-### Database Connection Test
-```bash
-cd backend
-python check_db.py
-```
+- [x] **Phase 1: Foundation**: Core Ingestion, Auth, & Gemini 2.0 Integration.
+- [x] **Phase 2: Commercialization**: Stripe Tiers, Custom Domain Setup, & Quota Enforcement.
+- [/] **Phase 3: Deep Insights (Active)**:
+    - [ ] **Agile Anti-Pattern Detection**: Automated detection of Feature Factory & HiPPO Effect.
+    - [ ] **Product Health Score**: Composite metric for strategic consistency.
+    - [ ] **PDF Export Engine**: Professional reporting for stakeholders.
+- [ ] **Phase 4: Ecosystem**: Auto-Sync with Intercom, Zendesk, and Slack.
 
 ---
 
-## 🗺️ Roadmap
+## 👥 Author
 
-- [x] **Phase 1**: Authentication & Database
-- [x] **Phase 1.5**: Frontend-Backend Integration
-- [ ] **Phase 2**: File Upload & CSV Processing
-- [ ] **Phase 3**: OpenAI Integration for Real AI Analysis
-- [ ] **Phase 4**: Advanced Analytics Dashboard
-- [ ] **Phase 5**: Team Collaboration Features
-
-See [docs/planning/Future_Upgrades.md](docs/planning/Future_Upgrades.md) for detailed roadmap.
-
----
-
-## 📝 Documentation
-
-- **[Product Spec](docs/planning/Product_Master_Spec.md)** - Complete product specification
-- **[User Stories](docs/planning/MVP_User_Stories_AI_Product_Decision_Intelligence.md)** - MVP user stories
-- **[Database Schema](docs/planning/Database_Schema.md)** - Database design
-- **[Setup Guide](Setup_Guide.md)** - Detailed setup instructions
-- **[Design System](docs/design/ui_design_prompts.md)** - UI/UX guidelines
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+**Muhammad Hamza Latif**
+*Solo Developer, ProductLogik*
 
 ---
 
@@ -225,24 +134,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 👥 Authors
-
-**ProductLogik Team**
-
----
-
-## 🙏 Acknowledgments
-
-- OpenAI for AI capabilities
-- Supabase for database hosting
-- The FastAPI and React communities
-
----
-
-## 📧 Support
-
-For support, email support@productlogik.com or open an issue on GitHub.
-
----
-
-**Built with ❤️ by the ProductLogik Team**
+**Built with ❤️ for Product Owners everywhere.**

@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS public.users (
 -- Tracks usage limits for the "Pricing" page logic.
 CREATE TABLE IF NOT EXISTS public.usage_quotas (
     user_id UUID PRIMARY KEY REFERENCES public.users(id) ON DELETE CASCADE,
-    plan_tier TEXT DEFAULT 'free' CHECK (plan_tier IN ('free', 'pro', 'enterprise')),
+    plan_tier TEXT DEFAULT 'demo' CHECK (plan_tier IN ('demo', 'pro', 'team', 'enterprise')),
     analyses_limit INTEGER DEFAULT 5,
     analyses_used INTEGER DEFAULT 0,
     reset_date TIMESTAMP WITH TIME ZONE DEFAULT (NOW() + interval '1 month')

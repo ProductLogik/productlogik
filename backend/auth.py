@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 import bcrypt
 
 from database import get_db
-from models import User, UsageQuota
+from models import User, UsageQuota, UploadShare
 from pydantic import BaseModel, EmailStr
 
 # --- Config ---
@@ -121,6 +121,8 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
         # We can flush.
         db.flush()
 
+        # Handle pending invites
+        pending_invites = db.query(UploadShare).filter(UploadShare.invited_email == user.email).all()
         if pending_invites:
             for invite in pending_invites:
                 invite.shared_with_user_id = new_user.id

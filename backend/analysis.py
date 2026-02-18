@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response
 from sqlalchemy.orm import Session
 from models import Upload, AnalysisResult
 from database import get_db
 from auth import get_current_user
 from models import User
 from pydantic import BaseModel, EmailStr
+from services.pdf_service import pdf_service
 
 router = APIRouter()
 
@@ -79,6 +80,7 @@ async def get_analysis(
         "filename": upload.filename,
         "row_count": upload.row_count,
         "status": "completed" if has_themes else "failed",
+        "message": analysis.executive_summary if not has_themes else None,
         "themes": analysis.themes_json,
         "executive_summary": analysis.executive_summary,
         "confidence_score": analysis.confidence_score,
@@ -87,6 +89,82 @@ async def get_analysis(
         "created_at": analysis.created_at.isoformat() if analysis.created_at else None,
         "has_themes": has_themes
     }
+
+@router.get("/analysis/{upload_id}/export")
+async def export_analysis(
+    upload_id: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Export analysis results as a professional PDF.
+    Requires authentication. User must own the upload or have shared access.
+    """
+    from models import UploadShare
+    from sqlalchemy import or_
+    from sqlalchemy.sql import func
+    from fastapi import HTTPException, status
+    
+    # Get the upload
+    upload = db.query(Upload).filter(Upload.id == upload_id).first()
+    
+    if not upload:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Upload not found"
+        )
+    
+    # Check if user owns the upload
+    is_owner = upload.user_id == current_user.id
+    
+    # Check if upload is shared with user
+    has_shared_access = db.query(UploadShare).filter(
+        UploadShare.upload_id == upload_id,
+        UploadShare.shared_with_user_id == current_user.id,
+        or_(
+            UploadShare.expires_at.is_(None),
+            UploadShare.expires_at > func.now()
+        )
+    ).first() is not None
+    
+    # Deny access if user doesn't own and doesn't have shared access
+    if not is_owner and not has_shared_access:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access denied. You don't have permission to export this upload."
+        )
+    
+    # Get analysis result
+    analysis = db.query(AnalysisResult).filter(
+        AnalysisResult.upload_id == upload_id
+    ).first()
+    
+    if not analysis:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Analysis not yet complete. Cannot export empty report."
+        )
+    
+    # Prepare data for PDF
+    report_data = {
+        "filename": upload.filename,
+        "executive_summary": analysis.executive_summary,
+        "themes": analysis.themes_json or []
+    }
+    
+    # Generate PDF
+    user_tier = current_user.usage_quota.plan_tier if current_user.usage_quota else "demo"
+    pdf_buffer = pdf_service.generate_report(report_data, tier=user_tier)
+    
+    # Return as response
+    filename = f"ProductLogik_Report_{upload_id[:8]}.pdf"
+    return Response(
+        content=pdf_buffer.getvalue(),
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": f"attachment; filename={filename}"
+        }
+    )
 
 @router.get("/uploads")
 async def get_user_uploads(

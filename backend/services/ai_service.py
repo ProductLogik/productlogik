@@ -76,23 +76,45 @@ class AIService:
             
             if self.gemini_available:
                 try:
-                    result = await self._analyze_with_gemini(feedback_sample)
-                    provider_used = "gemini-2.0-flash"
+                    logger.info(f"--- Starting Gemini Analysis for upload {upload_id} ---")
+                    # Try 2.0 Flash first
+                    try:
+                        result = await self._analyze_with_gemini(feedback_sample, model_id='gemini-2.0-flash')
+                        provider_used = "gemini-2.0-flash"
+                    except Exception as e:
+                        error_str = str(e)
+                        if "404" in error_str or "RESOURCE_EXHAUSTED" in error_str or "429" in error_str:
+                            logger.info(f"🔄 Gemini 2.0 Flash failed ({'Quota' if '429' in error_str or 'EXHAUSTED' in error_str else 'Missing'}). Retrying with 1.5 Flash...")
+                            result = await self._analyze_with_gemini(feedback_sample, model_id='gemini-flash-latest')
+                            provider_used = "gemini-1.5-flash"
+                        else:
+                            raise e
+                    
+                    logger.info(f"✅ Gemini Analysis Success ({provider_used})")
                 except Exception as e:
-                    logger.error(f"⚠️  Gemini analysis failed: {e}")
+                    logger.error(f"⚠️ Gemini analysis failed completely: {str(e)}")
                     if self.openai_available:
                         logger.info("🔄 Falling back to OpenAI...")
             
             if not result and self.openai_available:
                 try:
+                    logger.info(f"--- Starting OpenAI Analysis for upload {upload_id} ---")
                     result = await self._analyze_with_openai(feedback_sample)
                     provider_used = "gpt-4o-mini"
+                    logger.info("✅ OpenAI Analysis Success")
                 except Exception as e:
-                    print(f"❌ OpenAI analysis failed: {e}")
-                    return self._error_analysis(str(e))
+                    error_msg = str(e)
+                    logger.error(f"❌ OpenAI analysis failed: {error_msg}")
+                    
+                    # Special handling for quota errors to give better user feedback
+                    if "insufficient_quota" in error_msg or "429" in error_msg:
+                        return self._error_analysis("AI Analysis Credits Exhausted. Both Gemini and OpenAI are currently at their limit. Please try again in 60 seconds or contact support.")
+                    
+                    return self._error_analysis(error_msg)
             
             if not result:
-                return self._error_analysis("All AI providers failed")
+                logger.error("❌ All AI providers failed or were unavailable")
+                return self._error_analysis("All AI providers (Gemini & OpenAI) are currently unavailable or have exhausted their free-tier quotas.")
             
             # Add metadata
             processing_time_ms = int((time.time() - start_time) * 1000)
@@ -114,7 +136,7 @@ class AIService:
             print(f"❌ AI analysis error: {e}")
             return self._error_analysis(str(e))
     
-    async def _analyze_with_gemini(self, feedback_sample: List[str]) -> Dict:
+    async def _analyze_with_gemini(self, feedback_sample: List[str], model_id: str = 'gemini-1.5-flash') -> Dict:
         """Analyze feedback using Gemini"""
         feedback_list = "\n".join([f"{i+1}. {text}" for i, text in enumerate(feedback_sample)])
         
@@ -155,7 +177,7 @@ Return ONLY the JSON object."""
         from google.genai import types
         
         response = self.gemini_client.models.generate_content(
-            model='gemini-2.0-flash',
+            model=model_id,
             contents=prompt,
             config=types.GenerateContentConfig(
                 temperature=0.3,
