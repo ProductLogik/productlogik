@@ -11,7 +11,16 @@ env_path = os.path.join(os.path.dirname(__file__), '.env')
 if os.path.exists(env_path):
     load_dotenv(env_path)
 
+# --- STARTUP DIAGNOSTICS ---
+print("--- BACKEND PROCESS STARTING ---")
+print(f"Current Working Directory: {os.getcwd()}")
+print(f"Environment: RENDER={os.getenv('RENDER')}, PORT={os.getenv('PORT')}")
+import sys
+sys.stdout.flush()
+
 from database import engine, Base
+print("--- DATABASE IMPORTED ---")
+sys.stdout.flush()
 from auth import router as auth_router
 from payment import router as payment_router
 from upload import router as upload_router

@@ -6,9 +6,13 @@ from dotenv import load_dotenv
 # Load .env file
 load_dotenv()
 
+import sys
+
 # Get DB credentials from env
 # Get DB credentials
 DATABASE_URL = os.getenv("DATABASE_URL")
+
+print(f"DEBUG: DATABASE_URL is set: {bool(DATABASE_URL)}")
 
 if DATABASE_URL:
     # Handle Render's postgres:// vs SQLAlchemy's postgresql://
@@ -25,6 +29,11 @@ else:
     dbname = os.getenv("dbname")
 
     if not all([user, password, host, port, dbname]):
+        print(f"CRITICAL ERROR: Missing DB credentials. User={bool(user)}, Pass={bool(password)}, Host={bool(host)}, Port={bool(port)}, DBName={bool(dbname)}")
+        # We don't raise immediately to allow main.py to start and log this, 
+        # but usage of models will fail.
+        # Actually, let's raise but with a clear message that prints to stdout first
+        sys.stdout.flush()
         raise ValueError("One or more database connection variables are missing in .env file")
 
     # Construct SQLAlchemy URL
