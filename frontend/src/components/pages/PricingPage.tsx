@@ -97,7 +97,10 @@ const PricingPage: React.FC = () => {
                         MOST POPULAR
                     </div>
                     <CardHeader>
-                        <CardTitle className="text-2xl text-white">Pro</CardTitle>
+                        <CardTitle className="text-2xl text-white flex items-center gap-3">
+                            <img src="/src/assets/pro_tier_icon.svg" alt="" className="w-8 h-8" />
+                            Pro
+                        </CardTitle>
                         <CardDescription>For serious PMs and growing startups</CardDescription>
                         <div className="mt-4">
                             <span className="text-4xl font-bold text-emerald-400">€59</span>
@@ -128,7 +131,10 @@ const PricingPage: React.FC = () => {
                 {/* Team Plan */}
                 <Card className="border-slate-800 bg-slate-900/50 backdrop-blur-sm hover:border-purple-500/50 transition-all duration-300">
                     <CardHeader>
-                        <CardTitle className="text-2xl text-white">Team</CardTitle>
+                        <CardTitle className="text-2xl text-white flex items-center gap-3">
+                            <img src="/src/assets/team_tier_icon.svg" alt="" className="w-8 h-8" />
+                            Team
+                        </CardTitle>
                         <CardDescription>For product teams needing alignment</CardDescription>
                         <div className="mt-4">
                             <span className="text-4xl font-bold text-purple-400">€199</span>

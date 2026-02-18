@@ -88,7 +88,11 @@ export function UsagePage() {
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>Current Plan: <span className="capitalize text-brand-600">{quota.plan_tier}</span></CardTitle>
+                        <CardTitle className="flex items-center gap-3">
+                            {quota.plan_tier === "pro" && <img src="/src/assets/pro_tier_icon.svg" alt="" className="w-8 h-8" />}
+                            {quota.plan_tier === "team" && <img src="/src/assets/team_tier_icon.svg" alt="" className="w-8 h-8" />}
+                            Current Plan: <span className="capitalize text-brand-600">{quota.plan_tier}</span>
+                        </CardTitle>
                         <CardDescription>
                             {quota.plan_tier === "pro" ? "€59/month • Billed monthly" :
                                 quota.plan_tier === "team" ? "€199/month • Billed monthly" :
