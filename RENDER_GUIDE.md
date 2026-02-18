@@ -55,7 +55,7 @@ Since your frontend is hosted elsewhere (VPS, Web Hosting):
 This is usually caused by the app crashing during startup.
 *   **Logging Fix**: We have updated `main.py` to only log to the console on Render, avoiding potential file permission issues.
 *   **Port Binding**: Ensure your Start Command in Render is exactly: 
-    `gunicorn -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT main:app`
+    `uvicorn main:app --host 0.0.0.0 --port $PORT`
 
 ### 2. Login fails silently
 This is often a mismatch between the Frontend's `VITE_API_URL` and the Backend's actual URL.
