@@ -30,24 +30,42 @@ echo -e "${GREEN}Detected OS: $OS${NC}"
 start_backend() {
     echo -e "${BLUE}Starting Backend (Port 8001)...${NC}"
     cd backend
-    if [ "$OS" = "Windows" ]; then
-        # On Windows Git Bash, 'uvicorn' might need python -m
-        # Bind to 0.0.0.0 to avoid localhost IPv4/IPv6 issues
-        # Log output to backend.log for debugging
-        python -m uvicorn main:app --reload --host 0.0.0.0 --port 8001 > ../backend.log 2>&1 &
-    else
-        uvicorn main:app --reload --host 0.0.0.0 --port 8001 > ../backend.log 2>&1 &
+    
+    # Activate virtual environment if it exists
+    if [ -d "venv" ]; then
+        echo -e "${GREEN}Activating virtual environment...${NC}"
+        source venv/Scripts/activate || source venv/bin/activate
     fi
+    
+    if [ "$OS" = "Windows" ]; then
+        python -m uvicorn main:app --reload --host 127.0.0.1 --port 8001 &
+    else
+        uvicorn main:app --reload --host 127.0.0.1 --port 8001 &
+    fi
+    BACKEND_PID=$!
     cd ..
 }
 
-# Start Backend
+# Helper to start frontend
+start_frontend() {
+    echo -e "${BLUE}Starting Frontend (Port 5180)...${NC}"
+    cd frontend
+    npm run dev -- --force --port 5180
+}
+
+# Cleanup function
+cleanup() {
+    echo -e "\n${BLUE}Shutting down ProductLogik...${NC}"
+    if [ ! -z "$BACKEND_PID" ]; then
+        kill $BACKEND_PID 2>/dev/null
+    fi
+    exit
+}
+
+# Set up trap
+trap cleanup SIGINT SIGTERM
+
+# Start services
 start_backend
-
-# Wait for backend to initialize
-sleep 3
-
-# Start Frontend
-echo -e "${BLUE}Starting Frontend (Port 5180)...${NC}"
-cd frontend
-npm run dev -- --force --port 5180
+sleep 2
+start_frontend

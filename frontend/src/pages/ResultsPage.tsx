@@ -6,27 +6,57 @@ import { AgileHealth } from "../components/AgileHealth";
 import { ShareModal } from "../components/ShareModal";
 import { Link, useParams } from "react-router";
 import { ArrowLeft, ArrowRight, Loader2, AlertCircle, Share2 } from "lucide-react";
-import { getAnalysis } from "../lib/api";
+import { getAnalysis, exportAnalysis } from "../lib/api";
 import type { AnalysisResult } from "../lib/api";
 
 export function ResultsPage() {
     const { id } = useParams();
     const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
     const [loading, setLoading] = useState(true);
+    const [exporting, setExporting] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
+    const handleDownload = async () => {
+        if (!id) return;
+        try {
+            setExporting(true);
+            const token = localStorage.getItem("token");
+            if (!token) throw new Error("No auth token");
+
+            const blob = await exportAnalysis(id, token);
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `ProductLogik_Report_${id.substring(0, 8)}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        } catch (err) {
+            console.error("Failed to export PDF:", err);
+            alert("Failed to download PDF. Please try again.");
+        } finally {
+            setExporting(false);
+        }
+    };
+
     useEffect(() => {
+        let intervalId: any;
+
         async function fetchAnalysis() {
             if (!id) return;
             try {
                 const token = localStorage.getItem("token");
                 if (!token) throw new Error("No auth token");
 
-                // Poll for completion if status is pending? 
-                // For now, just fetch once. If pending, show pending state.
                 const data = await getAnalysis(id, token);
                 setAnalysis(data);
+
+                // If still pending, poll again in 3 seconds
+                if (data.status === "pending") {
+                    intervalId = setTimeout(fetchAnalysis, 3000);
+                }
             } catch (err) {
                 console.error("Failed to fetch analysis:", err);
                 setError("Failed to load analysis results");
@@ -36,6 +66,10 @@ export function ResultsPage() {
         }
 
         fetchAnalysis();
+
+        return () => {
+            if (intervalId) clearTimeout(intervalId);
+        };
     }, [id]);
 
     if (loading) {
@@ -178,8 +212,18 @@ export function ResultsPage() {
                     </div>
 
                     <div className="space-y-3">
-                        <Button size="lg" className="w-full h-12 text-base shadow-sm">
-                            Download Report (PDF) <ArrowRight className="ml-2 h-4 w-4" />
+                        <Button
+                            size="lg"
+                            className="w-full h-12 text-base shadow-sm"
+                            onClick={handleDownload}
+                            disabled={exporting}
+                        >
+                            {exporting ? (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                                <ArrowRight className="ml-2 h-4 w-4" />
+                            )}
+                            {exporting ? "Exporting..." : "Download Report (PDF)"}
                         </Button>
                         <Button
                             variant="outline"
