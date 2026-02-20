@@ -58,7 +58,7 @@ const PricingPage: React.FC = () => {
                     <p className="text-xl text-text-secondary max-w-2xl mx-auto mb-6">
                         From solo PMs to enterprise product organizations — unlock actionable intelligence from customer feedback.
                     </p>
-                    <div className="inline-flex items-center rounded-full border border-brand-200 bg-brand-50 px-4 py-1.5 text-sm font-medium text-brand-700">
+                    <div className="inline-flex items-center rounded-full border border-brand-200 bg-brand-50 px-4 py-1.5 text-sm font-medium text-brand-700 mb-12 lg:mb-16">
                         No credit card required for Demo. Cancel anytime.
                     </div>
                 </div>
@@ -102,7 +102,7 @@ const PricingPage: React.FC = () => {
 
                         {/* Pro Plan */}
                         <Card className="border border-brand-300 bg-white relative transform scale-105 shadow-2xl shadow-brand-600/10 z-10">
-                            <div className="absolute top-0 right-0 bg-gradient-to-r from-brand-600 to-brand-400 text-white text-xs font-bold px-4 py-1.5 rounded-bl-xl rounded-tr-xl shadow-md">
+                            <div className="absolute top-0 right-0 bg-brand-600 text-white text-xs font-bold px-4 py-1.5 rounded-bl-xl rounded-tr-xl shadow-md">
                                 MOST POPULAR
                             </div>
                             <CardHeader>
@@ -138,34 +138,34 @@ const PricingPage: React.FC = () => {
                         </Card>
 
                         {/* Team Plan */}
-                        <Card className="glass border-white/40 hover:border-indigo-200/50 hover:shadow-lg transition-all duration-300 mt-8">
+                        <Card className="glass border-white/40 hover:border-brand-200/50 hover:shadow-lg transition-all duration-300 mt-8">
                             <CardHeader>
                                 <CardTitle className="text-2xl text-text-primary flex items-center gap-3">
-                                    <div className="p-2 bg-indigo-50 rounded-xl">
+                                    <div className="p-2 bg-brand-50 rounded-xl">
                                         <img src={teamIcon} alt="Team Tier" className="w-7 h-7" />
                                     </div>
                                     Team
                                 </CardTitle>
                                 <CardDescription>For product teams needing alignment</CardDescription>
                                 <div className="mt-4">
-                                    <span className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-indigo-400">€199</span>
+                                    <span className="text-4xl font-bold text-brand-600">€199</span>
                                     <span className="text-text-secondary text-sm"> / month</span>
                                 </div>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                <div className="text-sm font-semibold text-indigo-700 tracking-wide uppercase mb-2">Everything in Pro, plus:</div>
+                                <div className="text-sm font-semibold text-brand-700 tracking-wide uppercase mb-2">Everything in Pro, plus:</div>
                                 <ul className="space-y-3">
-                                    <FeatureItem text="Unlimited Uploads" highlight color="indigo" />
-                                    <FeatureItem text="Multi-Source Integrations" color="indigo" />
-                                    <FeatureItem text="Team Collaboration" color="indigo" />
-                                    <FeatureItem text="Role-Based Access" color="indigo" />
-                                    <FeatureItem text="API Access" color="indigo" />
-                                    <FeatureItem text="Priority Support" color="indigo" />
+                                    <FeatureItem text="Unlimited Uploads" highlight />
+                                    <FeatureItem text="Multi-Source Integrations" highlight />
+                                    <FeatureItem text="Team Collaboration" />
+                                    <FeatureItem text="Role-Based Access" />
+                                    <FeatureItem text="API Access" />
+                                    <FeatureItem text="Priority Support" />
                                 </ul>
                             </CardContent>
                             <CardFooter>
                                 <Button
-                                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/20"
+                                    className="w-full bg-brand-600 hover:bg-brand-700 text-white shadow-md shadow-brand-600/20"
                                     onClick={() => handleUpgrade('price_1Qps1dRvy0938U5exWp6GfFv')} // Live Team Price ID
                                 >
                                     Start Team Plan
@@ -174,29 +174,29 @@ const PricingPage: React.FC = () => {
                         </Card>
 
                         {/* Enterprise Plan */}
-                        <Card className="glass border-white/40 hover:border-slate-300 transition-all duration-300 mt-8">
+                        <Card className="glass border-white/40 hover:border-brand-200/50 hover:shadow-lg transition-all duration-300 mt-8">
                             <CardHeader>
                                 <CardTitle className="text-2xl text-text-primary">Enterprise</CardTitle>
                                 <CardDescription>For massive scale and custom security</CardDescription>
                                 <div className="mt-4">
-                                    <span className="text-4xl font-bold text-text-primary">Custom</span>
+                                    <span className="text-4xl font-bold text-brand-600">Custom</span>
                                 </div>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                <div className="text-sm font-medium text-slate-600 mb-2">Everything in Team, plus:</div>
+                                <div className="text-sm font-semibold text-brand-700 tracking-wide uppercase mb-2">Everything in Team, plus:</div>
                                 <ul className="space-y-3">
-                                    <FeatureItem text="Custom Data Pipelines" highlight color="slate" />
-                                    <FeatureItem text="Dedicated ML Models" color="slate" />
-                                    <FeatureItem text="Single Sign-On (SSO)" color="slate" />
-                                    <FeatureItem text="On-Premise Deployment" color="slate" />
-                                    <FeatureItem text="Dedicated Success Mgr." color="slate" />
-                                    <FeatureItem text="Custom Contracts & SLA" color="slate" />
+                                    <FeatureItem text="Custom Data Pipelines" highlight />
+                                    <FeatureItem text="Dedicated ML Models" />
+                                    <FeatureItem text="Single Sign-On (SSO)" />
+                                    <FeatureItem text="On-Premise Deployment" />
+                                    <FeatureItem text="Dedicated Success Mgr." />
+                                    <FeatureItem text="Custom Contracts & SLA" />
                                 </ul>
                             </CardContent>
                             <CardFooter className="mt-auto">
                                 <Button
                                     variant="outline"
-                                    className="w-full border-slate-300 hover:bg-slate-100 text-text-primary"
+                                    className="w-full border-brand-200 text-brand-700 hover:bg-brand-50"
                                     onClick={() => window.location.href = 'mailto:hello@productlogik.com?subject=Enterprise Inquiry'}
                                 >
                                     Contact Sales
@@ -227,13 +227,8 @@ const PricingPage: React.FC = () => {
     );
 };
 
-const FeatureItem = ({ text, highlight = false, color = 'brand' }: { text: string, highlight?: boolean, color?: 'brand' | 'indigo' | 'slate' }) => {
-    let iconBgClass = 'bg-slate-100 text-slate-500'; // Default unhighlighted
-    if (highlight) {
-        if (color === 'brand') iconBgClass = 'bg-brand-100 text-brand-600';
-        else if (color === 'indigo') iconBgClass = 'bg-indigo-100 text-indigo-600';
-        else if (color === 'slate') iconBgClass = 'bg-slate-200 text-slate-700';
-    }
+const FeatureItem = ({ text, highlight = false }: { text: string, highlight?: boolean }) => {
+    const iconBgClass = highlight ? 'bg-brand-100 text-brand-600' : 'bg-slate-100 text-slate-500';
 
     return (
         <li className="flex items-center gap-3">

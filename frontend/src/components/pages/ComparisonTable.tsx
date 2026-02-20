@@ -3,18 +3,18 @@ import { Check, Minus } from 'lucide-react';
 
 const ComparisonTable: React.FC = () => {
     return (
-        <div className="overflow-x-auto rounded-lg border border-slate-800 bg-slate-900/50">
-            <table className="w-full text-left text-sm text-slate-400">
-                <thead className="bg-slate-900/80 text-xs uppercase text-slate-300">
+        <div className="overflow-x-auto rounded-xl border border-slate-200/60 bg-white shadow-sm">
+            <table className="w-full text-left text-sm text-text-secondary">
+                <thead className="bg-slate-50 text-xs uppercase text-text-secondary">
                     <tr>
-                        <th className="px-6 py-4 font-bold">Feature</th>
-                        <th className="px-6 py-4 font-bold text-center">Demo</th>
-                        <th className="px-6 py-4 font-bold text-center text-emerald-400">Pro</th>
-                        <th className="px-6 py-4 font-bold text-center text-purple-400">Team</th>
-                        <th className="px-6 py-4 font-bold text-center">Enterprise</th>
+                        <th className="px-6 py-4 font-bold tracking-wider">Feature</th>
+                        <th className="px-6 py-4 font-bold text-center tracking-wider">Demo</th>
+                        <th className="px-6 py-4 font-bold text-center text-brand-600 tracking-wider">Pro</th>
+                        <th className="px-6 py-4 font-bold text-center text-purple-600 tracking-wider">Team</th>
+                        <th className="px-6 py-4 font-bold text-center text-slate-700 tracking-wider">Enterprise</th>
                     </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800">
+                <tbody className="divide-y divide-slate-100">
                     <Row label="CSV Uploads" demo="3/mo" pro="50/mo" team="Unlimited" ent="Unlimited" />
                     <Row label="Max Rows per File" demo="100" pro="Unlimited" team="Unlimited" ent="Unlimited" />
                     <Row label="AI Theme Extraction" demo={true} pro={true} team={true} ent={true} />
@@ -23,7 +23,7 @@ const ComparisonTable: React.FC = () => {
                     <Row label="Anti-Pattern Detection" demo={false} pro={true} team={true} ent={true} />
                     <Row label="Product Health Score" demo={false} pro={true} team={true} ent={true} />
                     <Row label="Trend Analytics" demo={false} pro={true} team={true} ent={true} />
-                    <Row label="Integrations" demo={false} pro={false} team={<span className="text-white">Slack, Jira</span>} ent={<span className="text-white">Custom</span>} />
+                    <Row label="Integrations" demo={false} pro={false} team={<span className="text-text-primary font-medium">Slack, Jira</span>} ent={<span className="text-text-primary font-medium">Custom</span>} />
                     <Row label="Team Collaboration" demo={false} pro="Limited" team="Full" ent="Full" />
                     <Row label="API Access" demo={false} pro={false} team={true} ent={true} />
                     <Row label="Impact Estimation" demo={false} pro={false} team={false} ent={true} />
@@ -34,8 +34,8 @@ const ComparisonTable: React.FC = () => {
 };
 
 const Row = ({ label, demo, pro, team, ent }: { label: string, demo: any, pro: any, team: any, ent: any }) => (
-    <tr className="hover:bg-slate-800/50 transition-colors">
-        <td className="px-6 py-4 font-medium text-slate-200">{label}</td>
+    <tr className="hover:bg-slate-50/50 transition-colors">
+        <td className="px-6 py-4 font-medium text-text-primary">{label}</td>
         <td className="px-6 py-4 text-center"><ValueVal v={demo} /></td>
         <td className="px-6 py-4 text-center"><ValueVal v={pro} /></td>
         <td className="px-6 py-4 text-center"><ValueVal v={team} /></td>
@@ -44,9 +44,9 @@ const Row = ({ label, demo, pro, team, ent }: { label: string, demo: any, pro: a
 );
 
 const ValueVal = ({ v }: { v: any }) => {
-    if (v === true) return <Check className="mx-auto w-5 h-5 text-emerald-500" />;
-    if (v === false) return <Minus className="mx-auto w-5 h-5 text-slate-600" />;
-    return <span className="text-slate-300">{v}</span>;
+    if (v === true) return <Check className="mx-auto w-5 h-5 text-brand-500" />;
+    if (v === false) return <Minus className="mx-auto w-5 h-5 text-slate-300" />;
+    return <span className="text-text-secondary font-medium">{v}</span>;
 };
 
 export default ComparisonTable;
