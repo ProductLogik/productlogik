@@ -119,9 +119,9 @@ const PricingPage: React.FC = () => {
                             <CardContent className="space-y-4">
                                 <div className="text-sm font-medium text-brand-600 mb-2">Everything in Demo, plus:</div>
                                 <ul className="space-y-3">
-                                    <FeatureItem text="50 uploads / month" highlight />
-                                    <FeatureItem text="Full Dataset Support" highlight />
-                                    <FeatureItem text="Agile Anti-Pattern Detection" highlight />
+                                    <FeatureItem text="50 uploads / month" />
+                                    <FeatureItem text="Full Dataset Support" />
+                                    <FeatureItem text="Agile Anti-Pattern Detection" />
                                     <FeatureItem text="Product Health Score" />
                                     <FeatureItem text="Clean PDF Export" />
                                     <FeatureItem text="Email Sharing" />
@@ -155,8 +155,8 @@ const PricingPage: React.FC = () => {
                             <CardContent className="space-y-4">
                                 <div className="text-sm font-semibold text-brand-700 tracking-wide uppercase mb-2">Everything in Pro, plus:</div>
                                 <ul className="space-y-3">
-                                    <FeatureItem text="Unlimited Uploads" highlight />
-                                    <FeatureItem text="Multi-Source Integrations" highlight />
+                                    <FeatureItem text="Unlimited Uploads" />
+                                    <FeatureItem text="Multi-Source Integrations" />
                                     <FeatureItem text="Team Collaboration" />
                                     <FeatureItem text="Role-Based Access" />
                                     <FeatureItem text="API Access" />
@@ -185,7 +185,7 @@ const PricingPage: React.FC = () => {
                             <CardContent className="space-y-4">
                                 <div className="text-sm font-semibold text-brand-700 tracking-wide uppercase mb-2">Everything in Team, plus:</div>
                                 <ul className="space-y-3">
-                                    <FeatureItem text="Custom Data Pipelines" highlight />
+                                    <FeatureItem text="Custom Data Pipelines" />
                                     <FeatureItem text="Dedicated ML Models" />
                                     <FeatureItem text="Single Sign-On (SSO)" />
                                     <FeatureItem text="On-Premise Deployment" />
@@ -227,15 +227,13 @@ const PricingPage: React.FC = () => {
     );
 };
 
-const FeatureItem = ({ text, highlight = false }: { text: string, highlight?: boolean }) => {
-    const iconBgClass = highlight ? 'bg-brand-100 text-brand-600' : 'bg-slate-100 text-slate-500';
-
+const FeatureItem = ({ text }: { text: string }) => {
     return (
         <li className="flex items-center gap-3">
-            <div className={`p-1 rounded-full ${iconBgClass}`}>
+            <div className="p-1 rounded-full bg-slate-100 text-slate-500">
                 <Check className="w-4 h-4" />
             </div>
-            <span className={`${highlight ? 'font-medium text-text-primary' : 'text-text-secondary'} text-sm leading-tight`}>{text}</span>
+            <span className="text-text-secondary text-sm leading-tight">{text}</span>
         </li>
     );
 };
