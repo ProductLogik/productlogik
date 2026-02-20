@@ -25,14 +25,11 @@ export function HomePage() {
                         The decision intelligence platform for product leaders. Transform raw feedback into clear, verifiable priorities without the black box.
                     </p>
 
-                    <div className="flex flex-col sm:flex-row justify-center gap-4">
-                        <Button size="lg" asChild className="h-12 px-8 text-base">
+                    <div className="flex justify-center">
+                        <Button size="lg" asChild className="h-12 px-8 text-base shadow-lg shadow-brand-600/20">
                             <Link to="/upload">
                                 Start Executive Analysis <ArrowRight className="ml-2 h-4 w-4" />
                             </Link>
-                        </Button>
-                        <Button size="lg" variant="outline" asChild className="h-12 px-8 text-base bg-white/50 backdrop-blur-sm hover:bg-white/80">
-                            <Link to="/dashboard">View Live Demo</Link>
                         </Button>
                     </div>
 
