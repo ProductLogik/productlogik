@@ -32,16 +32,16 @@ const FAQItem = ({ question, answer }: { question: string, answer: string }) => 
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div className="border border-slate-800 rounded-lg bg-slate-900/30 overflow-hidden">
+        <div className="border border-slate-200/60 rounded-xl bg-white shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md">
             <button
-                className="w-full flex justify-between items-center px-6 py-4 text-left hover:bg-slate-800/50 transition-colors"
+                className="w-full flex justify-between items-center px-6 py-5 text-left hover:bg-slate-50 transition-colors"
                 onClick={() => setIsOpen(!isOpen)}
             >
-                <span className="text-lg font-medium text-slate-200">{question}</span>
-                {isOpen ? <ChevronUp className="text-emerald-500" /> : <ChevronDown className="text-slate-500" />}
+                <span className="text-lg font-medium text-text-primary">{question}</span>
+                {isOpen ? <ChevronUp className="text-brand-500 w-5 h-5" /> : <ChevronDown className="text-slate-400 w-5 h-5" />}
             </button>
             {isOpen && (
-                <div className="px-6 pb-6 pt-2 text-slate-400 leading-relaxed border-t border-slate-800/50">
+                <div className="px-6 pb-6 pt-2 text-text-secondary leading-relaxed border-t border-slate-100 bg-slate-50/50">
                     {answer}
                 </div>
             )}
