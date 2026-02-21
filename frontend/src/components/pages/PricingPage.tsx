@@ -8,8 +8,10 @@ import FAQ from './FAQ';
 import { useAuth } from '@/hooks/useAuth';
 
 // Import SVGs explicitly so Vite bundles them correctly in production
-import proIcon from '@/assets/pro_tier_icon.svg';
-import teamIcon from '@/assets/team_tier_icon.svg';
+import demoIcon from '@/assets/demo-outline.svg';
+import proIcon from '@/assets/pro-outline.svg';
+import teamIcon from '@/assets/team-outline.svg';
+import entIcon from '@/assets/enterprise-outline.svg';
 
 const PricingPage: React.FC = () => {
     const navigate = useNavigate();
@@ -72,8 +74,13 @@ const PricingPage: React.FC = () => {
                         {/* Demo Plan */}
                         <Card className="glass border-white/40 hover:border-brand-200/50 hover:shadow-lg transition-all duration-300 mt-8">
                             <CardHeader>
-                                <CardTitle className="text-2xl text-text-primary">Demo</CardTitle>
-                                <CardDescription>For individual PMs & early-stage builders</CardDescription>
+                                <CardTitle className="text-2xl text-text-primary flex items-center gap-3">
+                                    <div className="p-2 bg-brand-50 rounded-xl">
+                                        <img src={demoIcon} alt="Demo Tier" className="w-7 h-7" />
+                                    </div>
+                                    Demo
+                                </CardTitle>
+                                <CardDescription>Test the AI engine on your data</CardDescription>
                                 <div className="mt-4">
                                     <span className="text-4xl font-bold text-text-primary">€0</span>
                                     <span className="text-text-secondary text-sm"> / month</span>
@@ -176,7 +183,12 @@ const PricingPage: React.FC = () => {
                         {/* Enterprise Plan */}
                         <Card className="glass border-white/40 hover:border-brand-200/50 hover:shadow-lg transition-all duration-300 mt-8">
                             <CardHeader>
-                                <CardTitle className="text-2xl text-text-primary">Enterprise</CardTitle>
+                                <CardTitle className="text-2xl text-text-primary flex items-center gap-3">
+                                    <div className="p-2 bg-brand-50 rounded-xl">
+                                        <img src={entIcon} alt="Enterprise Tier" className="w-7 h-7" />
+                                    </div>
+                                    Enterprise
+                                </CardTitle>
                                 <CardDescription>For massive scale and custom security</CardDescription>
                                 <div className="mt-4">
                                     <span className="text-4xl font-bold text-brand-600">Custom</span>
