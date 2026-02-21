@@ -46,7 +46,6 @@ function App() {
         position="bottom-right"
         richColors
         toastOptions={{
-          style: { background: 'white', border: '1px solid #e2e8f0', color: '#1F2933' },
           className: 'shadow-lg rounded-xl font-sans'
         }}
       />
