@@ -6,6 +6,7 @@ import { Check } from "lucide-react";
 import ComparisonTable from './ComparisonTable';
 import FAQ from './FAQ';
 import { useAuth } from '@/hooks/useAuth';
+import { toast } from 'sonner';
 
 // Import SVGs explicitly so Vite bundles them correctly in production
 import demoIcon from '@/assets/demo-outline.svg';
@@ -39,11 +40,11 @@ const PricingPage: React.FC = () => {
                 window.location.href = data.checkout_url;
             } else {
                 console.error("Checkout failed");
-                alert("Failed to start checkout. Please try again.");
+                toast.error("Failed to start checkout. Please try again.");
             }
         } catch (error) {
             console.error("Error:", error);
-            alert("An error occurred.");
+            toast.error("An error occurred starting checkout.");
         }
     };
 

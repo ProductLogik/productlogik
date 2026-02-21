@@ -6,12 +6,13 @@ import { ArrowRight, FileText, Loader2, Plus, Zap } from "lucide-react";
 import { getUserUploads, getUserProfile } from "../lib/api";
 import { Progress } from "../components/ui/Progress";
 import type { Upload } from "../lib/api";
+import { toast } from "sonner";
 
 export function DashboardPage() {
     const [uploads, setUploads] = useState<Upload[]>([]);
     const [userProfile, setUserProfile] = useState<any>(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState<boolean>(false);
 
     useEffect(() => {
         async function fetchDashboardData() {
@@ -34,7 +35,8 @@ export function DashboardPage() {
                     window.location.href = "/login";
                     return;
                 }
-                setError("Failed to load dashboard data. Please try logging in again.");
+                setError(true);
+                toast.error("Failed to load dashboard data. Please try logging in again.");
             } finally {
                 setLoading(false);
             }
@@ -101,8 +103,8 @@ export function DashboardPage() {
                     <Loader2 className="h-8 w-8 animate-spin text-brand-600" />
                 </div>
             ) : error ? (
-                <div className="rounded-lg bg-red-50 p-4 text-red-800 border border-red-200">
-                    {error}
+                <div className="text-center py-12 bg-white rounded-lg border border-dashed border-slate-300">
+                    <p className="text-text-secondary">Unable to load dashboard data.</p>
                 </div>
             ) : uploads.length === 0 ? (
                 <div className="text-center py-12 bg-white rounded-lg border border-dashed border-slate-300">

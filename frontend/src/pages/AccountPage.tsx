@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import { User, LogOut, CreditCard, Edit2, Save, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getUserProfile, updateUserProfile } from "../lib/api";
+import { toast } from "sonner";
 
 export function AccountPage() {
     const navigate = useNavigate();
@@ -47,8 +48,9 @@ export function AccountPage() {
             setProfile(updated);
             setIsEditing(false);
             setSaving(false);
+            toast.success("Profile updated successfully!");
         } catch (err: any) {
-            setError(err.message);
+            toast.error(err.message || "Failed to update profile.");
             setSaving(false);
         }
     };

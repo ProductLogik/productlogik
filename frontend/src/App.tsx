@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router";
+import { Toaster } from "sonner";
 import { Layout } from "./components/layout/Layout";
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
@@ -40,20 +41,30 @@ function App() {
   }, [location]);
 
   return (
-    <Routes>
-      <Route element={<Layout />}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/verify-email" element={<VerifyEmailPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/upload" element={<UploadPage />} />
-        <Route path="/results/:id" element={<ResultsPage />} />
-        <Route path="/usage" element={<UsagePage />} />
-        <Route path="/account" element={<AccountPage />} />
-        <Route path="/pricing" element={<PricingPage />} />
-      </Route>
-    </Routes>
+    <>
+      <Toaster
+        position="bottom-right"
+        richColors
+        toastOptions={{
+          style: { background: 'white', border: '1px solid #e2e8f0', color: '#1F2933' },
+          className: 'shadow-lg rounded-xl font-sans'
+        }}
+      />
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/upload" element={<UploadPage />} />
+          <Route path="/results/:id" element={<ResultsPage />} />
+          <Route path="/usage" element={<UsagePage />} />
+          <Route path="/account" element={<AccountPage />} />
+          <Route path="/pricing" element={<PricingPage />} />
+        </Route>
+      </Routes>
+    </>
   );
 }
 
