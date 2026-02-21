@@ -114,7 +114,9 @@ const PricingPage: React.FC = () => {
                             </div>
                             <CardHeader>
                                 <CardTitle className="text-2xl text-text-primary flex items-center gap-3">
-                                    <img src={proIcon} alt="Pro Tier" className="w-8 h-8" />
+                                    <div className="p-2 bg-brand-50 rounded-xl">
+                                        <img src={proIcon} alt="Pro Tier" className="w-7 h-7" />
+                                    </div>
                                     Pro
                                 </CardTitle>
                                 <CardDescription>For serious PMs and growing startups</CardDescription>
