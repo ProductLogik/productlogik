@@ -291,3 +291,20 @@ export async function exportAnalysis(uploadId: string, token: string): Promise<B
 
     return response.blob();
 }
+
+export async function createPortalSession(token: string): Promise<{ url: string }> {
+    const response = await fetch(`${API_URL}/subscription/portal`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+
+    if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        throw new Error(error.detail || "Failed to create customer portal session");
+    }
+
+    return response.json();
+}
