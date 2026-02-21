@@ -4,12 +4,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../co
 import { Progress } from "../components/ui/Progress";
 import { getUserProfile, createPortalSession } from "../lib/api";
 import { Loader2, AlertCircle } from "lucide-react";
+import { toast } from "sonner";
 
 export function UsagePage() {
     const [userData, setUserData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [portalLoading, setPortalLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState<boolean>(false);
 
     useEffect(() => {
         async function fetchData() {
@@ -23,7 +24,8 @@ export function UsagePage() {
                 setUserData(profile);
             } catch (err: any) {
                 console.error("Failed to fetch usage data:", err);
-                setError("Failed to load usage information.");
+                setError(true);
+                toast.error("Failed to load usage information.");
             } finally {
                 setLoading(false);
             }
@@ -40,7 +42,8 @@ export function UsagePage() {
             window.location.href = url;
         } catch (err: any) {
             console.error("Failed to open billing portal:", err);
-            setError(err.message || "Failed to open billing portal. Please try again or contact support.");
+            const msg = err.message || "Failed to open billing portal. Please try again.";
+            toast.error(msg);
         } finally {
             setPortalLoading(false);
         }
@@ -57,9 +60,9 @@ export function UsagePage() {
     if (error) {
         return (
             <div className="container mx-auto py-12 px-4 text-center">
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-red-50 text-red-700 rounded-lg border border-red-100">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-slate-50 text-slate-500 rounded-lg border border-slate-200">
                     <AlertCircle className="h-5 w-5" />
-                    <span>{error}</span>
+                    <span>Unable to load usage data.</span>
                 </div>
             </div>
         );

@@ -3,20 +3,17 @@ import { useDropzone } from "react-dropzone";
 import { useNavigate } from "react-router";
 import { Button } from "../components/ui/Button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../components/ui/Card";
-import { UploadCloud, FileText, AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
+import { UploadCloud, FileText, AlertCircle, Loader2 } from "lucide-react";
 import { uploadCSV } from "../lib/api";
+import { toast } from "sonner";
 
 export function UploadPage() {
     const navigate = useNavigate();
     const [file, setFile] = useState<File | null>(null);
     const [uploading, setUploading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [success, setSuccess] = useState<string | null>(null);
 
     const onDrop = useCallback((acceptedFiles: File[]) => {
         setFile(acceptedFiles[0]);
-        setError(null);
-        setSuccess(null);
     }, []);
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -38,19 +35,17 @@ export function UploadPage() {
         }
 
         setUploading(true);
-        setError(null);
-        setSuccess(null);
 
         try {
             const result = await uploadCSV(file, token);
-            setSuccess(`Successfully uploaded ${result.row_count} feedback entries!`);
+            toast.success(`Successfully uploaded ${result.row_count} feedback entries!`);
 
             // Redirect to dashboard after 2 seconds
             setTimeout(() => {
                 navigate("/dashboard");
             }, 2000);
         } catch (err: any) {
-            setError(err.message || "Upload failed. Please try again.");
+            toast.error(err.message || "Upload failed. Please try again.");
         } finally {
             setUploading(false);
         }
@@ -95,8 +90,6 @@ export function UploadPage() {
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 setFile(null);
-                                                setError(null);
-                                                setSuccess(null);
                                             }}
                                         >
                                             Remove
@@ -114,33 +107,6 @@ export function UploadPage() {
                                 )}
                             </div>
                         </div>
-
-                        {/* Error Message */}
-                        {error && (
-                            <div className="rounded-md bg-red-50 p-4 border border-red-200">
-                                <div className="flex gap-3">
-                                    <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0" />
-                                    <div className="text-sm text-red-700">
-                                        <p className="font-medium">Upload Failed</p>
-                                        <p>{error}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Success Message */}
-                        {success && (
-                            <div className="rounded-md bg-green-50 p-4 border border-green-200">
-                                <div className="flex gap-3">
-                                    <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0" />
-                                    <div className="text-sm text-green-700">
-                                        <p className="font-medium">Upload Successful!</p>
-                                        <p>{success}</p>
-                                        <p className="mt-1 text-xs">Redirecting to dashboard...</p>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
 
                         {/* Info Box */}
                         <div className="rounded-md bg-blue-50 p-4">

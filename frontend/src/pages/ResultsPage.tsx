@@ -8,6 +8,7 @@ import { Link, useParams } from "react-router";
 import { ArrowLeft, ArrowRight, Loader2, AlertCircle, Share2 } from "lucide-react";
 import { getAnalysis, exportAnalysis } from "../lib/api";
 import type { AnalysisResult } from "../lib/api";
+import { toast } from "sonner";
 
 export function ResultsPage() {
     const { id } = useParams();
@@ -35,7 +36,7 @@ export function ResultsPage() {
             document.body.removeChild(a);
         } catch (err) {
             console.error("Failed to export PDF:", err);
-            alert("Failed to download PDF. Please try again.");
+            toast.error("Failed to download PDF. Please try again.");
         } finally {
             setExporting(false);
         }
@@ -60,6 +61,7 @@ export function ResultsPage() {
             } catch (err) {
                 console.error("Failed to fetch analysis:", err);
                 setError("Failed to load analysis results");
+                toast.error("Failed to load analysis results");
             } finally {
                 setLoading(false);
             }

@@ -3,6 +3,7 @@ import { Dialog } from "./ui/Dialog";
 import { Button } from "./ui/Button";
 import { Share2, Mail, Loader2, CheckCircle2, AlertTriangle, Copy, Check } from "lucide-react";
 import { shareUpload } from "../lib/api";
+import { toast } from "sonner";
 
 interface ShareModalProps {
     isOpen: boolean;
@@ -15,7 +16,6 @@ export function ShareModal({ isOpen, onClose, uploadId, filename }: ShareModalPr
     const [email, setEmail] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [success, setSuccess] = useState(false);
-    const [error, setError] = useState<string | null>(null);
     const [emailSent, setEmailSent] = useState<boolean | null>(null);
     const [shareId, setShareId] = useState<string | null>(null);
     const [copied, setCopied] = useState(false);
@@ -25,7 +25,6 @@ export function ShareModal({ isOpen, onClose, uploadId, filename }: ShareModalPr
         if (!email) return;
 
         setIsLoading(true);
-        setError(null);
         setEmailSent(null);
         setShareId(null);
 
@@ -46,13 +45,15 @@ export function ShareModal({ isOpen, onClose, uploadId, filename }: ShareModalPr
                 setShareId(response.share_id);
             }
 
-            setSuccess(true);
-            // Don't clear email yet if we might need it for the manual link display
-            if (response.email_sent !== false) {
-                setEmail("");
+            if (response.email_sent === false) {
+                setSuccess(true);
+                toast.warning(`Access granted, but email failed. Share link manually.`);
+            } else {
+                toast.success(`Invitation sent to ${email}`);
+                handleClose();
             }
         } catch (err: any) {
-            setError(err.message || "Failed to share upload");
+            toast.error(err.message || "Failed to share upload");
         } finally {
             setIsLoading(false);
         }
@@ -60,7 +61,6 @@ export function ShareModal({ isOpen, onClose, uploadId, filename }: ShareModalPr
 
     const handleClose = () => {
         setSuccess(false);
-        setError(null);
         setEmail("");
         setEmailSent(null);
         setShareId(null);
@@ -149,12 +149,6 @@ export function ShareModal({ isOpen, onClose, uploadId, filename }: ShareModalPr
                             />
                         </div>
                     </div>
-
-                    {error && (
-                        <div className="p-3 text-sm text-red-600 bg-red-50 rounded-lg border border-red-100">
-                            {error}
-                        </div>
-                    )}
 
                     <div className="flex gap-3 pt-2">
                         <Button type="button" variant="ghost" onClick={handleClose} className="flex-1">
