@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { Button } from "../components/ui/Button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/Card";
 import { Progress } from "../components/ui/Progress";
-import { getUserProfile } from "../lib/api";
+import { getUserProfile, createPortalSession } from "../lib/api";
 import { Loader2, AlertCircle } from "lucide-react";
 
 export function UsagePage() {
     const [userData, setUserData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [portalLoading, setPortalLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -29,6 +30,21 @@ export function UsagePage() {
         }
         fetchData();
     }, []);
+
+    const handleManageBilling = async () => {
+        try {
+            setPortalLoading(true);
+            const token = localStorage.getItem("token");
+            if (!token) throw new Error("Authentication required");
+            const { url } = await createPortalSession(token);
+            window.location.href = url;
+        } catch (err: any) {
+            console.error("Failed to open billing portal:", err);
+            setError(err.message || "Failed to open billing portal. Please try again or contact support.");
+        } finally {
+            setPortalLoading(false);
+        }
+    };
 
     if (loading) {
         return (
@@ -127,10 +143,19 @@ export function UsagePage() {
                             )}
                         </ul>
                         <div className="mt-6 flex gap-4">
-                            <Button variant="outline" asChild>
-                                <a href="https://billing.stripe.com/p/login/test_91c01L5bV6O21vG3cc" target="_blank" rel="noopener noreferrer">
-                                    Manage Billing
-                                </a>
+                            <Button
+                                variant="outline"
+                                onClick={handleManageBilling}
+                                disabled={portalLoading}
+                            >
+                                {portalLoading ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        Redirecting...
+                                    </>
+                                ) : (
+                                    "Manage Billing"
+                                )}
                             </Button>
                             {quota.plan_tier === "demo" && (
                                 <Button asChild>
