@@ -1,0 +1,11 @@
+Feedback ID,Source,Feedback Text,Date Submitted,Category
+1,Company All Hands,"The CEO reviewed our recent launch and said the UI was too 'blue'. They drew a sketch on a napkin of how it should look and told engineering to implement it by Monday.",2023-10-01,Leadership
+2,Product Sync,"We had to completely scrap the onboarding redesign we spent 3 weeks validating with users because the VP of Sales promised a custom Salesforce integration to a prospect to save a deal.",2023-10-02,Product Strategy
+3,Team Pulse,"We are exhausted. We just ship whatever the highest paid person in the room asks for. No one asks 'why'. We are just order-takers.",2023-10-03,Internal Update
+4,UX Research,"I presented data showing that 80% of users don't want the new social feed feature. Leadership ignored the data and said we're building it anyway because our competitor has it.",2023-10-04,UX Research
+5,Sprint Planning,"The backlog is entirely dictated by sales promises and executive whims. We haven't looked at a user metric or outcome in 6 months. We just focus on shipping 50 story points a sprint no matter what.",2023-10-05,Internal Update
+6,Customer Support,"Churn is spiking. Users are leaving because the platform is becoming bloated with features they don't use, while the core workflow remains broken.",2023-10-06,Support
+7,Engineering Sync,"We deployed 4 major features this month exactly on the deadline the CEO set. The app is slower and full of bugs, but leadership is celebrating the 'velocity'.",2023-10-07,Engineering
+8,Survey,"'The app keeps changing every week and it's impossible to use. Stop adding random features and fix the bugs!'",2023-10-08,Survey
+9,Product Sync,"I tried to introduce an OKR around user retention, but was told our only goal for the year is 'Deliver the 25 features on the roadmap on time'.",2023-10-09,Product Strategy
+10,Retrospective,"What's the point of even doing retrospectives? If a VP wants something built, we drop everything and build it. We have zero autonomy or strategic direction.",2023-10-10,Internal Update

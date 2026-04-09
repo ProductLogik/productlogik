@@ -45,7 +45,12 @@ export function UploadPage() {
                 navigate("/dashboard");
             }, 2000);
         } catch (err: any) {
-            toast.error(err.message || "Upload failed. Please try again.");
+            if (err.message === "LIMIT_REACHED") {
+                toast.error("Usage limit reached. Redirecting to contact support.");
+                navigate("/contact");
+            } else {
+                toast.error(err.message || "Upload failed. Please try again.");
+            }
         } finally {
             setUploading(false);
         }
@@ -101,7 +106,7 @@ export function UploadPage() {
                                             Drag & drop files here, or click to select
                                         </p>
                                         <p className="mt-1 text-xs text-text-secondary">
-                                            Max file size: 10MB | Max rows: 10,000
+                                            Max file size: 25MB | Max rows: 5,000
                                         </p>
                                     </>
                                 )}
@@ -135,7 +140,7 @@ export function UploadPage() {
                         <Button
                             disabled={!file || uploading}
                             onClick={handleUpload}
-                            className="gap-2"
+                            className="gap-2 bg-brand-600 hover:bg-brand-700"
                         >
                             {uploading ? (
                                 <>

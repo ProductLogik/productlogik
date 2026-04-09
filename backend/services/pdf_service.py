@@ -69,7 +69,26 @@ class PDFService:
         # --- 1. Header ---
         elements.append(Paragraph("ProductLogik Intelligence Report", self.title_style))
         elements.append(Paragraph(f"Analysis Summary: {analysis_data.get('executive_summary', 'No summary available.')}", self.body_style))
-        elements.append(Spacer(1, 1*cm))
+        elements.append(Spacer(1, 0.6*cm))
+
+        # --- Product Health Score (Pro/Team only) ---
+        if tier != "demo" and analysis_data.get('agile_risks'):
+            agile_risks = analysis_data['agile_risks']
+            score = agile_risks.get('product_health_score')
+            if score is not None:
+                elements.append(Paragraph("Product Health Score", self.styles['Heading2']))
+                elements.append(Spacer(1, 0.2*cm))
+                
+                status = "Excellent Alignment" if score >= 80 else "Monitor Closely" if score >= 50 else "Critical Risk"
+                score_color = 'green' if score >= 80 else '#d97706' if score >= 50 else 'red'
+                
+                elements.append(Paragraph(f"<b>Score:</b> <font color='{score_color}'>{score}/100</font> ({status})", self.body_style))
+                
+                reasoning = agile_risks.get('product_health_reasoning')
+                if reasoning:
+                    elements.append(Paragraph(f"<b>Assessment:</b> {reasoning}", self.body_style))
+                
+                elements.append(Spacer(1, 0.8*cm))
         
         # --- 2. Themes Section ---
         elements.append(Paragraph("Key Problem Themes", self.styles['Heading2']))

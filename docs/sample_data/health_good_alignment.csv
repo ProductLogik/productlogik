@@ -1,0 +1,11 @@
+Feedback ID,Source,Feedback Text,Date Submitted,Category
+1,User Interview,"Users were confused by the checkout flow, so we prototyped three variations and tested them. Variation B increased completion rate by 15%. We'll build that.",2023-10-01,UX Research
+2,Sprint Review,"We hit our outcome metric! Time-to-value decreased by 2 days this sprint after we simplified the onboarding. Team feels great about the impact.",2023-10-02,Internal Update
+3,Sales Call,"Prospect asked for a custom dashboard. Instead of building it immediately, we asked why they needed it and discovered they just need an automated weekly report. Added to discovery backlog.",2023-10-03,Sales Feedback
+4,Product Sync,"We killed the 'Advanced Filtering' epic. After running an A/B test with a fake door, only 1% of users clicked it. Saved us 3 weeks of engineering effort.",2023-10-04,Product Strategy
+5,Customer Support,"Several users asked for an export feature. Reached out to 5 of them, learned they just need a PDF receipt. Designing a lightweight solution now.",2023-10-05,Support
+6,Sprint Retrospective,"Team morale is high. We feel really connected to the user problems we are solving. The new 'focus on outcomes' OKRs are working well.",2023-10-06,Internal Update
+7,Stakeholder Meeting,"CEO suggested adding a crypto wallet. We pushed back, explaining it doesn't align with our Q3 goal of improving core retention. CEO agreed to wait for validation.",2023-10-07,Leadership
+8,User Testing,"The new navigation is much clearer. Users found the settings page 3x faster than the old version. Ready to roll out to 100% of users.",2023-10-08,UX Research
+9,Survey,"NPS is up 5 points this month. Users are loving the performance improvements we shipped last cycle.",2023-10-09,Survey
+10,Engineering Sync,"Refactoring the billing module took longer than expected, but it was worth it. We reduced technical debt and the system is much more stable now. Less time spent on bug fixes means more time for value creation.",2023-10-10,Internal Update

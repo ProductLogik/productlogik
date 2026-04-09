@@ -12,6 +12,54 @@ router = APIRouter()
 class ShareRequest(BaseModel):
     email: EmailStr
 
+@router.get("/analysis/trends")
+async def get_analysis_trends(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Get historical trend data for all successful analyses belonging to the user.
+    Aggregates product health scores and top theme frequencies by date.
+    """
+    # Join Upload and AnalysisResult, filter by current user, order by creation date ASC
+    records = db.query(Upload, AnalysisResult).join(
+        AnalysisResult, Upload.id == AnalysisResult.upload_id
+    ).filter(
+        Upload.user_id == current_user.id,
+        Upload.status == "completed"
+    ).order_by(Upload.created_at.asc()).all()
+    
+    trend_data = []
+    
+    for upload, analysis in records:
+        # Only process if we actually have themes / a successful AI run
+        if not analysis.themes_json or len(analysis.themes_json) == 0:
+            continue
+            
+        # Extract Product Health Score (could be None if old analysis)
+        health_score = None
+        if analysis.agile_risks_json:
+            health_score = analysis.agile_risks_json.get('product_health_score')
+            
+        # Map out theme frequencies
+        # Themes might be stored uniquely, but we'll extract their 'count' attribute 
+        theme_volumes = {}
+        for t in analysis.themes_json:
+            name = t.get('name', 'Unknown')
+            count = t.get('count', 0)
+            theme_volumes[name] = count
+            
+        trend_data.append({
+            "upload_id": str(upload.id),
+            "date": upload.created_at.isoformat() if upload.created_at else None,
+            "filename": upload.filename,
+            "health_score": health_score,
+            "themes": theme_volumes
+        })
+        
+    print("DEBUG TRENDS:", trend_data)
+    return {"trends": trend_data}
+
 @router.get("/analysis/{upload_id}")
 async def get_analysis(
     upload_id: str,
@@ -87,7 +135,8 @@ async def get_analysis(
         "processing_time_ms": analysis.processing_time_ms,
         "agile_risks": analysis.agile_risks_json,
         "created_at": analysis.created_at.isoformat() if analysis.created_at else None,
-        "has_themes": has_themes
+        "has_themes": has_themes,
+        "plan_tier": current_user.usage_quota.plan_tier if current_user.usage_quota else "demo"
     }
 
 @router.get("/analysis/{upload_id}/export")

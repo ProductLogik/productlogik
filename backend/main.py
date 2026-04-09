@@ -22,7 +22,6 @@ from database import engine, Base
 print("--- DATABASE IMPORTED ---")
 sys.stdout.flush()
 from auth import router as auth_router
-from payment import router as payment_router
 from upload import router as upload_router
 from analysis import router as analysis_router
 
@@ -91,7 +90,7 @@ app.add_middleware(
 
 # Debug middleware to log origins
 @app.middleware("http")
-async def log_origin(request, call_next):
+async def log_origin(request: Request, call_next):
     origin = request.headers.get("origin")
     if origin:
         logging.info(f"Incoming Request Origin: {origin}")
@@ -110,6 +109,5 @@ async def health_check():
 
 # Include routers
 app.include_router(auth_router, prefix="/api/auth", tags=["auth"])
-app.include_router(payment_router, prefix="/api/subscription", tags=["subscription"])
 app.include_router(upload_router, prefix="/api", tags=["upload"])
 app.include_router(analysis_router, prefix="/api", tags=["analysis"])

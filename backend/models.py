@@ -15,9 +15,8 @@ class User(Base):
     company_name = Column(String)
     role = Column(String, default="user")
     
-    # Stripe Integration
-    stripe_customer_id = Column(String, nullable=True)
-    stripe_subscription_id = Column(String, nullable=True)
+    
+    # Stripe integration removed
     
     email_verified = Column(String, default=False)  # Email verification status
     verification_token = Column(String, nullable=True)  # Token for email verification
@@ -32,8 +31,6 @@ class UsageQuota(Base):
     __tablename__ = "usage_quotas"
 
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
-    plan_tier = Column(String, default="demo") # demo, pro, team, enterprise
-    analyses_limit = Column(Integer, default=3) # Default limit for demo
     analyses_used = Column(Integer, default=0)
     reset_date = Column(DateTime(timezone=True), default=func.now())
 

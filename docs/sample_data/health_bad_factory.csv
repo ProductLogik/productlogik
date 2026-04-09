@@ -1,0 +1,11 @@
+Feedback ID,Source,Feedback Text,Date Submitted,Category
+1,Sprint Review,"Incredible sprint! We delivered 45 story points, our highest velocity ever. We shipped the reporting dashboard, the new billing UI, and the CSV export all on time.",2023-10-01,Internal Update
+2,Product Sync,"The roadmap for Q4 is packed. We have 12 major epics to deliver before the end of the year. It's going to be tight, but if we optimize our Jira workflows we can hit the dates.",2023-10-02,Product Strategy
+3,Team Pulse,"Morale is okay. We're churning out code really fast. I wish we had more time to see how the last feature we shipped is performing, but we immediately moved onto the next one.",2023-10-03,Internal Update
+4,Stakeholder Update,"We are officially feature-complete for the v2.0 launch. All 40 checklist items from the PRD are done. Great job execution team.",2023-10-04,Leadership
+5,Retrospective,"We missed our sprint commitment by 5 points. Next sprint we need to push harder to ensure we deliver everything on the board.",2023-10-05,Internal Update
+6,Engineering Sync,"We had to skip writing automated tests for the new module to ensure we met the Friday shipping deadline.",2023-10-06,Engineering
+7,Support,"Users are submitting bug reports about the feature we shipped last week. We will add them to the backlog, but priority right now is finishing the current sprint deliverables.",2023-10-07,Support
+8,Sales Sync,"Sales is happy we delivered the requested feature on time. Now they want 4 more features by next quarter. Added to the backlog.",2023-10-08,Sales Feedback
+9,UX Update,"I asked for time to do discovery on the new onboarding flow, but I was told we just need wireframes by tomorrow so development can start.",2023-10-09,UX Research
+10,Performance Review,"The team is evaluated almost entirely on whether we hit our sprint delivery targets. Velocity is the only metric that seems to matter.",2023-10-10,Internal Update

@@ -44,7 +44,8 @@ async def run_ai_analysis(upload_id: str, db_session_factory):
         ]
         
         # Run AI analysis
-        analysis_result = await ai_service.analyze_feedback(feedback_data, str(upload.id))
+        plan_tier = "pro" # Give all users full features since payment is removed
+        analysis_result = await ai_service.analyze_feedback(feedback_data, str(upload.id), plan_tier)
         
         # Check if analysis actually succeeded or returned an error
         if analysis_result.get('error'):
@@ -115,15 +116,15 @@ async def upload_csv(
     quota = db.query(UsageQuota).filter(UsageQuota.user_id == current_user.id).first()
     
     if not quota:
-        quota = UsageQuota(user_id=current_user.id, plan_tier="demo", analyses_limit=3, analyses_used=0)
+        quota = UsageQuota(user_id=current_user.id, analyses_used=0)
         db.add(quota)
         db.commit()
         db.refresh(quota)
         
-    if quota.analyses_used >= quota.analyses_limit:
+    if quota.analyses_used >= 3:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail=f"Usage limit reached ({quota.analyses_used}/{quota.analyses_limit}). Please upgrade your plan."
+            detail="LIMIT_REACHED"
         )
     
     if not file.filename.endswith('.csv'):
@@ -144,26 +145,41 @@ async def upload_csv(
         if len(df) == 0:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="CSV is empty")
         
-        # Priority columns
+        # Priority keywords to search for
         feedback_column = None
-        priority_columns = ['description', 'feedback', 'summary', 'subject', 'content', 'text', 'comment', 'message']
-        for priority_col in priority_columns:
+        priority_keywords = ['description', 'feedback', 'summary', 'subject', 'content', 'text', 'comment', 'message', 'update', 'note', 'detail', 'retro', 'issue']
+        
+        # 1. Exact match first
+        for keyword in priority_keywords:
             for col in df.columns:
-                if col.lower().strip() == priority_col:
+                if col.lower().strip() == keyword:
                     feedback_column = col
                     break
             if feedback_column: break
-        
+            
+        # 2. Contains match (e.g., 'update_text', 'customer feedback')
         if not feedback_column:
-            for col in df.columns:
-                if df[col].dtype == 'object':
-                    sample_text = df[col].dropna().iloc[0] if len(df[col].dropna()) > 0 else ""
-                    if len(str(sample_text)) > 10:
+            for keyword in priority_keywords:
+                for col in df.columns:
+                    if keyword in col.lower().strip():
                         feedback_column = col
                         break
+                if feedback_column: break
+        
+        # 3. Intelligent fallback: pick the text column with the longest average string length
+        if not feedback_column:
+            object_cols = df.select_dtypes(include=['object']).columns
+            if len(object_cols) > 0:
+                max_len = -1
+                for col in object_cols:
+                    # Calculate mean string length for this column
+                    avg_len = df[col].astype(str).str.len().mean()
+                    if avg_len > max_len:
+                        max_len = avg_len
+                        feedback_column = col
         
         if not feedback_column:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="No feedback text column found")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Could not identify the primary text column in CSV")
         
         # Create Upload record
         upload = Upload(
@@ -212,3 +228,72 @@ async def upload_csv(
     except Exception as e:
         logger.error(f"Upload error: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
+
+@router.delete("/uploads/{upload_id}")
+async def delete_upload(
+    upload_id: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Delete a specific upload and all its associated data (cascade).
+    """
+    upload = db.query(Upload).filter(
+        Upload.id == upload_id,
+        Upload.user_id == current_user.id
+    ).first()
+    
+    if not upload:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Analysis not found or you don't have permission to delete it.")
+        
+    try:
+        # Delete the upload (cascades to FeedbackEntry, AnalysisResult, UploadShare)
+        db.delete(upload)
+        db.commit()
+        return {"status": "success", "message": "Analysis deleted successfully"}
+    except Exception as e:
+        logger.error(f"Delete upload error {upload_id}: {str(e)}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to delete analysis")
+
+@router.post("/uploads/{upload_id}/retry")
+async def retry_analysis(
+    upload_id: str,
+    background_tasks: BackgroundTasks,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Retry a failed analysis.
+    This deletes the failed AnalysisResult and re-queues the background task.
+    """
+    # Verify the upload exists and belongs to the user
+    upload = db.query(Upload).filter(
+        Upload.id == upload_id,
+        Upload.user_id == current_user.id
+    ).first()
+    
+    if not upload:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Analysis not found or you don't have permission to retry it.")
+        
+    # Find and delete the existing failed result
+    failed_result = db.query(AnalysisResult).filter(AnalysisResult.upload_id == upload_id).first()
+    
+    if failed_result:
+        # Check if it actually failed (or is pending). We don't want to retry a completed one
+        # unless forced, but for now we assume the frontend only shows the retry button on failure.
+        db.delete(failed_result)
+        
+        # Reset upload status to pending (optional but good practice)
+        upload.status = "pending"
+        db.commit()
+    else:
+        # If no result exists yet, it might be stuck. We can still try to queue it.
+        pass
+        
+    # Re-queue the background task
+    background_tasks.add_task(run_ai_analysis, str(upload.id), SessionLocal)
+    
+    return {
+        "status": "success", 
+        "message": "Analysis retry queued. Please wait a moment."
+    }

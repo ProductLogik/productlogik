@@ -106,7 +106,8 @@ export function AccountPage() {
                     )}
                 </div>
 
-                <div className="bg-white shadow rounded-lg divide-y divide-gray-200">
+                {/* Profile Section */}
+                <div className="bg-white shadow rounded-lg divide-y divide-gray-200 mb-8">
                     <div className="p-6">
                         <div className="flex items-center gap-4 mb-6">
                             <div className="h-16 w-16 rounded-full bg-brand-100 flex items-center justify-center text-brand-600">
@@ -190,20 +191,36 @@ export function AccountPage() {
                             </div>
                         )}
                     </div>
+                </div>
 
+                {/* Subscription Section */}
+                <div className="bg-white shadow rounded-lg divide-y divide-gray-200 mb-8">
                     <div className="p-6">
                         <h3 className="text-sm font-medium text-text-secondary uppercase tracking-wider mb-4">Subscription</h3>
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                                <CreditCard className="h-5 w-5 text-gray-400" />
-                                <span className="text-text-primary font-medium">Free Plan</span>
+                                <CreditCard className="h-5 w-5 text-brand-500" />
+                                <div className="flex flex-col">
+                                    <span className="text-text-primary font-medium capitalize">
+                                        {profile?.usage_quota?.plan_tier || 'Demo'} Plan
+                                    </span>
+                                    <span className="text-sm text-text-secondary">
+                                        {profile?.usage_quota?.plan_tier === 'pro' && '€59 / month'}
+                                        {profile?.usage_quota?.plan_tier === 'team' && '€199 / month'}
+                                        {profile?.usage_quota?.plan_tier === 'enterprise' && 'Custom Pricing'}
+                                        {(!profile?.usage_quota?.plan_tier || profile?.usage_quota?.plan_tier === 'demo') && 'Free'}
+                                    </span>
+                                </div>
                             </div>
                             <Button variant="ghost" size="sm" onClick={() => navigate("/usage")}>
                                 View Usage
                             </Button>
                         </div>
                     </div>
+                </div>
 
+                {/* Logout Section */}
+                <div className="bg-white shadow rounded-lg">
                     <div className="p-6">
                         <Button
                             variant="destructive"

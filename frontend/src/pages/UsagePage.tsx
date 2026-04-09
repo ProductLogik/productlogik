@@ -2,14 +2,15 @@ import { useEffect, useState } from "react";
 import { Button } from "../components/ui/Button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/Card";
 import { Progress } from "../components/ui/Progress";
-import { getUserProfile, createPortalSession } from "../lib/api";
+import { getUserProfile } from "../lib/api";
 import { Loader2, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
+import { useNavigate } from "react-router";
 
 export function UsagePage() {
+    const navigate = useNavigate();
     const [userData, setUserData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
-    const [portalLoading, setPortalLoading] = useState(false);
     const [error, setError] = useState<boolean>(false);
 
     useEffect(() => {
@@ -33,22 +34,6 @@ export function UsagePage() {
         fetchData();
     }, []);
 
-    const handleManageBilling = async () => {
-        try {
-            setPortalLoading(true);
-            const token = localStorage.getItem("token");
-            if (!token) throw new Error("Authentication required");
-            const { url } = await createPortalSession(token);
-            window.location.href = url;
-        } catch (err: any) {
-            console.error("Failed to open billing portal:", err);
-            const msg = err.message || "Failed to open billing portal. Please try again.";
-            toast.error(msg);
-        } finally {
-            setPortalLoading(false);
-        }
-    };
-
     if (loading) {
         return (
             <div className="flex justify-center items-center min-h-[60vh]">
@@ -68,15 +53,16 @@ export function UsagePage() {
         );
     }
 
-    const quota = userData?.usage_quota || { plan_tier: "demo", analyses_limit: 3, analyses_used: 0 };
-    const remaining = Math.max(0, quota.analyses_limit - quota.analyses_used);
-    const usagePercent = Math.min(100, (quota.analyses_used / quota.analyses_limit) * 100);
+    const quota = userData?.usage_quota || { analyses_used: 0 };
+    const LIMIT = 3;
+    const remaining = Math.max(0, LIMIT - quota.analyses_used);
+    const usagePercent = Math.min(100, (quota.analyses_used / LIMIT) * 100);
 
     return (
         <div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
                 <h1 className="text-3xl font-bold text-text-primary">Usage & Limits</h1>
-                <p className="mt-2 text-text-secondary">Monitor your usage and plan limits.</p>
+                <p className="mt-2 text-text-secondary">Monitor your usage limits.</p>
             </div>
 
             <div className="mx-auto mt-10 max-w-3xl space-y-8">
@@ -84,13 +70,13 @@ export function UsagePage() {
                     <CardHeader>
                         <CardTitle>Analysis Quota</CardTitle>
                         <CardDescription>
-                            Usage for the current billing cycle
+                            Usage for the current account
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="flex justify-between text-sm font-medium">
                             <span className="text-text-secondary">Analyses Used: <span className="text-text-primary">{quota.analyses_used}</span></span>
-                            <span className="text-text-secondary">Limit: <span className="text-text-primary">{quota.analyses_limit === 999999 ? "Unlimited" : quota.analyses_limit}</span></span>
+                            <span className="text-text-secondary">Limit: <span className="text-text-primary">{LIMIT}</span></span>
                         </div>
                         <Progress
                             value={usagePercent}
@@ -98,74 +84,16 @@ export function UsagePage() {
                             indicatorClassName={usagePercent > 90 ? "bg-red-500" : "bg-brand-600"}
                         />
                         <p className="text-xs text-text-secondary">
-                            {quota.analyses_limit === 999999
-                                ? "You have unlimited analyses on the Team plan."
-                                : `You have ${remaining} analyses remaining this month.`}
+                            You have {remaining} analyses remaining.
                         </p>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-3">
-                            {quota.plan_tier === "pro" && <img src="/src/assets/pro_tier_icon.svg" alt="" className="w-8 h-8" />}
-                            {quota.plan_tier === "team" && <img src="/src/assets/team_tier_icon.svg" alt="" className="w-8 h-8" />}
-                            Current Plan: <span className="capitalize text-brand-600">{quota.plan_tier}</span>
-                        </CardTitle>
-                        <CardDescription>
-                            {quota.plan_tier === "pro" ? "€59/month • Billed monthly" :
-                                quota.plan_tier === "team" ? "€199/month • Billed monthly" :
-                                    "Free Tier"}
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <ul className="list-disc pl-5 space-y-2 text-sm text-text-secondary">
-                            {quota.plan_tier === "demo" && (
-                                <>
-                                    <li>3 analyses per month</li>
-                                    <li>Basic AI theme identification</li>
-                                    <li>Watermarked PDF reports</li>
-                                    <li className="text-brand-600 font-medium list-none -ml-5 mt-2">↑ Upgrade to Pro for 50 uploads and no watermarks!</li>
-                                </>
-                            )}
-                            {quota.plan_tier === "pro" && (
-                                <>
-                                    <li>50 analyses per month</li>
-                                    <li>Agile Anti-Pattern Detection</li>
-                                    <li>Product Health Score</li>
-                                    <li>Clean professional PDF exports</li>
-                                </>
-                            )}
-                            {quota.plan_tier === "team" && (
-                                <>
-                                    <li>Unlimited feedback analyses</li>
-                                    <li>Multi-source integrations</li>
-                                    <li>AI Roadmap Generator</li>
-                                    <li>Team collaboration features</li>
-                                </>
-                            )}
-                        </ul>
-                        <div className="mt-6 flex gap-4">
-                            <Button
-                                variant="outline"
-                                onClick={handleManageBilling}
-                                disabled={portalLoading}
-                            >
-                                {portalLoading ? (
-                                    <>
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                        Redirecting...
-                                    </>
-                                ) : (
-                                    "Manage Billing"
-                                )}
-                            </Button>
-                            {quota.plan_tier === "demo" && (
-                                <Button asChild>
-                                    <a href="/pricing">Upgrade Plan</a>
+                        {remaining === 0 && (
+                            <div className="mt-6 pt-6 border-t border-slate-100">
+                                <p className="text-sm text-text-secondary mb-4">You have reached the maximum number of analyses allowed. If you need more usage or have a special use case, please contact support.</p>
+                                <Button className="bg-brand-600 hover:bg-brand-700 w-full" onClick={() => navigate("/contact")}>
+                                    Contact Support
                                 </Button>
-                            )}
-                        </div>
+                            </div>
+                        )}
                     </CardContent>
                 </Card>
             </div>

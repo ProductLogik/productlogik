@@ -1,0 +1,11 @@
+Feedback ID,Source,Feedback Text,Date Submitted,Category
+1,Team Sync,"We finally shipped the dark mode toggle. We didn't do any user testing, but the CEO really wanted it by Friday so we made it happen.",2023-10-01,Internal Update
+2,Support,"User complained about the new dashboard layout. We'll log it, but we can't change it right now because we're heads down on the next big feature release.",2023-10-02,Support
+3,Product Sync,"We hit our outcome metric for signups, but the board is asking why we haven't shipped the AI assistant yet. We might need to pivot resources.",2023-10-03,Product Strategy
+4,User Interview,"Users like the core product but are confused by the new 'Pro' features. I think we built too much too fast without validating if it solved a real problem.",2023-10-04,UX Research
+5,Sales Call,"Big enterprise prospect says they won't sign unless we build a custom SSO integration by next month. Sales VP is pushing us to commit to the timeline.",2023-10-05,Sales Feedback
+6,Sprint Retrospective,"Good sprint, we delivered all committed story points. But I feel like we're just blindly executing the roadmap without knowing if any of this moves the needle.",2023-10-06,Internal Update
+7,Customer Support,"Five tickets today asking how to use the reporting tool. We should probably design a better empty state, but it's not on the roadmap.",2023-10-07,Support
+8,UX Review,"The new flow is technically functional, but the cognitive load is very high. I recommend we simplify it before launch, but leadership says we can't delay the release date.",2023-10-08,UX Research
+9,Survey,"NPS is flat. We shipped 3 major features this quarter but users don't seem to care or notice.",2023-10-09,Survey
+10,Engineering Sync,"We're accumulating a lot of technical debt by rushing these features out the door to meet arbitrary deadlines.",2023-10-10,Internal Update
