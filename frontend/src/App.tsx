@@ -10,6 +10,7 @@ import { UploadPage } from "./pages/UploadPage";
 import { ResultsPage } from "./pages/ResultsPage";
 import { UsagePage } from "./pages/UsagePage";
 import { AccountPage } from "./pages/AccountPage";
+import { TrendsPage } from "./pages/TrendsPage";
 import PricingPage from "./components/pages/PricingPage";
 
 import { VerifyEmailPage } from "./pages/VerifyEmailPage";
@@ -29,6 +30,7 @@ function App() {
       "/usage": "Usage & Billing - Productlogik",
       "/account": "Account Settings - Productlogik",
       "/pricing": "Pricing - Productlogik",
+      "/trends": "Trend Analytics - Productlogik",
     };
 
     const title = titles[location.pathname] || "Productlogik";
@@ -58,6 +60,7 @@ function App() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/upload" element={<UploadPage />} />
           <Route path="/results/:id" element={<ResultsPage />} />
+          <Route path="/trends" element={<TrendsPage />} />
           <Route path="/usage" element={<UsagePage />} />
           <Route path="/account" element={<AccountPage />} />
           <Route path="/pricing" element={<PricingPage />} />

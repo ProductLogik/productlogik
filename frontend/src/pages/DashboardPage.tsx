@@ -2,17 +2,24 @@ import { useEffect, useState } from "react";
 import { Button } from "../components/ui/Button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/Card";
 import { Link } from "react-router";
-import { ArrowRight, FileText, Loader2, Plus, Zap } from "lucide-react";
-import { getUserUploads, getUserProfile } from "../lib/api";
+import { ArrowRight, FileText, Loader2, Plus, Trash2 } from "lucide-react";
+import { getUserUploads, getUserProfile, deleteAnalysis } from "../lib/api";
 import { Progress } from "../components/ui/Progress";
 import type { Upload } from "../lib/api";
 import { toast } from "sonner";
+
+import demoIcon from '@/assets/demo-outline.svg';
+import proIcon from '@/assets/pro-outline.svg';
+import teamIcon from '@/assets/team-outline.svg';
+import entIcon from '@/assets/enterprise-outline.svg';
 
 export function DashboardPage() {
     const [uploads, setUploads] = useState<Upload[]>([]);
     const [userProfile, setUserProfile] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<boolean>(false);
+    const [deletingId, setDeletingId] = useState<string | null>(null);
+    const [uploadToDelete, setUploadToDelete] = useState<{ id: string, name: string } | null>(null);
 
     useEffect(() => {
         async function fetchDashboardData() {
@@ -45,6 +52,41 @@ export function DashboardPage() {
         fetchDashboardData();
     }, []);
 
+    const confirmDelete = async () => {
+        if (!uploadToDelete) return;
+
+        const uploadId = uploadToDelete.id;
+
+        try {
+            setDeletingId(uploadId);
+            const token = localStorage.getItem("token");
+            if (!token) throw new Error("No token found");
+
+            await deleteAnalysis(uploadId, token);
+
+            // Remove from local state
+            setUploads(uploads.filter(u => u.upload_id !== uploadId));
+
+            toast.success("Analysis deleted successfully");
+
+            // Re-fetch profile to update quota
+            const profileData = await getUserProfile(token);
+            setUserProfile(profileData);
+
+        } catch (err) {
+            console.error("Failed to delete:", err);
+            toast.error("Failed to delete analysis");
+        } finally {
+            setDeletingId(null);
+            setUploadToDelete(null);
+        }
+    };
+
+    const handleDeleteClick = (e: React.MouseEvent, uploadId: string, filename: string) => {
+        e.preventDefault();
+        setUploadToDelete({ id: uploadId, name: filename });
+    };
+
     return (
         <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between mb-8">
@@ -64,27 +106,30 @@ export function DashboardPage() {
                     <CardContent className="p-4 sm:p-6">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                             <div className="flex items-center gap-4">
-                                <div className="h-12 w-12 rounded-full bg-brand-100 flex items-center justify-center text-brand-600">
-                                    <Zap className="h-6 w-6" />
+                                <div className="p-2 bg-brand-100 rounded-xl flex items-center justify-center">
+                                    {userProfile.usage_quota.plan_tier === "demo" && <img src={demoIcon} alt="" className="w-6 h-6" />}
+                                    {userProfile.usage_quota.plan_tier === "pro" && <img src={proIcon} alt="" className="w-6 h-6" />}
+                                    {userProfile.usage_quota.plan_tier === "team" && <img src={teamIcon} alt="" className="w-6 h-6" />}
+                                    {userProfile.usage_quota.plan_tier === "enterprise" && <img src={entIcon} alt="" className="w-6 h-6" />}
                                 </div>
                                 <div>
                                     <h3 className="font-semibold text-text-primary">
                                         <span className="capitalize">{userProfile.usage_quota.plan_tier}</span> Plan Usage
                                     </h3>
                                     <p className="text-sm text-text-secondary">
-                                        {userProfile.usage_quota.analyses_used} of {userProfile.usage_quota.analyses_limit === 999999 ? "∞" : userProfile.usage_quota.analyses_limit} analyses used
+                                        {userProfile.usage_quota.analyses_used} of {userProfile.usage_quota.analyses_limit >= 9999 ? "∞" : userProfile.usage_quota.analyses_limit} analyses used
                                     </p>
                                 </div>
                             </div>
                             <div className="flex-1 max-w-xs">
                                 <Progress
                                     value={Math.min(100, (userProfile.usage_quota.analyses_used / userProfile.usage_quota.analyses_limit) * 100)}
-                                    className="h-2 mb-2"
+                                    className="h-2 mb-2 bg-slate-200"
                                     indicatorClassName="bg-brand-600"
                                 />
                                 <div className="flex justify-between items-center text-xs">
                                     <span className="text-text-secondary">
-                                        {userProfile.usage_quota.analyses_limit === 999999
+                                        {userProfile.usage_quota.analyses_limit >= 9999
                                             ? "Unlimited credits"
                                             : `${userProfile.usage_quota.analyses_limit - userProfile.usage_quota.analyses_used} credits left`}
                                     </span>
@@ -155,13 +200,69 @@ export function DashboardPage() {
                                         )}
                                     </div>
 
-                                    <div className="mt-4 flex items-center text-sm font-medium text-brand-600 group-hover:text-brand-700">
-                                        View Insights <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                                    <div className="mt-4 flex items-center justify-between">
+                                        <div className="flex items-center text-sm font-medium text-brand-600 group-hover:text-brand-700">
+                                            View Insights <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                                        </div>
+                                        <button
+                                            onClick={(e) => handleDeleteClick(e, upload.upload_id, upload.filename)}
+                                            disabled={deletingId === upload.upload_id}
+                                            className="p-1.5 text-red-500 hover:text-white hover:bg-red-500 rounded bg-red-50 border border-red-200 shadow-sm transition-colors relative z-10"
+                                            title="Delete Analysis"
+                                        >
+                                            {deletingId === upload.upload_id ? (
+                                                <Loader2 className="w-4 h-4 animate-spin" />
+                                            ) : (
+                                                <Trash2 className="w-4 h-4" />
+                                            )}
+                                        </button>
                                     </div>
                                 </CardContent>
                             </Card>
                         </Link>
                     ))}
+                </div>
+            )}
+
+            {/* Custom Delete Confirmation Modal */}
+            {uploadToDelete && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+                    <div className="bg-white rounded-xl shadow-xl max-w-md w-full overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                        <div className="p-6">
+                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-100 mb-4 text-red-600">
+                                <Trash2 className="w-6 h-6" />
+                            </div>
+                            <h2 className="text-xl font-semibold text-slate-900 mb-2">Delete Analysis</h2>
+                            <p className="text-sm text-slate-500 mb-4">
+                                Are you sure you want to permanently delete "<strong>{uploadToDelete.name}</strong>"?
+                            </p>
+                            <div className="bg-red-50 border border-red-100 rounded-lg p-3 text-sm text-red-800 mb-6">
+                                <p className="font-semibold mb-1">Warning:</p>
+                                <ul className="list-disc pl-4 space-y-1 text-red-700">
+                                    <li>This action cannot be undone. All insights and raw data will be purged.</li>
+                                    <li><strong>Deleting this record will not restore your analysis credit.</strong> It is permanently consumed.</li>
+                                </ul>
+                            </div>
+
+                            <div className="flex justify-end gap-3 mt-6">
+                                <Button
+                                    variant="outline"
+                                    onClick={() => setUploadToDelete(null)}
+                                    disabled={deletingId !== null}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    variant="default"
+                                    className="bg-red-600 hover:bg-red-700 text-white"
+                                    onClick={confirmDelete}
+                                    disabled={deletingId !== null}
+                                >
+                                    {deletingId ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Deleting...</> : "Confirm Delete"}
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

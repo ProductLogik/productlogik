@@ -43,6 +43,7 @@ export interface AnalysisResult {
     created_at?: string;
     has_themes: boolean;
     message?: string;
+    plan_tier?: string;
 }
 
 export interface Upload {
@@ -128,8 +129,6 @@ export async function getUserProfile(token: string): Promise<{
     role: string;
     created_at: string | null;
     usage_quota?: {
-        plan_tier: string;
-        analyses_limit: number;
         analyses_used: number;
     };
 }> {
@@ -160,8 +159,6 @@ export async function updateUserProfile(
     role: string;
     created_at: string | null;
     usage_quota?: {
-        plan_tier: string;
-        analyses_limit: number;
         analyses_used: number;
     };
 }> {
@@ -243,6 +240,54 @@ export async function getAnalysis(uploadId: string, token: string): Promise<Anal
     return response.json();
 }
 
+export async function getAnalysisTrends(token: string): Promise<{ trends: any[] }> {
+    const response = await fetch(`${API_URL}/analysis/trends`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+        },
+    });
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || "Failed to fetch trends data");
+    }
+
+    return response.json();
+}
+
+export async function deleteAnalysis(uploadId: string, token: string): Promise<any> {
+    const response = await fetch(`${API_URL}/uploads/${uploadId}`, {
+        method: "DELETE",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+        },
+    });
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || "Failed to delete analysis");
+    }
+
+    return response.json();
+}
+
+export async function retryAnalysis(uploadId: string, token: string): Promise<any> {
+    const response = await fetch(`${API_URL}/uploads/${uploadId}/retry`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+        },
+    });
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || "Failed to retry analysis");
+    }
+
+    return response.json();
+}
+
 export async function getSharedUploads(token: string): Promise<{ uploads: Upload[] }> {
     const response = await fetch(`${API_URL}/uploads/shared-with-me`, {
         method: "GET",
@@ -292,19 +337,3 @@ export async function exportAnalysis(uploadId: string, token: string): Promise<B
     return response.blob();
 }
 
-export async function createPortalSession(token: string): Promise<{ url: string }> {
-    const response = await fetch(`${API_URL}/subscription/portal`, {
-        method: "POST",
-        headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json",
-        },
-    });
-
-    if (!response.ok) {
-        const error = await response.json().catch(() => ({}));
-        throw new Error(error.detail || "Failed to create customer portal session");
-    }
-
-    return response.json();
-}

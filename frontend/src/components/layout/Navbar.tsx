@@ -2,17 +2,31 @@ import { Button } from "../ui/Button";
 import { Link } from "react-router";
 import { User, LogOut, Settings } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { getUserProfile } from "../../lib/api";
 
 export function Navbar() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [showUserMenu, setShowUserMenu] = useState(false);
+    const [firstName, setFirstName] = useState("Account");
     const menuRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         // Check if user is logged in
-        const checkLoginState = () => {
+        const checkLoginState = async () => {
             const token = localStorage.getItem("token");
             setIsLoggedIn(!!token);
+            if (token) {
+                try {
+                    const profile = await getUserProfile(token);
+                    if (profile.full_name) {
+                        setFirstName(profile.full_name.split(" ")[0]);
+                    }
+                } catch (e) {
+                    console.error("Failed to fetch user profile for navbar");
+                }
+            } else {
+                setFirstName("Account");
+            }
         };
 
         checkLoginState();
@@ -45,6 +59,7 @@ export function Navbar() {
         localStorage.removeItem("token");
         setIsLoggedIn(false);
         setShowUserMenu(false);
+        setFirstName("Account");
         window.location.href = "/";
     };
 
@@ -65,6 +80,10 @@ export function Navbar() {
                         <>
                             <Link to="/upload" className="text-sm font-medium text-text-secondary hover:text-brand-600 transition-colors">Analyzer</Link>
                             <Link to="/dashboard" className="text-sm font-medium text-text-secondary hover:text-brand-600 transition-colors">Dashboard</Link>
+                            <Link to="/trends" className="text-sm font-medium text-text-secondary hover:text-brand-600 transition-colors flex items-center gap-1.5">
+                                Trends
+                                <span className="bg-gradient-to-r from-brand-600 to-indigo-600 text-white text-[10px] uppercase font-bold px-1.5 py-0.5 rounded-sm select-none">Pro</span>
+                            </Link>
                             <Link to="/usage" className="text-sm font-medium text-text-secondary hover:text-brand-600 transition-colors">Usage</Link>
                         </>
                     )}
@@ -80,7 +99,7 @@ export function Navbar() {
                                 <div className="h-8 w-8 rounded-full bg-brand-100 flex items-center justify-center text-brand-600">
                                     <User className="h-4 w-4" />
                                 </div>
-                                <span className="text-sm font-medium text-text-primary hidden sm:inline">Account</span>
+                                <span className="text-sm font-medium text-text-primary hidden sm:inline">{firstName}</span>
                             </button>
 
                             {showUserMenu && (

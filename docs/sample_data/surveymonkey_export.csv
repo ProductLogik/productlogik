@@ -1,4 +1,4 @@
-Response ID,Submitted At,Question 1: How satisfied are you with our product?,Question 2: What do you like most about our product?,Question 3: What could we improve?,Question 4: Would you recommend us to a friend?
+Response ID,Submitted At,Question 1: How satisfied are you with our product?,Feedback,Question 3: What could we improve?,Question 4: Would you recommend us to a friend?
 R001,2024-01-15 10:30:00,Very Satisfied,The interface is clean and intuitive. I can find everything I need quickly.,Would love to see more integrations with other tools we use.,Yes
 R002,2024-01-16 14:22:00,Satisfied,Great analytics and insights. Helps us make better product decisions.,The mobile app could use some work. It's a bit clunky.,Yes
 R003,2024-01-17 09:15:00,Neutral,It does what it's supposed to do.,Pricing is a bit high for small teams. Also the learning curve is steep.,Maybe

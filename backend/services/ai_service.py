@@ -47,13 +47,14 @@ class AIService:
             # Do not raise error to allow server startup
             pass
     
-    async def analyze_feedback(self, feedback_entries: List[Dict], upload_id: str) -> Dict:
+    async def analyze_feedback(self, feedback_entries: List[Dict], upload_id: str, plan_tier: str = "demo") -> Dict:
         """
         Analyze feedback using available AI provider (Gemini primary, OpenAI fallback).
         
         Args:
             feedback_entries: List of feedback entry dicts with 'content' field
             upload_id: UUID of the upload
+            plan_tier: User's subscription tier to conditionally run advanced models
             
         Returns:
             Dict with themes, sentiment, confidence scores, and executive summary
@@ -111,6 +112,23 @@ class AIService:
                         return self._error_analysis("AI Analysis Credits Exhausted. Both Gemini and OpenAI are currently at their limit. Please try again in 60 seconds or contact support.")
                     
                     return self._error_analysis(error_msg)
+            
+            # Anti-Pattern Detection (Pro Tier & Above Only)
+            if result and plan_tier != "demo":
+                try:
+                    logger.info(f"--- Starting Agile Anti-Pattern Detection for {upload_id} ---")
+                    if provider_used and "gemini" in provider_used.lower():
+                        # Use the same model family as the primary analysis
+                        model_id = 'gemini-2.0-flash' if '2.0' in provider_used else 'gemini-1.5-flash'
+                        agile_risks = await self._detect_agile_anti_patterns_gemini(feedback_sample, model_id=model_id)
+                    else:
+                        agile_risks = await self._detect_agile_anti_patterns_openai(feedback_sample)
+                    
+                    result['agile_risks'] = agile_risks
+                except Exception as e:
+                    logger.error(f"⚠️ Agile Anti-Pattern detection failed: {e}")
+                    # Don't fail the whole analysis if just this optional extra fails
+                    result['agile_risks'] = {"error": str(e), "detected_patterns": []}
             
             if not result:
                 logger.error("❌ All AI providers failed or were unavailable")
@@ -235,6 +253,83 @@ Return ONLY valid JSON."""
         )
         
         return json.loads(response.choices[0].message.content)
+    
+    async def _detect_agile_anti_patterns_gemini(self, feedback_sample: List[str], model_id: str = 'gemini-1.5-flash') -> Dict:
+        """Detect agile anti-patterns using Gemini"""
+        prompt = self._get_agile_prompt(feedback_sample)
+        
+        from google import genai
+        from google.genai import types
+        
+        response = self.gemini_client.models.generate_content(
+            model=model_id,
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                temperature=0.2,
+                max_output_tokens=2000,
+                response_mime_type="application/json"
+            )
+        )
+        
+        return json.loads(response.text)
+        
+    async def _detect_agile_anti_patterns_openai(self, feedback_sample: List[str]) -> Dict:
+        """Detect agile anti-patterns using OpenAI"""
+        prompt = self._get_agile_prompt(feedback_sample)
+        
+        response = self.openai_client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "You are a Senior Agile Coach & Product Strategy Expert. Analyze feedback for dysfunctions."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.2,
+            max_tokens=2000,
+            response_format={"type": "json_object"}
+        )
+        
+        return json.loads(response.choices[0].message.content)
+        
+    def _get_agile_prompt(self, feedback_sample: List[str]) -> str:
+        feedback_list = "\n".join([f"{i+1}. {text}" for i, text in enumerate(feedback_sample)])
+        return f"""You are a Senior Agile Coach & Product Strategy Expert. Analyze the following {len(feedback_sample)} feedback items/updates to detect any of the following 3 Agile anti-patterns:
+
+1. 'Output over Outcome' (The Build Trap): Focuses on shipping volume (velocity, story points, features) rather than value, user satisfaction, or impact.
+2. 'Stakeholder-Driven Development' (The HiPPO Effect): Priorities dictated by a specific internal person (CEO, Sales) without mentioning user validation.
+3. 'The Feature Factory': Continuous mention of shipping/backlog without mention of learning, validation, or iteration.
+
+CRITICAL INSTRUCTION FOR CONTEXT:
+If the dataset appears to be pure external customer feedback (like app store reviews, support tickets, or user feature bugs) rather than internal team communication, DO NOT try to force a pattern. Instead, return an empty `detected_patterns` array and state in the `analysis_summary` that "This dataset consists of external customer feedback. Agile anti-patterns are internal team dysfunctions and are best detected using internal product syncs, retrospective notes, or sprint updates."
+
+If none are found in internal data, return empty detected_patterns and summarize the team's apparent alignment.
+
+CALCULATE A PRODUCT HEALTH SCORE:
+Evaluate the overall organizational health and assign a `product_health_score` from 0 to 100 based on the presence, severity, and absence of the dysfunctions listed above.
+- 80-100: Excellent alignment. No major dysfunctions, focus on outcomes and continuous learning.
+- 50-79: Warning signs. Some dysfunctions present (e.g., occasional HiPPO or Feature Factory tendencies).
+- 0-49: Critical risk. Severe and systemic dysfunctions (pure output over outcome, stakeholder dictation).
+If the dataset is pure external customer feedback, set the score to 0 and explain in the reasoning that health scores are only applicable to internal team data. Provide a 1-2 sentence `product_health_reasoning` justifying the score.
+
+Return strictly valid JSON with this exact structure:
+{{
+  "analysis_summary": "Overall summary of team health and patterns found...",
+  "product_health_score": 85,
+  "product_health_reasoning": "Short explanation of the 0-100 score...",
+  "detected_patterns": [
+    {{
+      "pattern_id": "output_over_outcome",
+      "name": "Output over Outcome",
+      "confidence_score": 0.85,
+      "evidence": ["quote 1", "quote 2"],
+      "recommendation": "Advice on how to fix..."
+    }}
+  ]
+}}
+
+Data:
+{feedback_list}
+
+Return ONLY valid JSON."""
     
     def _empty_analysis(self) -> Dict:
         """Return empty analysis when no feedback provided"""

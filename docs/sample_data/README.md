@@ -28,6 +28,26 @@ This folder contains sample CSV files for testing the ProductLogik upload functi
 **Rows**: 20 feedback items from various sources
 **Use Case**: Mixed feedback from app stores, social media, emails, etc.
 
+## Agile Anti-Pattern & Health Score Test Data
+
+These files simulate internal product team updates and stakeholder requests to explicitly trigger the AI's organizational dysfunction detection.
+
+### 5. `health_good_alignment.csv`
+**Severity**: None (Excellent Alignment)
+**Content**: Highly outcome-driven teams prioritizing user validation, A/B testing, and strategy over mere output.
+
+### 6. `health_medium_risk.csv`
+**Severity**: Low/Medium Risk
+**Content**: A mix of standard operations with creeping warning signs (a few arbitrary deadlines and minor executive meddling).
+
+### 7. `health_bad_factory.csv`
+**Severity**: High Risk (Feature Factory)
+**Content**: Obsessive focus on story points, velocity, and shipping volume. No mention of metrics, validation, or actual user outcomes.
+
+### 8. `health_worse_critical.csv`
+**Severity**: Critical (The HiPPO Effect & Build Trap)
+**Content**: Severe team dysfunction. The CEO/Sales VP dictate the roadmap based on whims or specific deals. High team frustration and zero autonomy.
+
 ## Testing Scenarios
 
 Use these files to test:

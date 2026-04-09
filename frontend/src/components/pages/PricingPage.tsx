@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/Button";
 import { Check } from "lucide-react";
 import ComparisonTable from './ComparisonTable';
 import FAQ from './FAQ';
-import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
+import { useState, useEffect } from 'react';
+import { getUserProfile } from '../../lib/api';
 
 // Import SVGs explicitly so Vite bundles them correctly in production
 import demoIcon from '@/assets/demo-outline.svg';
@@ -16,11 +17,45 @@ import entIcon from '@/assets/enterprise-outline.svg';
 
 const PricingPage: React.FC = () => {
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const [planTier, setPlanTier] = useState<string>('demo');
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    const handleUpgrade = async (priceId: string) => {
-        if (!user) {
+    useEffect(() => {
+        const fetchTier = async () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                setIsLoggedIn(true);
+                try {
+                    const profile = await getUserProfile(token);
+                    if (profile.usage_quota) {
+                        setPlanTier(profile.usage_quota.plan_tier || 'demo');
+                    }
+                } catch (e) {
+                    console.error("Failed to fetch user tier");
+                }
+            }
+        };
+        fetchTier();
+    }, []);
+
+    const tierRanks: Record<string, number> = {
+        'demo': 0,
+        'pro': 1,
+        'team': 2,
+        'enterprise': 3
+    };
+
+    const handleUpgrade = async (priceId: string, targetTier: string) => {
+        if (!isLoggedIn) {
             navigate('/login?redirect=/pricing');
+            return;
+        }
+
+        const currentRank = tierRanks[planTier.toLowerCase()] || 0;
+        const targetRank = tierRanks[targetTier.toLowerCase()] || 0;
+
+        if (targetRank <= currentRank) {
+            toast.error("You cannot downgrade or select your current tier from here. Manage via your billing portal.");
             return;
         }
 
@@ -73,7 +108,12 @@ const PricingPage: React.FC = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto -mt-20">
 
                         {/* Demo Plan */}
-                        <Card className="glass border-white/40 hover:border-brand-200/50 hover:shadow-lg transition-all duration-300 mt-8">
+                        <Card className="glass border-white/40 hover:border-brand-200/50 hover:shadow-lg transition-all duration-300 mt-8 relative">
+                            {planTier === 'demo' && (
+                                <div className="absolute top-0 right-0 bg-slate-700 text-white text-xs font-bold px-4 py-1.5 rounded-bl-xl rounded-tr-xl shadow-md">
+                                    CURRENT PLAN
+                                </div>
+                            )}
                             <CardHeader>
                                 <CardTitle className="text-2xl text-text-primary flex items-center gap-3">
                                     <div className="p-2 bg-brand-50 rounded-xl">
@@ -98,21 +138,35 @@ const PricingPage: React.FC = () => {
                                 </ul>
                             </CardContent>
                             <CardFooter>
-                                <Button
-                                    variant="outline"
-                                    className="w-full border-slate-200 hover:bg-slate-50 text-text-primary"
-                                    onClick={() => navigate('/upload')}
-                                >
-                                    Start Demo
-                                </Button>
+                                {tierRanks[planTier] > tierRanks['demo'] ? (
+                                    <Button variant="outline" className="w-full border-slate-200 text-slate-400 bg-slate-50/50" disabled>
+                                        Included in {planTier.charAt(0).toUpperCase() + planTier.slice(1)}
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        variant="outline"
+                                        className="w-full border-slate-200 hover:bg-slate-50 text-text-primary"
+                                        onClick={() => navigate('/upload')}
+                                        disabled={planTier === 'demo'}
+                                    >
+                                        {planTier === 'demo' ? 'Current Plan' : 'Start Demo'}
+                                    </Button>
+                                )}
                             </CardFooter>
                         </Card>
 
                         {/* Pro Plan */}
-                        <Card className="border border-brand-300 bg-white relative transform scale-105 shadow-2xl shadow-brand-600/10 z-10">
-                            <div className="absolute top-0 right-0 bg-brand-600 text-white text-xs font-bold px-4 py-1.5 rounded-bl-xl rounded-tr-xl shadow-md">
-                                MOST POPULAR
-                            </div>
+                        <Card className={`transition-all duration-300 relative ${planTier === 'demo' ? 'bg-white border border-brand-300 transform scale-105 shadow-2xl shadow-brand-600/10 z-10' : 'glass border-white/40 hover:border-brand-200/50 hover:shadow-lg mt-8'}`}>
+                            {planTier === 'demo' && (
+                                <div className="absolute top-0 right-0 bg-brand-600 text-white text-xs font-bold px-4 py-1.5 rounded-bl-xl rounded-tr-xl shadow-md">
+                                    MOST POPULAR
+                                </div>
+                            )}
+                            {planTier === 'pro' && (
+                                <div className="absolute top-0 right-0 bg-slate-700 text-white text-xs font-bold px-4 py-1.5 rounded-bl-xl rounded-tr-xl shadow-md">
+                                    CURRENT PLAN
+                                </div>
+                            )}
                             <CardHeader>
                                 <CardTitle className="text-2xl text-text-primary flex items-center gap-3">
                                     <div className="p-2 bg-brand-50 rounded-xl">
@@ -138,17 +192,42 @@ const PricingPage: React.FC = () => {
                                 </ul>
                             </CardContent>
                             <CardFooter>
-                                <Button
-                                    className="w-full bg-brand-600 hover:bg-brand-700 text-white shadow-md shadow-brand-600/20"
-                                    onClick={() => handleUpgrade('price_1Qps15Rvy0938U5eIsqD64lV')} // Live Pro Price ID
-                                >
-                                    Upgrade to Pro
-                                </Button>
+                                {tierRanks[planTier] > tierRanks['pro'] ? (
+                                    <Button variant="outline" className="w-full border-slate-200 text-slate-400 bg-slate-50/50" disabled>
+                                        Included in {planTier.charAt(0).toUpperCase() + planTier.slice(1)}
+                                    </Button>
+                                ) : planTier === 'demo' ? (
+                                    <Button
+                                        className="w-full bg-brand-600 hover:bg-brand-700 text-white shadow-md shadow-brand-600/20"
+                                        onClick={() => handleUpgrade('price_1Qps15Rvy0938U5eIsqD64lV', 'pro')} // Live Pro Price ID
+                                    >
+                                        Upgrade to Pro
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        variant="outline"
+                                        className="w-full border-slate-200 hover:bg-slate-50 text-text-primary"
+                                        onClick={() => handleUpgrade('price_1Qps15Rvy0938U5eIsqD64lV', 'pro')}
+                                        disabled={planTier === 'pro'}
+                                    >
+                                        {planTier === 'pro' ? 'Current Plan' : 'Select Pro'}
+                                    </Button>
+                                )}
                             </CardFooter>
                         </Card>
 
                         {/* Team Plan */}
-                        <Card className="glass border-white/40 hover:border-brand-200/50 hover:shadow-lg transition-all duration-300 mt-8">
+                        <Card className={`transition-all duration-300 relative ${planTier === 'pro' ? 'bg-white border border-brand-300 transform scale-105 shadow-2xl shadow-brand-600/10 z-10' : 'glass border-white/40 hover:border-brand-200/50 hover:shadow-lg mt-8'}`}>
+                            {planTier === 'pro' && (
+                                <div className="absolute top-0 right-0 bg-brand-600 text-white text-xs font-bold px-4 py-1.5 rounded-bl-xl rounded-tr-xl shadow-md">
+                                    RECOMMENDED
+                                </div>
+                            )}
+                            {planTier === 'team' && (
+                                <div className="absolute top-0 right-0 bg-slate-700 text-white text-xs font-bold px-4 py-1.5 rounded-bl-xl rounded-tr-xl shadow-md">
+                                    CURRENT PLAN
+                                </div>
+                            )}
                             <CardHeader>
                                 <CardTitle className="text-2xl text-text-primary flex items-center gap-3">
                                     <div className="p-2 bg-brand-50 rounded-xl">
@@ -165,7 +244,7 @@ const PricingPage: React.FC = () => {
                             <CardContent className="space-y-4">
                                 <div className="text-sm font-semibold text-brand-700 tracking-wide uppercase mb-2">Everything in Pro, plus:</div>
                                 <ul className="space-y-3">
-                                    <FeatureItem text="Unlimited Uploads" />
+                                    <FeatureItem text="250 uploads / month" />
                                     <FeatureItem text="Multi-Source Integrations" />
                                     <FeatureItem text="Team Collaboration" />
                                     <FeatureItem text="Role-Based Access" />
@@ -174,17 +253,32 @@ const PricingPage: React.FC = () => {
                                 </ul>
                             </CardContent>
                             <CardFooter>
-                                <Button
-                                    className="w-full bg-brand-600 hover:bg-brand-700 text-white shadow-md shadow-brand-600/20"
-                                    onClick={() => handleUpgrade('price_1Qps1dRvy0938U5exWp6GfFv')} // Live Team Price ID
-                                >
-                                    Start Team Plan
-                                </Button>
+                                {tierRanks[planTier] > tierRanks['team'] ? (
+                                    <Button variant="outline" className="w-full border-slate-200 text-slate-400 bg-slate-50/50" disabled>
+                                        Included in {planTier.charAt(0).toUpperCase() + planTier.slice(1)}
+                                    </Button>
+                                ) : planTier === 'team' ? (
+                                    <Button variant="outline" className="w-full border-slate-200 text-text-primary" disabled>
+                                        Current Plan
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        className={`w-full ${planTier === 'pro' ? 'bg-brand-600 hover:bg-brand-700 text-white shadow-md shadow-brand-600/20' : 'bg-brand-600 hover:bg-brand-700 text-white shadow-md'}`}
+                                        onClick={() => handleUpgrade('price_1Qps1dRvy0938U5exWp6GfFv', 'team')} // Live Team Price ID
+                                    >
+                                        Start Team Plan
+                                    </Button>
+                                )}
                             </CardFooter>
                         </Card>
 
                         {/* Enterprise Plan */}
-                        <Card className="glass border-white/40 hover:border-brand-200/50 hover:shadow-lg transition-all duration-300 mt-8">
+                        <Card className="glass border-white/40 hover:border-brand-200/50 hover:shadow-lg transition-all duration-300 mt-8 relative">
+                            {planTier === 'enterprise' && (
+                                <div className="absolute top-0 right-0 bg-slate-700 text-white text-xs font-bold px-4 py-1.5 rounded-bl-xl rounded-tr-xl shadow-md">
+                                    CURRENT PLAN
+                                </div>
+                            )}
                             <CardHeader>
                                 <CardTitle className="text-2xl text-text-primary flex items-center gap-3">
                                     <div className="p-2 bg-brand-50 rounded-xl">
@@ -209,13 +303,19 @@ const PricingPage: React.FC = () => {
                                 </ul>
                             </CardContent>
                             <CardFooter className="mt-auto">
-                                <Button
-                                    variant="outline"
-                                    className="w-full border-brand-200 text-brand-700 hover:bg-brand-50"
-                                    onClick={() => window.location.href = 'mailto:hello@productlogik.com?subject=Enterprise Inquiry'}
-                                >
-                                    Contact Sales
-                                </Button>
+                                {planTier === 'enterprise' ? (
+                                    <Button variant="outline" className="w-full border-slate-200 text-text-primary" disabled>
+                                        Current Plan
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        variant="outline"
+                                        className="w-full border-brand-200 text-brand-700 hover:bg-brand-50"
+                                        onClick={() => window.location.href = 'mailto:hello@productlogik.com?subject=Enterprise Inquiry'}
+                                    >
+                                        Contact Sales
+                                    </Button>
+                                )}
                             </CardFooter>
                         </Card>
 

@@ -15,7 +15,7 @@ const ComparisonTable: React.FC = () => {
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                    <Row label="CSV Uploads" demo="3/mo" pro="50/mo" team="Unlimited" ent="Unlimited" />
+                    <Row label="CSV Uploads" demo="3/mo" pro="50/mo" team="250/mo" ent="Unlimited" />
                     <Row label="Max Rows per File" demo="100" pro="Unlimited" team="Unlimited" ent="Unlimited" />
                     <Row label="AI Theme Extraction" demo={true} pro={true} team={true} ent={true} />
                     <Row label="Sentiment Analysis" demo={true} pro={true} team={true} ent={true} />
