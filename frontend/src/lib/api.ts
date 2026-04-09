@@ -130,6 +130,7 @@ export async function getUserProfile(token: string): Promise<{
     created_at: string | null;
     usage_quota?: {
         analyses_used: number;
+        plan_tier?: string;
     };
 }> {
     const response = await fetch(`${API_URL}/auth/me`, {
@@ -160,6 +161,7 @@ export async function updateUserProfile(
     created_at: string | null;
     usage_quota?: {
         analyses_used: number;
+        plan_tier?: string;
     };
 }> {
     const response = await fetch(`${API_URL}/auth/me`, {
