@@ -132,10 +132,13 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
         # Create UsageQuota record
         usage_quota = UsageQuota(
             user_id=new_user.id,
-            plan_tier="demo",
-            analyses_limit=3,
             analyses_used=0
         )
+        # Safely set attributes in case they exist in newer/older schemas
+        if hasattr(usage_quota, 'plan_tier'):
+            setattr(usage_quota, 'plan_tier', "demo")
+        if hasattr(usage_quota, 'analyses_limit'):
+            setattr(usage_quota, 'analyses_limit', 3)
         db.add(usage_quota)
 
         # Send verification email
@@ -208,8 +211,8 @@ def get_current_user_profile(current_user: User = Depends(get_current_user)):
         "role": current_user.role,
         "created_at": current_user.created_at.isoformat() if current_user.created_at else None,
         "usage_quota": {
-            "plan_tier": current_user.usage_quota.plan_tier if current_user.usage_quota else "demo",
-            "analyses_limit": current_user.usage_quota.analyses_limit if current_user.usage_quota else 3,
+            "plan_tier": getattr(current_user.usage_quota, "plan_tier", "demo") if current_user.usage_quota else "demo",
+            "analyses_limit": getattr(current_user.usage_quota, "analyses_limit", 3) if current_user.usage_quota else 3,
             "analyses_used": current_user.usage_quota.analyses_used if current_user.usage_quota else 0
         }
     }
