@@ -43,7 +43,8 @@ else:
 # pool_pre_ping=True helps handle dropped connections (common in cloud DBs)
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, 
-    pool_pre_ping=True
+    pool_pre_ping=True,
+    connect_args={'sslmode': 'require'}
 )
 
 # Session Local
