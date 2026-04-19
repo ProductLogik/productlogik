@@ -36,8 +36,17 @@ else:
         sys.stdout.flush()
         raise ValueError("One or more database connection variables are missing in .env file")
 
-    # Construct SQLAlchemy URL
-    SQLALCHEMY_DATABASE_URL = f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{dbname}"
+    # Use URL.create so SQLAlchemy percent-encodes special characters in the
+    # password automatically — a raw f-string breaks if password contains @, #, etc.
+    from sqlalchemy.engine import URL
+    SQLALCHEMY_DATABASE_URL = URL.create(
+        drivername="postgresql+psycopg2",
+        username=user,
+        password=password,
+        host=host,
+        port=int(port),
+        database=dbname,
+    )
 
 # Create Engine
 # pool_pre_ping=True issues a SELECT 1 before returning a connection from the pool.

@@ -120,8 +120,12 @@ async def health_check(db: Session = Depends(get_db)):
 
 @app.get("/api/health/db")
 async def db_keepalive(db: Session = Depends(get_db)):
-    db.execute(text("SELECT 1"))
-    return {"status": "ok"}
+    try:
+        db.execute(text("SELECT 1"))
+        return {"status": "ok", "database": "reachable"}
+    except Exception as e:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=503, detail=f"Database unreachable: {str(e)}")
 
 # Include routers
 app.include_router(auth_router, prefix="/api/auth", tags=["auth"])
