@@ -40,11 +40,23 @@ else:
     SQLALCHEMY_DATABASE_URL = f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{dbname}"
 
 # Create Engine
-# pool_pre_ping=True helps handle dropped connections (common in cloud DBs)
+# pool_pre_ping=True issues a SELECT 1 before returning a connection from the pool.
+# pool_recycle=300 discards connections after 5 minutes so Supabase's PgBouncer never
+# silently kills an idle socket before we try to use it (common cause of the
+# "SSL connection has been closed unexpectedly" error).
+# TCP keepalive settings instruct the OS to send probe packets on idle connections,
+# preventing the SSL session from being dropped by network intermediaries.
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, 
+    SQLALCHEMY_DATABASE_URL,
     pool_pre_ping=True,
-    connect_args={'sslmode': 'require'}
+    pool_recycle=300,
+    connect_args={
+        'sslmode': 'require',
+        'keepalives': 1,
+        'keepalives_idle': 30,
+        'keepalives_interval': 10,
+        'keepalives_count': 5,
+    }
 )
 
 # Session Local
