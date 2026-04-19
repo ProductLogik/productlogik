@@ -12,7 +12,7 @@ git reset --hard origin/main
 echo "Installing and building frontend..."
 cd frontend
 npm install
-NODE_OPTIONS="--max-old-space-size=1024" npm run build
+NODE_OPTIONS="--max-old-space-size=400" npm run build
 cd ..
 
 # 3. Backend Setup
