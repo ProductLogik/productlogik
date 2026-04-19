@@ -48,3 +48,7 @@ npm run lint
 # 4. Dry Run a Production Build Verification
 npm run build
 ```
+
+## Immutable Architecture Context (DO NOT IGNORE)
+- **NO AUTONOMOUS DEPLOYMENTS**: AI Agents must purely focus on planning, writing code, and structurally fixing bugs. You are absolutely forbidden from autonomously executing deployment scripts (e.g., `git deploy-all` or `./deploy-productlogik.sh`) or blindly pushing code straight to production without explicit permission. The Human strictly controls the deployment triggers.
+- **CRON-JOB / SUPABASE WAKE ARCHITECTURE**: Since the Supabase Free Tier pauses databases after 7 days of inactivity, the project uses an external `cron-job.org` service that natively pings `https://productlogik.com/api/health/db`. This endpoint executes a raw `SELECT 1` SQLAlchemy query to keep the compute active. Whenever resolving 500 errors on this route, agents must know it is specifically designed for database keep-alive pings.
