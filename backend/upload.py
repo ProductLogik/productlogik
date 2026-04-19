@@ -1,5 +1,6 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException, Depends, status, BackgroundTasks
+from fastapi import APIRouter, UploadFile, File, Form, HTTPException, Depends, status, BackgroundTasks
 from sqlalchemy.orm import Session
+from typing import Optional
 import pandas as pd
 import io
 from datetime import datetime
@@ -17,7 +18,7 @@ MAX_ROWS = 10000
 
 logger = logging.getLogger(__name__)
 
-async def run_ai_analysis(upload_id: str, db_session_factory):
+async def run_ai_analysis(upload_id: str, db_session_factory, ignored_words: Optional[str] = None, persona: Optional[str] = None):
     """Background task to run AI analysis and store results"""
     # Create a new DB session for the background task
     db = db_session_factory()
@@ -45,7 +46,7 @@ async def run_ai_analysis(upload_id: str, db_session_factory):
         
         # Run AI analysis
         plan_tier = "pro" # Give all users full features since payment is removed
-        analysis_result = await ai_service.analyze_feedback(feedback_data, str(upload.id), plan_tier)
+        analysis_result = await ai_service.analyze_feedback(feedback_data, str(upload.id), plan_tier, ignored_words=ignored_words, persona=persona)
         
         # Check if analysis actually succeeded or returned an error
         if analysis_result.get('error'):
@@ -105,6 +106,8 @@ async def run_ai_analysis(upload_id: str, db_session_factory):
 async def upload_csv(
     background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
+    ignored_words: Optional[str] = Form(None),
+    persona: Optional[str] = Form(None),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -213,7 +216,7 @@ async def upload_csv(
         db.commit()
         
         # Trigger AI analysis as Background Task
-        background_tasks.add_task(run_ai_analysis, str(upload.id), SessionLocal)
+        background_tasks.add_task(run_ai_analysis, str(upload.id), SessionLocal, ignored_words, persona)
         
         return {
             "upload_id": str(upload.id),

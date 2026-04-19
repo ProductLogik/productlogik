@@ -13,69 +13,54 @@ export function Footer() {
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                                 </svg>
                             </div>
-                            <span className="text-lg font-display font-bold tracking-tight text-text-primary">Productlogik</span>
+                            <span className="text-lg font-display font-bold tracking-tight text-text-primary">ProductLogik</span>
                         </div>
                         <p className="text-text-secondary text-sm leading-relaxed">
-                            The intelligent decision platform for modern product teams. Decode feedback, detect patterns, and deliver value.
+                            The decision intelligence platform for modern product teams. Decode feedback, detect patterns, and deliver value.
                         </p>
-                        <div className="flex gap-4 pt-2">
-                            {/* Social placeholders */}
-                            <div className="h-8 w-8 rounded-full bg-slate-100 hover:bg-brand-100 transition-colors"></div>
-                            <div className="h-8 w-8 rounded-full bg-slate-100 hover:bg-brand-100 transition-colors"></div>
-                            <div className="h-8 w-8 rounded-full bg-slate-100 hover:bg-brand-100 transition-colors"></div>
-                        </div>
                     </div>
 
-                    {/* Links Columns */}
+                    {/* Product Column */}
                     <div>
                         <h4 className="font-bold text-text-primary mb-6">Product</h4>
                         <ul className="space-y-3 text-sm text-text-secondary">
                             <li><Link to="/upload" className="hover:text-brand-600 transition-colors">Analyzer</Link></li>
                             <li><Link to="/dashboard" className="hover:text-brand-600 transition-colors">Intelligence Dashboard</Link></li>
-                            <li><Link to="#" className="hover:text-brand-600 transition-colors">Integrations</Link></li>
-                            <li><Link to="#" className="hover:text-brand-600 transition-colors">Enterprise</Link></li>
-                            <li><Link to="/usage" className="hover:text-brand-600 transition-colors">Pricing</Link></li>
+                            <li><Link to="/integrations" className="hover:text-brand-600 transition-colors">Integrations</Link></li>
+                            <li><Link to="/compare" className="hover:text-brand-600 transition-colors">A/B Compare</Link></li>
+                            <li><Link to="/methodology" className="hover:text-brand-600 transition-colors">Methodology</Link></li>
                         </ul>
                     </div>
 
+                    {/* Support Column */}
                     <div>
-                        <h4 className="font-bold text-text-primary mb-6">Resources</h4>
+                        <h4 className="font-bold text-text-primary mb-6">Support</h4>
                         <ul className="space-y-3 text-sm text-text-secondary">
-                            <li><Link to="#" className="hover:text-brand-600 transition-colors">Methodology</Link></li>
-                            <li><Link to="#" className="hover:text-brand-600 transition-colors">Case Studies</Link></li>
-                            <li><Link to="#" className="hover:text-brand-600 transition-colors">Blog</Link></li>
-                            <li><Link to="#" className="hover:text-brand-600 transition-colors">Help Center</Link></li>
+                            <li><Link to="/about" className="hover:text-brand-600 transition-colors">About</Link></li>
+                            <li><Link to="/blog" className="hover:text-brand-600 transition-colors">Blog</Link></li>
+                            <li><Link to="/help-center" className="hover:text-brand-600 transition-colors">Help Center</Link></li>
+                            <li><Link to="/contact" className="hover:text-brand-600 transition-colors">Contact Us</Link></li>
                         </ul>
                     </div>
 
-                    {/* Newsletter / Legal */}
+                    {/* Legal Column */}
                     <div>
-                        <h4 className="font-bold text-text-primary mb-6">Stay Updated</h4>
-                        <p className="text-sm text-text-secondary mb-4">Latest product strategy insights delivered to your inbox.</p>
-                        <div className="flex gap-2 mb-4">
-                            <input
-                                type="email"
-                                placeholder="Enter email"
-                                className="flex-1 rounded-md border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
-                            />
-                            <button className="bg-text-primary text-white rounded-md px-4 py-2 text-sm font-medium hover:bg-brand-600 transition-colors">
-                                Join
-                            </button>
-                        </div>
+                        <h4 className="font-bold text-text-primary mb-6">Legal</h4>
+                        <ul className="space-y-3 text-sm text-text-secondary">
+                            <li><Link to="/privacy-policy" className="hover:text-brand-600 transition-colors">Privacy Policy</Link></li>
+                            <li><Link to="/terms-of-service" className="hover:text-brand-600 transition-colors">Terms of Service</Link></li>
+                            <li><Link to="/cookie-policy" className="hover:text-brand-600 transition-colors">Cookie Policy</Link></li>
+                        </ul>
                     </div>
                 </div>
 
-                <div className="border-t border-slate-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-text-secondary">
-                    <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4">
-                        <p>&copy; {new Date().getFullYear()} Productlogik AI. All rights reserved.</p>
-                        <span className="hidden md:inline text-slate-300">|</span>
-                        <p>Created by <a href="https://www.hamzalatif.com" target="_blank" rel="noopener noreferrer" className="text-brand-600 hover:text-brand-700 font-medium transition-colors">Hamza Latif</a></p>
-                    </div>
-                    <div className="flex gap-8">
-                        <Link to="#" className="hover:text-text-primary">Privacy Policy</Link>
-                        <Link to="#" className="hover:text-text-primary">Terms of Service</Link>
-                        <Link to="#" className="hover:text-text-primary">Cookie Settings</Link>
-                    </div>
+                <div className="border-t border-slate-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-2 text-sm text-text-secondary">
+                    <p>
+                        &copy; {new Date().getFullYear()} ProductLogik. All rights reserved. &nbsp;·&nbsp; Built by{" "}
+                        <a href="https://www.hamzalatif.com" target="_blank" rel="noopener noreferrer" className="text-brand-600 hover:text-brand-700 font-medium transition-colors">
+                            Hamza Latif
+                        </a>
+                    </p>
                 </div>
             </div>
         </footer>

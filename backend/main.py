@@ -1,7 +1,7 @@
 
 import os
 import logging
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
@@ -24,6 +24,8 @@ sys.stdout.flush()
 from auth import router as auth_router
 from upload import router as upload_router
 from analysis import router as analysis_router
+from contact import router as contact_router
+from shared import router as shared_router
 
 # Configure logging
 handlers = [logging.StreamHandler()]
@@ -102,12 +104,28 @@ async def log_origin(request: Request, call_next):
 async def read_root():
     return {"status": "ProductLogik API is running"}
 
+from sqlalchemy.orm import Session
+from sqlalchemy import text
+from database import get_db
+
 @app.get("/health")
 @app.head("/health")
-async def health_check():
-    return {"status": "healthy"}
+async def health_check(db: Session = Depends(get_db)):
+    try:
+        # Perform a lightweight query to keep Supabase connection active
+        db.execute(text("SELECT 1"))
+        return {"status": "healthy", "database": "connected"}
+    except Exception as e:
+        return {"status": "unhealthy", "error": str(e)}
+
+@app.get("/api/health/db")
+async def db_keepalive(db: Session = Depends(get_db)):
+    db.execute(text("SELECT 1"))
+    return {"status": "ok"}
 
 # Include routers
 app.include_router(auth_router, prefix="/api/auth", tags=["auth"])
 app.include_router(upload_router, prefix="/api", tags=["upload"])
 app.include_router(analysis_router, prefix="/api", tags=["analysis"])
+app.include_router(contact_router, prefix="/api", tags=["contact"])
+app.include_router(shared_router, prefix="/api", tags=["shared"])

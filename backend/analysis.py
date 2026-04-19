@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Response
+from fastapi import APIRouter, Depends, Response, HTTPException, status
 from sqlalchemy.orm import Session
 from models import Upload, AnalysisResult
 from database import get_db
@@ -11,6 +11,91 @@ router = APIRouter()
 
 class ShareRequest(BaseModel):
     email: EmailStr
+
+class ThemeFeedbackRequest(BaseModel):
+    theme_name: str
+    is_helpful: bool
+
+class CompareRequest(BaseModel):
+    upload_id_a: str
+    upload_id_b: str
+
+@router.post("/analysis/{upload_id}/feedback")
+async def submit_theme_feedback(
+    upload_id: str,
+    request: ThemeFeedbackRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Store helpful/not helpful feedback for a specific theme."""
+    upload = db.query(Upload).filter(
+        Upload.id == upload_id,
+        Upload.user_id == current_user.id
+    ).first()
+    if not upload:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Upload not found")
+
+    analysis = db.query(AnalysisResult).filter(AnalysisResult.upload_id == upload_id).first()
+    if not analysis:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Analysis not found")
+
+    feedback = dict(analysis.theme_feedback_json) if analysis.theme_feedback_json else {}
+    feedback[request.theme_name] = request.is_helpful
+    analysis.theme_feedback_json = feedback
+    db.commit()
+
+    return {"status": "success", "theme": request.theme_name, "is_helpful": request.is_helpful}
+
+
+@router.post("/analysis/compare")
+async def compare_analyses(
+    request: CompareRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Compare two past analyses using AI synthesis."""
+    from services.ai_service import ai_service
+    from sqlalchemy import or_
+    from models import UploadShare
+    from sqlalchemy.sql import func as sqlfunc
+
+    def get_accessible_analysis(upload_id: str):
+        upload = db.query(Upload).filter(Upload.id == upload_id).first()
+        if not upload:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Upload {upload_id} not found")
+
+        is_owner = upload.user_id == current_user.id
+        has_access = is_owner or db.query(UploadShare).filter(
+            UploadShare.upload_id == upload_id,
+            UploadShare.shared_with_user_id == current_user.id,
+            or_(UploadShare.expires_at.is_(None), UploadShare.expires_at > sqlfunc.now())
+        ).first() is not None
+
+        if not has_access:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
+
+        analysis = db.query(AnalysisResult).filter(AnalysisResult.upload_id == upload_id).first()
+        if not analysis or not analysis.themes_json:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Analysis for {upload_id} has no themes")
+
+        return upload, analysis
+
+    upload_a, analysis_a = get_accessible_analysis(request.upload_id_a)
+    upload_b, analysis_b = get_accessible_analysis(request.upload_id_b)
+
+    synthesis = await ai_service.compare_analyses(
+        themes_a=analysis_a.themes_json,
+        summary_a=analysis_a.executive_summary or "",
+        themes_b=analysis_b.themes_json,
+        summary_b=analysis_b.executive_summary or ""
+    )
+
+    return {
+        "upload_a": {"upload_id": str(upload_a.id), "filename": upload_a.filename, "created_at": upload_a.created_at.isoformat() if upload_a.created_at else None},
+        "upload_b": {"upload_id": str(upload_b.id), "filename": upload_b.filename, "created_at": upload_b.created_at.isoformat() if upload_b.created_at else None},
+        "synthesis": synthesis
+    }
+
 
 @router.get("/analysis/trends")
 async def get_analysis_trends(

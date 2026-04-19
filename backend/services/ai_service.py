@@ -4,6 +4,12 @@ from typing import List, Dict, Optional
 import time
 import logging
 
+PERSONA_PROMPTS = {
+    "strict_agile": "You are a strict Agile practitioner. Focus exclusively on user stories, sprint deliverables, acceptance criteria violations, and agile process dysfunctions. Ignore non-process feedback.",
+    "blue_sky": "You are a visionary product strategist. Focus on innovative opportunities, emerging trends, and transformative ideas hidden within the feedback. Reframe negatives as opportunity areas.",
+    "risk_churn": "You are a risk and retention analyst. Focus exclusively on churn signals, frustration patterns, deal-breakers, and retention risks embedded in the feedback.",
+}
+
 # Configure logger
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -47,7 +53,7 @@ class AIService:
             # Do not raise error to allow server startup
             pass
     
-    async def analyze_feedback(self, feedback_entries: List[Dict], upload_id: str, plan_tier: str = "demo") -> Dict:
+    async def analyze_feedback(self, feedback_entries: List[Dict], upload_id: str, plan_tier: str = "demo", ignored_words: Optional[str] = None, persona: Optional[str] = None) -> Dict:
         """
         Analyze feedback using available AI provider (Gemini primary, OpenAI fallback).
         
@@ -80,27 +86,27 @@ class AIService:
                     logger.info(f"--- Starting Gemini Analysis for upload {upload_id} ---")
                     # Try 2.0 Flash first
                     try:
-                        result = await self._analyze_with_gemini(feedback_sample, model_id='gemini-2.0-flash')
+                        result = await self._analyze_with_gemini(feedback_sample, model_id='gemini-2.0-flash', ignored_words=ignored_words, persona=persona)
                         provider_used = "gemini-2.0-flash"
                     except Exception as e:
                         error_str = str(e)
                         if "404" in error_str or "RESOURCE_EXHAUSTED" in error_str or "429" in error_str:
                             logger.info(f"🔄 Gemini 2.0 Flash failed ({'Quota' if '429' in error_str or 'EXHAUSTED' in error_str else 'Missing'}). Retrying with 1.5 Flash...")
-                            result = await self._analyze_with_gemini(feedback_sample, model_id='gemini-flash-latest')
+                            result = await self._analyze_with_gemini(feedback_sample, model_id='gemini-flash-latest', ignored_words=ignored_words, persona=persona)
                             provider_used = "gemini-1.5-flash"
                         else:
                             raise e
-                    
+
                     logger.info(f"✅ Gemini Analysis Success ({provider_used})")
                 except Exception as e:
                     logger.error(f"⚠️ Gemini analysis failed completely: {str(e)}")
                     if self.openai_available:
                         logger.info("🔄 Falling back to OpenAI...")
-            
+
             if not result and self.openai_available:
                 try:
                     logger.info(f"--- Starting OpenAI Analysis for upload {upload_id} ---")
-                    result = await self._analyze_with_openai(feedback_sample)
+                    result = await self._analyze_with_openai(feedback_sample, ignored_words=ignored_words, persona=persona)
                     provider_used = "gpt-4o-mini"
                     logger.info("✅ OpenAI Analysis Success")
                 except Exception as e:
@@ -154,11 +160,19 @@ class AIService:
             print(f"❌ AI analysis error: {e}")
             return self._error_analysis(str(e))
     
-    async def _analyze_with_gemini(self, feedback_sample: List[str], model_id: str = 'gemini-1.5-flash') -> Dict:
+    async def _analyze_with_gemini(self, feedback_sample: List[str], model_id: str = 'gemini-1.5-flash', ignored_words: Optional[str] = None, persona: Optional[str] = None) -> Dict:
         """Analyze feedback using Gemini"""
         feedback_list = "\n".join([f"{i+1}. {text}" for i, text in enumerate(feedback_sample)])
-        
-        prompt = f"""You are an expert product feedback analyst. Analyze the following {len(feedback_sample)} customer feedback items and extract key insights.
+
+        persona_instruction = ""
+        if persona and persona in PERSONA_PROMPTS:
+            persona_instruction = f"\n\nANALYSIS LENS: {PERSONA_PROMPTS[persona]}"
+
+        ignored_instruction = ""
+        if ignored_words and ignored_words.strip():
+            ignored_instruction = f"\n\nEXCLUSION RULE: You MUST exclude any themes related to these topics: [{ignored_words}]. Do not create themes around these words."
+
+        prompt = f"""You are an expert product feedback analyst. Analyze the following {len(feedback_sample)} customer feedback items and extract key insights.{persona_instruction}{ignored_instruction}
 
 Your task:
 1. Identify the top 3-5 most important themes
@@ -206,11 +220,19 @@ Return ONLY the JSON object."""
         
         return json.loads(response.text)
     
-    async def _analyze_with_openai(self, feedback_sample: List[str]) -> Dict:
+    async def _analyze_with_openai(self, feedback_sample: List[str], ignored_words: Optional[str] = None, persona: Optional[str] = None) -> Dict:
         """Analyze feedback using OpenAI"""
         feedback_list = "\n".join([f"{i+1}. {text}" for i, text in enumerate(feedback_sample)])
-        
-        system_prompt = """You are an expert product feedback analyst. Extract key themes, sentiment, and insights.
+
+        persona_instruction = ""
+        if persona and persona in PERSONA_PROMPTS:
+            persona_instruction = f" {PERSONA_PROMPTS[persona]}"
+
+        ignored_instruction = ""
+        if ignored_words and ignored_words.strip():
+            ignored_instruction = f" EXCLUSION RULE: Exclude any themes related to: [{ignored_words}]. Do not create themes around these words."
+
+        system_prompt = f"""You are an expert product feedback analyst. Extract key themes, sentiment, and insights.{persona_instruction}{ignored_instruction}
 
 Return valid JSON with this structure:
 {
@@ -331,6 +353,49 @@ Data:
 
 Return ONLY valid JSON."""
     
+    async def compare_analyses(self, themes_a: list, summary_a: str, themes_b: list, summary_b: str) -> str:
+        """Compare two analyses and return a 2-paragraph synthesis."""
+        themes_a_text = json.dumps([{"name": t.get("name"), "sentiment": t.get("sentiment"), "count": t.get("count")} for t in themes_a], indent=2)
+        themes_b_text = json.dumps([{"name": t.get("name"), "sentiment": t.get("sentiment"), "count": t.get("count")} for t in themes_b], indent=2)
+
+        prompt = f"""You are an expert product analyst. Compare two customer feedback datasets.
+
+Dataset A Executive Summary: {summary_a}
+Dataset A Themes: {themes_a_text}
+
+Dataset B Executive Summary: {summary_b}
+Dataset B Themes: {themes_b_text}
+
+Write exactly 2 paragraphs:
+Paragraph 1: What themes or sentiments IMPROVED or remained consistent from Dataset A to Dataset B?
+Paragraph 2: What themes or sentiments DETERIORATED or newly emerged in Dataset B compared to Dataset A?
+
+Be specific. Reference actual theme names from both datasets. Keep each paragraph to 3-4 sentences."""
+
+        if self.gemini_available:
+            try:
+                from google import genai
+                from google.genai import types
+                response = self.gemini_client.models.generate_content(
+                    model='gemini-2.0-flash',
+                    contents=prompt,
+                    config=types.GenerateContentConfig(temperature=0.3, max_output_tokens=600)
+                )
+                return response.text
+            except Exception as e:
+                logger.error(f"Gemini compare failed: {e}")
+
+        if self.openai_available:
+            response = self.openai_client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0.3,
+                max_tokens=600
+            )
+            return response.choices[0].message.content
+
+        raise Exception("No AI provider available for comparison")
+
     def _empty_analysis(self) -> Dict:
         """Return empty analysis when no feedback provided"""
         return {

@@ -181,7 +181,7 @@ export async function updateUserProfile(
     return response.json();
 }
 
-export async function uploadCSV(file: File, token: string): Promise<{
+export async function uploadCSV(file: File, token: string, ignoredWords?: string, persona?: string): Promise<{
     upload_id: string;
     filename: string;
     row_count: number;
@@ -190,6 +190,8 @@ export async function uploadCSV(file: File, token: string): Promise<{
 }> {
     const formData = new FormData();
     formData.append("file", file);
+    if (ignoredWords && ignoredWords.trim()) formData.append("ignored_words", ignoredWords.trim());
+    if (persona && persona.trim()) formData.append("persona", persona.trim());
 
     const response = await fetch(`${API_URL}/upload`, {
         method: "POST",
@@ -323,6 +325,77 @@ export async function shareUpload(uploadId: string, email: string, token: string
 
     return response.json();
 }
+export async function submitContactForm(name: string, email: string, message: string): Promise<{ status: string; message: string }> {
+    const response = await fetch(`${API_URL}/contact`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, message }),
+    });
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || "Failed to send message");
+    }
+
+    return response.json();
+}
+
+export async function submitThemeFeedback(uploadId: string, themeName: string, isHelpful: boolean, token: string): Promise<void> {
+    const response = await fetch(`${API_URL}/analysis/${uploadId}/feedback`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ theme_name: themeName, is_helpful: isHelpful }),
+    });
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || "Failed to submit feedback");
+    }
+}
+
+export async function getPublicAnalysis(uploadId: string): Promise<{
+    upload_id: string;
+    filename: string;
+    row_count: number;
+    themes: Theme[];
+    executive_summary: string;
+    confidence_score: number;
+    created_at?: string;
+}> {
+    const response = await fetch(`${API_URL}/public/analysis/${uploadId}`);
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || "Analysis not found");
+    }
+    return response.json();
+}
+
+export async function compareAnalyses(uploadIdA: string, uploadIdB: string, token: string): Promise<{
+    upload_a: { upload_id: string; filename: string; created_at: string | null };
+    upload_b: { upload_id: string; filename: string; created_at: string | null };
+    synthesis: string;
+}> {
+    const response = await fetch(`${API_URL}/analysis/compare`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ upload_id_a: uploadIdA, upload_id_b: uploadIdB }),
+    });
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || "Comparison failed");
+    }
+    return response.json();
+}
+
 export async function exportAnalysis(uploadId: string, token: string): Promise<Blob> {
     const response = await fetch(`${API_URL}/analysis/${uploadId}/export`, {
         method: "GET",

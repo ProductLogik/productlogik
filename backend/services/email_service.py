@@ -574,5 +574,85 @@ class EmailService:
             logging.error(traceback.format_exc())
             return False
 
+    def send_contact_email(
+        self,
+        name: str,
+        email: str,
+        message: str
+    ) -> bool:
+        """
+        Forward a contact form submission to the site administrator.
+
+        Returns:
+            True if sent successfully, False otherwise
+        """
+        admin_email = os.getenv("ADMIN_CONTACT_EMAIL", "contact@hamzalatif.com")
+
+        if not self.enabled:
+            logging.info(f"📧 Contact email not sent (service disabled): from {email}")
+            return False
+
+        try:
+            html_content = f"""
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="utf-8">
+                <style>
+                    body {{ font-family: 'Inter', -apple-system, sans-serif; color: #1F2933; background: #F9FAFB; margin: 0; padding: 0; }}
+                    .container {{ max-width: 600px; margin: 40px auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 30px rgba(0,0,0,0.08); }}
+                    .header {{ background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 28px 30px; }}
+                    .header h1 {{ margin: 0; font-size: 22px; font-weight: 700; }}
+                    .content {{ padding: 32px 30px; }}
+                    .field {{ margin-bottom: 20px; }}
+                    .label {{ font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #6B7280; margin-bottom: 6px; }}
+                    .value {{ font-size: 15px; color: #1F2933; background: #F9FAFB; padding: 12px 16px; border-radius: 8px; border-left: 3px solid #059669; }}
+                    .footer {{ padding: 20px 30px; background: #F9FAFB; text-align: center; font-size: 12px; color: #9CA3AF; }}
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h1>New Contact Form Submission — ProductLogik</h1>
+                    </div>
+                    <div class="content">
+                        <div class="field">
+                            <div class="label">Name</div>
+                            <div class="value">{name}</div>
+                        </div>
+                        <div class="field">
+                            <div class="label">Email</div>
+                            <div class="value">{email}</div>
+                        </div>
+                        <div class="field">
+                            <div class="label">Message</div>
+                            <div class="value">{message}</div>
+                        </div>
+                    </div>
+                    <div class="footer">
+                        <p>Sent via productlogik.com contact form</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+            """
+
+            params = {
+                "from": self.from_email,
+                "to": [admin_email],
+                "reply_to": email,
+                "subject": f"[ProductLogik Contact] Message from {name}",
+                "html": html_content
+            }
+
+            response = resend.Emails.send(params)
+            logging.info(f"✅ Contact email dispatched to admin (ID: {response['id']})")
+            return True
+
+        except Exception as e:
+            logging.error(f"❌ Failed to send contact email: {e}")
+            return False
+
+
 # Create singleton instance
 email_service = EmailService()
