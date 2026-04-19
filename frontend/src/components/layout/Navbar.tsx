@@ -76,7 +76,7 @@ export function Navbar() {
                 </Link>
 
                 <nav className="hidden md:flex items-center gap-8">
-                    {isLoggedIn && (
+                    {isLoggedIn ? (
                         <>
                             <Link to="/upload" className="text-sm font-medium text-text-secondary hover:text-brand-600 transition-colors">Analyzer</Link>
                             <Link to="/dashboard" className="text-sm font-medium text-text-secondary hover:text-brand-600 transition-colors">Dashboard</Link>
@@ -84,7 +84,14 @@ export function Navbar() {
                                 Trends
                                 <span className="bg-gradient-to-r from-brand-600 to-indigo-600 text-white text-[10px] uppercase font-bold px-1.5 py-0.5 rounded-sm select-none">Pro</span>
                             </Link>
+                            <Link to="/compare" className="text-sm font-medium text-text-secondary hover:text-brand-600 transition-colors">Compare</Link>
                             <Link to="/usage" className="text-sm font-medium text-text-secondary hover:text-brand-600 transition-colors">Usage</Link>
+                            <Link to="/contact" className="text-sm font-medium text-text-secondary hover:text-brand-600 transition-colors">Contact Us</Link>
+                        </>
+                    ) : (
+                        <>
+                            <Link to="/about" className="text-sm font-medium text-text-secondary hover:text-brand-600 transition-colors">About</Link>
+                            <Link to="/contact" className="text-sm font-medium text-text-secondary hover:text-brand-600 transition-colors">Contact Us</Link>
                         </>
                     )}
                 </nav>
@@ -132,14 +139,9 @@ export function Navbar() {
                             )}
                         </div>
                     ) : (
-                        <>
-                            <Button variant="ghost" asChild className="hidden sm:inline-flex hover:bg-white/50">
-                                <Link to="/login">Sign In</Link>
-                            </Button>
-                            <Button asChild className="shadow-brand-600/25">
-                                <Link to="/signup">Get Started</Link>
-                            </Button>
-                        </>
+                        <Button asChild className="shadow-brand-600/25">
+                            <Link to="/login">Log In</Link>
+                        </Button>
                     )}
                 </div>
             </div>

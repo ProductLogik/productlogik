@@ -6,7 +6,7 @@ import { AgileHealth } from "../components/AgileHealth";
 import { ProductHealthScore } from "../components/ProductHealthScore";
 import { ShareModal } from "../components/ShareModal";
 import { Link, useParams } from "react-router";
-import { ArrowLeft, ArrowRight, Loader2, AlertCircle, Share2, RefreshCw, Clock } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2, AlertCircle, Share2, Link2, RefreshCw, Clock } from "lucide-react";
 import { getAnalysis, exportAnalysis, retryAnalysis } from "../lib/api";
 import type { AnalysisResult } from "../lib/api";
 import { toast } from "sonner";
@@ -297,7 +297,11 @@ export function ResultsPage() {
 
                         {/* Expandable Theme List */}
                         <div>
-                            <ExpandableThemeList themes={analysis.themes} />
+                            <ExpandableThemeList
+                                themes={analysis.themes}
+                                uploadId={id}
+                                token={localStorage.getItem("token") ?? undefined}
+                            />
                         </div>
                     </div>
                 </div>
@@ -358,6 +362,18 @@ export function ResultsPage() {
                         >
                             <Share2 className="mr-2 h-4 w-4" />
                             Share Analysis
+                        </Button>
+                        <Button
+                            variant="outline"
+                            className="w-full justify-start h-auto py-3 whitespace-normal text-left"
+                            onClick={() => {
+                                const url = `${window.location.origin}/shared/${id}`;
+                                navigator.clipboard.writeText(url);
+                                toast.success("Public link copied to clipboard!");
+                            }}
+                        >
+                            <Link2 className="mr-2 h-4 w-4" />
+                            Copy Public Link
                         </Button>
                     </div>
                 </div>

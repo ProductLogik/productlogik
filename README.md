@@ -16,7 +16,7 @@
 - **🧭 Compass Dashboard**: A streamlined results view for product owners to prioritize what users actually need.
 - **⚡ Real-Time Usage Tracking**: Integrated usage dashboard with dynamic progress bars and credits management.
 - **💳 Tiered Quota Enforcement**: Production-ready **Stripe** integration enforcing 3 tiers (Demo, Pro, Team) with hard API limits.
-- ** प्रोफेशनल Branding**: Authenticated domain emails via **Resend** and hosted PNG branding assets for professional delivery.
+- **💼 Professional Branding**: Authenticated domain emails via **Resend** and hosted PNG branding assets for professional delivery.
 - **🔐 Enterprise Security**: JWT-based session management, feedback data isolation, and secure CORS/CSP configuration.
 
 ---
@@ -109,11 +109,23 @@ npm install
 
 ---
 
+## 🌐 Deployment & Infrastructure (Current Migration)
+
+ProductLogik is currently undergoing an active infrastructure migration from standard PaaS providers (Vercel/Render) to a strictly isolated, self-managed **Ubuntu VPS**. 
+
+This transition integrates **PM2** for resilient process lifecycle memory-management (running isolated API and React instances) and connects an **Nginx Reverse Proxy** for secure HTTPS traffic routing.
+
+For complete, step-by-step instructions regarding the production server configurations and environment isolation, please read the primary migration doc:
+👉 **[Deployment Migration Plan](./docs/deployment_migration_plan.md)**
+
+---
+
 ## 🗺️ Roadmap: The Path to Enterprise
 
 - [x] **Phase 1: Foundation**: Core Ingestion, Auth, & Gemini 2.0 Integration.
-- [x] **Phase 2: Commercialization**: Stripe Tiers, Custom Domain Setup, & Quota Enforcement.
-- [/] **Phase 3: Deep Insights (Active)**:
+- [/] **Phase 2: Commercialization & Infrastructure**: Stripe Tiers, Custom Domain Setup, & Quota Enforcement.
+    - [/] **Production VPS Migration (Active)**: Transitioning from Vercel/Render to a unified Ubuntu machine utilizing Nginx and PM2.
+- [/] **Phase 3: Deep Insights**:
     - [ ] **Agile Anti-Pattern Detection**: Automated detection of Feature Factory & HiPPO Effect.
     - [ ] **Product Health Score**: Composite metric for strategic consistency.
     - [ ] **PDF Export Engine**: Professional reporting for stakeholders.

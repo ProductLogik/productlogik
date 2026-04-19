@@ -1,16 +1,74 @@
-# Python
+# -----------------------------
+# 1. ENVIRONMENT VARIABLES
+# -----------------------------
+.env
+.env.*
+!.env.example
+
+# -----------------------------
+# 2. PYTHON (FASTAPI BACKEND)
+# -----------------------------
 __pycache__/
 *.py[cod]
 *$py.class
 venv/
-.env
+backend/venv/
 
-# Node
+# Python Tooling Caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.sqlite3
+*.db
+
+# -----------------------------
+# 3. NODE & VITE (REACT FRONTEND)
+# -----------------------------
 node_modules/
+frontend/node_modules/
 dist/
+frontend/dist/
+dist-ssr/
+.pnpm-store/
+*.tsbuildinfo
 
-# System
+# Node Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# -----------------------------
+# 4. SYSTEM & GENERAL LOGS
+# -----------------------------
+*.log
 .DS_Store
 Thumbs.db
 backend/debug.log
+
+# -----------------------------
+# 5. IDE & EDITOR CACHES
+# -----------------------------
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.sw?
+
+# -----------------------------
+# 6. AI AGENTS & SKILLS
+# -----------------------------
+.agents/
+.claude/
+.cursor/
+.cursorignore
+.cursorindexingignore
+skills/
+skills-lock.json
+.mcp.json
+
+# -----------------------------
+# 7. MISC / PROJECT SPECIFIC
+# -----------------------------
 test_accounts.txt

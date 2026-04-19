@@ -1,6 +1,6 @@
 import { Button } from "../components/ui/Button";
 import { Link } from "react-router";
-import { ArrowRight, BarChart3, CheckCircle2, ShieldCheck, Zap, Layers, Globe } from "lucide-react";
+import { ArrowRight, BarChart3, CheckCircle2, ShieldCheck, Zap, Layers, Network } from "lucide-react";
 import { Card, CardContent } from "../components/ui/Card";
 
 export function HomePage() {
@@ -9,11 +9,6 @@ export function HomePage() {
             {/* Hero Section with Mesh Gradient */}
             <section className="relative overflow-hidden pt-20 pb-20 lg:pt-28 lg:pb-32 bg-white">
                 <div className="container mx-auto px-4 text-center sm:px-6 lg:px-8 relative z-10">
-                    <div className="inline-flex items-center rounded-full border border-brand-200 bg-brand-50/50 backdrop-blur-sm px-3 py-1 text-sm font-medium text-brand-800 mb-8 animate-fade-in-up">
-                        <span className="flex h-2 w-2 rounded-full bg-brand-600 mr-2"></span>
-                        New: AI-Powered Agile Anti-Pattern Detection
-                    </div>
-
                     <h1 className="text-4xl font-display font-bold tracking-tight text-text-primary sm:text-6xl lg:text-7xl mb-6">
                         Explainable AI for <br />
                         <span className="bg-clip-text text-transparent bg-gradient-to-r from-brand-600 to-brand-400">
@@ -22,7 +17,7 @@ export function HomePage() {
                     </h1>
 
                     <p className="mx-auto max-w-2xl text-lg sm:text-xl text-text-secondary mb-10 leading-relaxed">
-                        The decision intelligence platform for product leaders. Transform raw feedback into clear, verifiable priorities without the black box.
+                        A 100% free, solo-built MVP tool for Product Managers.
                     </p>
 
                     <div className="flex justify-center">
@@ -69,33 +64,33 @@ export function HomePage() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         <FeatureCard
                             icon={<Zap className="h-6 w-6" />}
-                            title="Instant Clarity"
-                            description="Aggregate feedback from Jira, Zendesk, and surveys into a single source of truth in seconds."
+                            title="CSV Upload & Instant Analysis"
+                            description="Upload any CSV containing feedback text — support tickets, reviews, retro notes. No template required."
                         />
                         <FeatureCard
                             icon={<ShieldCheck className="h-6 w-6" />}
                             title="Explainable & Trusted"
-                            description="Every AI insight links back to original customer quotes. No hallucinations, just evidence."
+                            description="Every AI insight links back to original customer quotes from your CSV. No fabricated claims, just evidence."
                         />
                         <FeatureCard
-                            icon={<Layers className="h-6 w-6" />}
-                            title="Agile Health Checks"
-                            description="Automatically detect anti-patterns like 'Build Loops' or 'Zombie Features' before they kill momentum."
+                            icon={<Network className="h-6 w-6" />}
+                            title="Dual-LLM Redundancy"
+                            description="Gemini AI runs as the primary engine with OpenAI as an automatic fallback — analysis continues even if one provider is down."
                         />
                         <FeatureCard
                             icon={<BarChart3 className="h-6 w-6" />}
-                            title="Strategic Alignment"
-                            description="Map every feature request to your OKRs and strategic pillars automatically."
+                            title="Thematic Extraction"
+                            description="The AI identifies recurring themes across your dataset, each scored by sentiment, confidence, and mention count."
                         />
                         <FeatureCard
                             icon={<CheckCircle2 className="h-6 w-6" />}
                             title="Confidence Scoring"
-                            description="Know exactly how much data backs each decision with our proprietary Confidence Score."
+                            description="Each theme carries a confidence score reflecting how strongly the evidence supports the classification."
                         />
                         <FeatureCard
-                            icon={<Globe className="h-6 w-6" />}
-                            title="Global Scale"
-                            description="Enterprise-grade security and compliance (GDPR, SOC2) built for global teams."
+                            icon={<Layers className="h-6 w-6" />}
+                            title="PDF Export"
+                            description="Download a formatted PDF report of your analysis, including the executive summary, themes, and evidence quotes."
                         />
                     </div>
                 </div>
@@ -129,18 +124,15 @@ export function HomePage() {
             <section className="py-24 bg-brand-900 relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10"></div>
                 <div className="container mx-auto px-4 text-center sm:px-6 lg:px-8 relative z-10">
-                    <h2 className="text-4xl font-display font-bold tracking-tight text-white mb-6">Ready to lead with data?</h2>
+                    <h2 className="text-4xl font-display font-bold tracking-tight text-white mb-6">Ready to read your feedback properly?</h2>
                     <p className="text-xl text-brand-100 mb-10 max-w-2xl mx-auto opacity-90">
-                        Join 500+ product leaders making faster, confident decisions today.
+                        Upload a CSV and get structured themes, evidence quotes, and an executive summary in under a minute. Completely free.
                     </p>
                     <div className="flex justify-center gap-4">
                         <Button size="lg" asChild className="h-14 px-10 text-lg shadow-xl shadow-brand-600/30">
                             <Link to="/upload">Start Free Analysis</Link>
                         </Button>
                     </div>
-                    <p className="mt-6 text-sm text-brand-300">
-                        Free Demo Plan · No credit card required · GDPR Compliant
-                    </p>
                 </div>
             </section>
         </div>

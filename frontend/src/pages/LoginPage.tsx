@@ -95,7 +95,7 @@ export function LoginPage() {
                 </CardContent>
                 <CardFooter className="justify-center">
                     <p className="text-sm text-text-secondary">
-                        Don't have an account? <Link to="/signup" className="text-brand-600 hover:underline">Sign up</Link>
+                        Don't have an account? <Link to="/signup" className="text-brand-600 hover:underline">Create Account</Link>
                     </p>
                 </CardFooter>
             </Card>

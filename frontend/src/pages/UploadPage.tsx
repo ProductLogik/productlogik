@@ -7,10 +7,19 @@ import { UploadCloud, FileText, AlertCircle, Loader2 } from "lucide-react";
 import { uploadCSV } from "../lib/api";
 import { toast } from "sonner";
 
+const PERSONA_OPTIONS = [
+    { value: "", label: "Default — Balanced Analysis" },
+    { value: "strict_agile", label: "Strict Agile Validation" },
+    { value: "blue_sky", label: "Blue-Sky Ideation" },
+    { value: "risk_churn", label: "Risk & Churn Analysis" },
+];
+
 export function UploadPage() {
     const navigate = useNavigate();
     const [file, setFile] = useState<File | null>(null);
     const [uploading, setUploading] = useState(false);
+    const [ignoredWords, setIgnoredWords] = useState("");
+    const [persona, setPersona] = useState("");
 
     const onDrop = useCallback((acceptedFiles: File[]) => {
         setFile(acceptedFiles[0]);
@@ -37,7 +46,7 @@ export function UploadPage() {
         setUploading(true);
 
         try {
-            const result = await uploadCSV(file, token);
+            const result = await uploadCSV(file, token, ignoredWords, persona);
             toast.success(`Successfully uploaded ${result.row_count} feedback entries!`);
 
             // Redirect to dashboard after 2 seconds
@@ -111,6 +120,40 @@ export function UploadPage() {
                                     </>
                                 )}
                             </div>
+                        </div>
+
+                        {/* Analysis Lens */}
+                        <div className="grid gap-2">
+                            <label htmlFor="persona" className="text-sm font-medium text-text-primary">
+                                Analysis Lens <span className="text-text-secondary font-normal">(optional)</span>
+                            </label>
+                            <select
+                                id="persona"
+                                value={persona}
+                                onChange={(e) => setPersona(e.target.value)}
+                                className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-500"
+                            >
+                                {PERSONA_OPTIONS.map((opt) => (
+                                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                ))}
+                            </select>
+                            <p className="text-xs text-text-secondary">The AI will use this perspective when clustering themes.</p>
+                        </div>
+
+                        {/* Ignored Words */}
+                        <div className="grid gap-2">
+                            <label htmlFor="ignored-words" className="text-sm font-medium text-text-primary">
+                                Ignored Topics <span className="text-text-secondary font-normal">(optional)</span>
+                            </label>
+                            <input
+                                id="ignored-words"
+                                type="text"
+                                placeholder="e.g. pricing, login, bug"
+                                value={ignoredWords}
+                                onChange={(e) => setIgnoredWords(e.target.value)}
+                                className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-text-primary placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                            />
+                            <p className="text-xs text-text-secondary">Comma-separated topics to exclude from theme clustering.</p>
                         </div>
 
                         {/* Info Box */}

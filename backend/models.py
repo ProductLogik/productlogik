@@ -73,6 +73,7 @@ class AnalysisResult(Base):
     
     themes_json = Column(JSONB)
     agile_risks_json = Column(JSONB)
+    theme_feedback_json = Column(JSONB, nullable=True)
     executive_summary = Column(Text)
     
     confidence_score = Column(Float)
