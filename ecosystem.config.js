@@ -8,7 +8,7 @@ module.exports = {
       env: {
         NODE_ENV: 'production'
       },
-      max_memory_restart: '300M',
+      max_memory_restart: '250M',
       log_date_format: 'YYYY-MM-DD HH:mm Z',
       error_file: '../frontend-error.log',
       out_file: '../frontend-out.log'
@@ -22,7 +22,7 @@ module.exports = {
       env: {
         PYTHONUNBUFFERED: '1'
       },
-      max_memory_restart: '1G',
+      max_memory_restart: '300M',
       log_date_format: 'YYYY-MM-DD HH:mm Z',
       error_file: '../backend-error.log',
       out_file: '../backend-out.log'
